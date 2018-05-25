@@ -2,14 +2,14 @@ langcode: en
 status: true
 dependencies:
   module:
+    - controlled_access_terms
     - node
-id: node.field_uris
-field_name: field_uris
+id: node.field_subject_authorities
+field_name: field_subject_authorities
 entity_type: node
-type: string_long
-settings:
-  case_sensitive: false
-module: core
+type: authority_link
+settings: {  }
+module: controlled_access_terms
 locked: false
 cardinality: -1
 translatable: true

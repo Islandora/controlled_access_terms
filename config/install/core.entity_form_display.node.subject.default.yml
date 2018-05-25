@@ -3,9 +3,10 @@ status: true
 dependencies:
   config:
     - field.field.node.subject.body
-    - field.field.node.subject.field_uris
+    - field.field.node.subject.field_subject_authorities
     - node.type.subject
   module:
+    - controlled_access_terms
     - path
     - text
 id: node.subject.default
@@ -28,13 +29,13 @@ content:
     region: content
     settings: {  }
     third_party_settings: {  }
-  field_uris:
-    weight: 122
+  field_subject_authorities:
+    weight: 123
     settings:
-      rows: 5
-      placeholder: ''
+      placeholder_url: ''
+      placeholder_title: ''
     third_party_settings: {  }
-    type: string_textarea
+    type: authority_link_default
     region: content
   path:
     type: path

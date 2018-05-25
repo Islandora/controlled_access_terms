@@ -3,10 +3,11 @@ status: true
 dependencies:
   config:
     - field.field.node.person.body
+    - field.field.node.person.field_person_name_authorities
     - field.field.node.person.field_relation
-    - field.field.node.person.field_uris
     - node.type.person
   module:
+    - controlled_access_terms
     - path
     - text
 id: node.person.default
@@ -29,6 +30,14 @@ content:
     region: content
     settings: {  }
     third_party_settings: {  }
+  field_person_name_authorities:
+    weight: 124
+    settings:
+      placeholder_url: ''
+      placeholder_title: ''
+    third_party_settings: {  }
+    type: authority_link_default
+    region: content
   field_relation:
     weight: 123
     settings:
@@ -37,14 +46,6 @@ content:
       placeholder: ''
     third_party_settings: {  }
     type: entity_reference_autocomplete
-    region: content
-  field_uris:
-    weight: 122
-    settings:
-      rows: 5
-      placeholder: ''
-    third_party_settings: {  }
-    type: string_textarea
     region: content
   path:
     type: path

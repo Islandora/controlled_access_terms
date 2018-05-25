@@ -4,6 +4,7 @@ dependencies:
   config:
     - core.entity_view_mode.node.teaser
     - field.field.node.subject.body
+    - field.field.node.subject.field_subject_authorities
     - node.type.subject
   module:
     - text
@@ -24,4 +25,5 @@ content:
   links:
     weight: 100
     region: content
-hidden: {  }
+hidden:
+  field_subject_authorities: true

@@ -3,10 +3,11 @@ status: true
 dependencies:
   config:
     - field.field.node.corporate_body.body
+    - field.field.node.corporate_body.field_corporate_body_authorities
     - field.field.node.corporate_body.field_relation
-    - field.field.node.corporate_body.field_uris
     - node.type.corporate_body
   module:
+    - controlled_access_terms
     - text
     - user
 id: node.corporate_body.default
@@ -21,6 +22,18 @@ content:
     settings: {  }
     third_party_settings: {  }
     region: content
+  field_corporate_body_authorities:
+    weight: 104
+    label: above
+    settings:
+      trim_length: '80'
+      url_only: ''
+      url_plain: ''
+      rel: ''
+      target: _blank
+    third_party_settings: {  }
+    type: authority_formatter_default
+    region: content
   field_relation:
     weight: 103
     label: above
@@ -28,13 +41,6 @@ content:
       link: true
     third_party_settings: {  }
     type: entity_reference_label
-    region: content
-  field_uris:
-    weight: 102
-    label: above
-    settings: {  }
-    third_party_settings: {  }
-    type: basic_string
     region: content
   links:
     weight: 100

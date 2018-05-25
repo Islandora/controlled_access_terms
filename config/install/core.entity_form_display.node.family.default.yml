@@ -2,10 +2,11 @@ langcode: en
 status: true
 dependencies:
   config:
+    - field.field.node.family.field_family_name_authorities
     - field.field.node.family.field_relation
-    - field.field.node.family.field_uris
     - node.type.family
   module:
+    - controlled_access_terms
     - path
 id: node.family.default
 targetEntityType: node
@@ -18,6 +19,14 @@ content:
     region: content
     settings: {  }
     third_party_settings: {  }
+  field_family_name_authorities:
+    weight: 122
+    settings:
+      placeholder_url: ''
+      placeholder_title: ''
+    third_party_settings: {  }
+    type: authority_link_default
+    region: content
   field_relation:
     weight: 121
     settings:
@@ -71,5 +80,4 @@ content:
       placeholder: ''
     region: content
     third_party_settings: {  }
-hidden:
-  field_uris: true
+hidden: {  }

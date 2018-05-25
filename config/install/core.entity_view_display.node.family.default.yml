@@ -2,16 +2,29 @@ langcode: en
 status: true
 dependencies:
   config:
+    - field.field.node.family.field_family_name_authorities
     - field.field.node.family.field_relation
-    - field.field.node.family.field_uris
     - node.type.family
   module:
+    - controlled_access_terms
     - user
 id: node.family.default
 targetEntityType: node
 bundle: family
 mode: default
 content:
+  field_family_name_authorities:
+    weight: 102
+    label: above
+    settings:
+      trim_length: '80'
+      url_only: ''
+      url_plain: ''
+      rel: ''
+      target: _blank
+    third_party_settings: {  }
+    type: authority_formatter_default
+    region: content
   field_relation:
     weight: 101
     label: above
@@ -23,5 +36,4 @@ content:
   links:
     weight: 100
     region: content
-hidden:
-  field_uris: true
+hidden: {  }
