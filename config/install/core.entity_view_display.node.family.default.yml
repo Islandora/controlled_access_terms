@@ -1,0 +1,27 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.node.family.field_relation
+    - field.field.node.family.field_uris
+    - node.type.family
+  module:
+    - user
+id: node.family.default
+targetEntityType: node
+bundle: family
+mode: default
+content:
+  field_relation:
+    weight: 101
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    type: entity_reference_label
+    region: content
+  links:
+    weight: 100
+    region: content
+hidden:
+  field_uris: true
