@@ -22,7 +22,7 @@ use Drupal\link\Plugin\Field\FieldType\LinkItem;
  * )
  */
 
-class Authority extends LinkItem {
+class AuthorityLink extends LinkItem {
 
   /**
    * {@inheritdoc}

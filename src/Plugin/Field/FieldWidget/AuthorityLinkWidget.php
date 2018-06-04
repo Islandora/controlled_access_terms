@@ -19,7 +19,7 @@ use Drupal\link\Plugin\Field\FieldWidget\LinkWidget;
  * )
  */
 
-class AuthorityWidget extends LinkWidget {
+class AuthorityLinkWidget extends LinkWidget {
 
   /**
    * {@inheritdoc}

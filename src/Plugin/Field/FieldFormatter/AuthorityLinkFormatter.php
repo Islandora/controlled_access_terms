@@ -7,7 +7,7 @@ use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\link\Plugin\Field\FieldFormatter\LinkFormatter;
 
 /**
- * Plugin implementation of the 'AuthorityFormatter'.
+ * Plugin implementation of the 'AuthorityLinkFormatter'.
  *
  * @FieldFormatter(
  *   id = "authority_formatter_default",
@@ -17,7 +17,7 @@ use Drupal\link\Plugin\Field\FieldFormatter\LinkFormatter;
  *   }
  * )
  */
-class AuthorityFormatter extends LinkFormatter {
+class AuthorityLinkFormatter extends LinkFormatter {
 
   /**
    * {@inheritdoc}
