@@ -1,5 +1,9 @@
 name: 'Controlled Access Terms'
 type: module
+description: 'Provides topic, geographic, person, family, and corporate body entites as well as an authorities link field.'
 core: 8.x
 package: 'Controlled Access Terms'
 
+dependencies:
+  - name
+  - auto_entitylabel

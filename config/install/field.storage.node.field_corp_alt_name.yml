@@ -3,12 +3,12 @@ status: true
 dependencies:
   module:
     - node
-id: node.field_creator
-field_name: field_creator
+id: node.field_corp_alt_name
+field_name: field_corp_alt_name
 entity_type: node
-type: entity_reference
+type: string_long
 settings:
-  target_type: node
+  case_sensitive: false
 module: core
 locked: false
 cardinality: -1

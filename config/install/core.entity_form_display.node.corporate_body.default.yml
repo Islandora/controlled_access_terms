@@ -3,6 +3,7 @@ status: true
 dependencies:
   config:
     - field.field.node.corporate_body.body
+    - field.field.node.corporate_body.field_corp_alt_name
     - field.field.node.corporate_body.field_corporate_body_authorities
     - field.field.node.corporate_body.field_relation
     - node.type.corporate_body
@@ -17,7 +18,7 @@ mode: default
 content:
   body:
     type: text_textarea_with_summary
-    weight: 121
+    weight: 9
     settings:
       rows: 9
       summary_rows: 3
@@ -26,12 +27,20 @@ content:
     region: content
   created:
     type: datetime_timestamp
-    weight: 10
+    weight: 2
     region: content
     settings: {  }
     third_party_settings: {  }
+  field_corp_alt_name:
+    weight: 8
+    settings:
+      rows: 5
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textarea
+    region: content
   field_corporate_body_authorities:
-    weight: 124
+    weight: 7
     settings:
       placeholder_url: ''
       placeholder_title: ''
@@ -39,7 +48,7 @@ content:
     type: authority_link_default
     region: content
   field_relation:
-    weight: 123
+    weight: 10
     settings:
       match_operator: CONTAINS
       size: 60
@@ -49,7 +58,7 @@ content:
     region: content
   path:
     type: path
-    weight: 30
+    weight: 5
     region: content
     settings: {  }
     third_party_settings: {  }
@@ -57,26 +66,26 @@ content:
     type: boolean_checkbox
     settings:
       display_label: true
-    weight: 15
+    weight: 3
     region: content
     third_party_settings: {  }
   status:
     type: boolean_checkbox
     settings:
       display_label: true
-    weight: 120
+    weight: 6
     region: content
     third_party_settings: {  }
   sticky:
     type: boolean_checkbox
     settings:
       display_label: true
-    weight: 16
+    weight: 4
     region: content
     third_party_settings: {  }
   title:
     type: string_textfield
-    weight: -5
+    weight: 0
     region: content
     settings:
       size: 60
@@ -84,7 +93,7 @@ content:
     third_party_settings: {  }
   uid:
     type: entity_reference_autocomplete
-    weight: 5
+    weight: 1
     settings:
       match_operator: CONTAINS
       size: 60

@@ -4,6 +4,7 @@ dependencies:
   config:
     - core.entity_view_mode.node.teaser
     - field.field.node.person.body
+    - field.field.node.person.field_person_name_authorities
     - field.field.node.person.field_relation
     - node.type.person
   module:
@@ -26,4 +27,5 @@ content:
     weight: 100
     region: content
 hidden:
+  field_person_name_authorities: true
   field_relation: true

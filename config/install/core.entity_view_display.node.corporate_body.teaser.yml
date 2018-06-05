@@ -4,6 +4,7 @@ dependencies:
   config:
     - core.entity_view_mode.node.teaser
     - field.field.node.corporate_body.body
+    - field.field.node.corporate_body.field_corporate_body_authorities
     - field.field.node.corporate_body.field_relation
     - node.type.corporate_body
   module:
@@ -26,4 +27,5 @@ content:
     weight: 100
     region: content
 hidden:
+  field_corporate_body_authorities: true
   field_relation: true
