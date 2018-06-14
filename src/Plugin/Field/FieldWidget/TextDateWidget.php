@@ -81,7 +81,7 @@ class TextDateWidget extends WidgetBase {
   }
 
   /**
-  * Validate for ISO 8601 compliance
+  * Validate date format compliance
   */
   public function validate($element, FormStateInterface $form_state){
     $value = $element['#value'];
