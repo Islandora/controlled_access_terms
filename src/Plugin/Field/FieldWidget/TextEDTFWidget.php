@@ -9,20 +9,20 @@ use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Plugin implementation of the 'text_edtf' widget.
- * (Partially) validates text values for compliance with EDTF 1.0
+ * Validates text values for compliance with EDTF 1.0, level 1.
  * http://www.loc.gov/standards/datetime/pre-submission.html
  *
- * Starting with level 0. Will pursue level 1. Maybe level 2 later.
+ * // TODO: maybe some day support level 2.
  *
  * @FieldWidget(
  *   id = "text_edtf",
- *   label = @Translation("Extended Date Time Format, Level 0"),
+ *   label = @Translation("Extended Date Time Format, Level 1"),
  *   field_types = {
  *     "string"
  *   }
  * )
  */
-class EDTFWidget extends WidgetBase {
+class TextEDTFWidget extends WidgetBase {
 
   /**
    * {@inheritdoc}
@@ -30,6 +30,7 @@ class EDTFWidget extends WidgetBase {
    public static function defaultSettings() {
     return [
       'strict_dates' => TRUE,
+      'intervals' => FALSE,
     ] + parent::defaultSettings();
   }
 
@@ -40,8 +41,19 @@ class EDTFWidget extends WidgetBase {
     $element = parent::settingsForm($form, $form_state);
     $element['strict_dates'] = [
       '#type' => 'checkbox',
-      '#title' => $this->t('Ensure date values are valid.'),
+      '#title' => $this->t('Ensure provided date values are valid.'),
+      '#description' => $this->t(
+        'Negative dates, and the level 1 features unspecified dates, '.
+        'extended years, and seasons '.
+        'are not supported with strict date checking.<br />'.
+        'Uncertain/Approximate dates will have their markers removed before '.
+        'checking. (For example, "1984~?" will be checked as "1984".)'),
       '#default_value' => $this->getSetting('strict_dates'),
+    ];
+    $element['intervals'] = [
+      '#type' => 'checkbox',
+      '#title' => $this->t('Permit date intervals.'),
+      '#default_value' => $this->getSetting('intervals'),
     ];
     return $element;
   }
@@ -54,6 +66,11 @@ class EDTFWidget extends WidgetBase {
 
     if($this->getSetting('strict_dates')){
       $summary[] = t('Strict dates enabled');
+    }
+    if($this->getSetting('intervals')){
+      $summary[] = t('Date intervals permitted');
+    } else {
+      $summary[] = t('Date intervals are not permitted');
     }
 
     return $summary;
@@ -86,34 +103,127 @@ class EDTFWidget extends WidgetBase {
       return;
     }
 
-    // TODO: Intervals
-    if(strpos('/', $value) !== false){
-      $form_state->setError($element, t("Date intervals are not currently supported."));
+    // Intervals
+    if( $this->getSetting('intervals') ){
+      if(strpos($value, 'T') !== false){
+        $form_state->setError($element, t("Date intervals cannot include times."));
+      }
+
+      list($begin, $end) = explode('/',$value);
+      // begin
+      $error_message = $this->dateValidation($begin);
+      if($error_message){
+        $form_state->setError($element, t($error_message));
+      }
+      // end either empty or valid extended interval values (5.2.3.)
+      if(empty($end) || $end === 'unknown' || $end === 'open'){
+        return;
+      }
+      $error_message = $this->dateValidation($end);
+      if($error_message){
+        $form_state->setError($element, t($error_message));
+      }
+    } else {
+      $error_message = $this->dateValidation($value);
+      if($error_message){
+        $form_state->setError($element, t($error_message));
+      }
     }
 
-    list($date, $time) = explode('T',$value);
+    return;
+  }
 
-    // Date
-    // Negative year? That is fine, but remove it before exploding the date
-    if(strpos('-',$value) == 0){
-      $value = ltrim($value, '-';)
+  /**
+  * Validate a date
+  * returns False if valid or a string explaining the reason for invalidation.
+  */
+  protected function dateValidation( $datetime_str ){
+
+    list($date, $time) = explode('T', $datetime_str);
+
+    $date = trim($date);
+    $extended_year = (strpos($date,'y') === 0 ? true : false);
+    if($extended_year && $this->getSetting('strict_dates')){
+      return "Extended years (5.2.4.) are not supported with the 'strict dates' option enabled.";
     }
-    list($year, $month, $day) = explode('-',$date);
+    // Uncertainty characters on the end are valid Level 1 features (5.2.1.),
+    // pull them off to make checking the rest easier.
+    $date = rtrim($date, '?~');
 
-    if(!preg_match('/^\d\d\d\d$/', $year)){
-      $form_state->setError($element, t("The year is invalid. Please enter a four-digit year."));
+    // Negative year? That is fine, but remove it
+    // and the extended year indicator before exploding the date
+    $date = ltrim($date, 'y-');
+
+    //Now to check the parts
+    list($year, $month, $day) = explode('-',$date,3);
+
+    // Year
+    if(!preg_match('/^\d\d(\d\d|\du|uu)$/', $year) && !$extended_year){
+      return "The year '$year' is invalid. Please enter a four-digit year.";
+    } elseif($extended_year && !preg_match('/^\d{5,}$/', $year)){
+      return "Invalid extended year. Please enter at least a four-digit year.";
+    }
+    $strict_pattern = 'Y';
+
+    // Month
+    if(!empty($month) && !preg_match('/^(\d\d|\du|uu)$/',$month)){
+      return "The month '$month' is invalid. Please enter a two-digit month.";
+    }
+    if(!empty($month)){
+      if(strpos($year, 'u') !== false && strpos($month, 'u') === false){
+        return "The month must either be blank or unspecified when the year is unspecified.";
+      }
+      $strict_pattern = 'Y-m';
     }
 
-    // TODO: Time
-    if($time){
-      $form_state->setError($element, t("Time values are not currently supported."));
+    // Day
+    if(!empty($day) && !preg_match('/^(\d\d|\du|uu)$/',$day)){
+      return "The day '$day' is invalid. Please enter a two-digit day.";
     }
-
-    // Date
+    if(!empty($day)){
+      if(strpos($month, 'u') !== false && strpos($day, 'u') === false){
+        return "The day must either be blank or unspecified when the month is unspecified.";
+      }
+      $strict_pattern = 'Y-m-d';
+    }
 
     // Time
-    // Split pieces & check each one for acceptable characters/ranges.
-    // If specific dates are given, are they valid?
+    if(strpos($datetime_str, 'T') !== false && empty($time)){
+      return "Time not provided with time seperator (T).";
+    }
+
+    if($time){
+      if(!preg_match('/^-?(\d{4})(-\d{2}){2}T\d{2}(:\d{2}){2}(Z|(\+|-)\d{2}:\d{2})?$/',$datetime_str,$matches)){
+        return "The date/time '$datetime_str' is invalid. See EDTF 1.0, 5.1.2.";
+      }
+      drupal_set_message(print_r($matches, TRUE));
+      $strict_pattern = 'Y-m-d\TH:i:s';
+      if(count($matches) > 4){
+        if($matches[4] === 'Z'){
+          $strict_pattern .= '\Z';
+        } else {
+          $strict_pattern .= 'P';
+        }
+      }
+    }
+
+    if($this->getSetting('strict_dates')){
+      //Clean the date/time string to ensure it parses correctly.
+      $cleaned_datetime = str_replace('u','1', $datetime_str);
+      $datetime_obj = DateTime::createFromFormat('!'.$strict_pattern, $cleaned_datetime);
+      $errors = DateTime::getLastErrors();
+      if( !$datetime_obj ||
+          !empty($errors['warning_count']) ||
+          // DateTime will create valid dates from Y-m without warning,
+          // so validate we still have what it was given.
+          !($cleaned_datetime === $datetime_obj->format($strict_pattern))
+        ) {
+        return "Strictly speaking, the date (and/or time) '$datetime_str' is invalid.";
+      }
+
+    }
+
+    return false;
   }
 
 }
