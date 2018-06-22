@@ -21,13 +21,37 @@ use Drupal\Core\Form\FormStateInterface;
  */
 class TextEDTFHumanFormatter extends FormatterBase {
 
+  private $MONTHS = array(
+    '01' => array('mmm'=>'Jan', 'mmmm'=>'January'),
+    '02' => array('mmm'=>'Feb', 'mmmm'=>'February'),
+    '03' => array('mmm'=>'Mar', 'mmmm'=>'March'),
+    '04' => array('mmm'=>'Apr', 'mmmm'=>'April'),
+    '05' => array('mmm'=>'May', 'mmmm'=>'May'),
+    '06' => array('mmm'=>'Jun', 'mmmm'=>'June'),
+    '07' => array('mmm'=>'Jul', 'mmmm'=>'July'),
+    '08' => array('mmm'=>'Aug', 'mmmm'=>'August'),
+    '09' => array('mmm'=>'Sep', 'mmmm'=>'September'),
+    '10' => array('mmm'=>'Oct', 'mmmm'=>'October'),
+    '11' => array('mmm'=>'Nov', 'mmmm'=>'November'),
+    '12' => array('mmm'=>'Dec', 'mmmm'=>'December'),
+  );
+
+  private $DELIMITERS = array(
+    'dash'   => '-',
+    'stroke' => '/',
+    'period' => '.',
+    'space'  => ' ',
+  );
+
   /**
    * {@inheritdoc}
    */
    public static function defaultSettings() {
     return [
-      // assign a default date format of
-      'date_format' => '',
+      'date_separator' => 'dash',
+      'date_order' => 'big_endian',
+      'month_format' => 'mm',
+      'day_format' => 'dd',
     ] + parent::defaultSettings();
   }
 
@@ -35,17 +59,50 @@ class TextEDTFHumanFormatter extends FormatterBase {
    * {@inheritdoc}
    */
   public function settingsForm(array $form, FormStateInterface $form_state) {
-    $element = parent::settingsForm($form, $form_state);
-    $element['date_format'] = [
-      '#type' => 'textfield',
-      '#title' => $this->t('PHP DateTime Format String (http://php.net/manual/en/datetime.createfromformat.php); e.g. Y-m-d'),
-      '#default_value' => $this->getSetting('date_format'),
-      '#description' => $this->t(
-        'If a date format is used then the earliest date of that format '.
-        'will be used. <br />E.g. using the format \'Y-m-d\' will display '.
-        'for a value of \'2018\' will display \'2018-01-01\'.'),
-    ];
-    return $element;
+    $form['date_separator'] = array(
+      '#title' => t('Date Separator'),
+      '#type' => 'select',
+      '#description' => "Select the separator between date elements.",
+      '#default_value' => $this->getSetting('date_separator'),
+      '#options' => array(
+                  'dash' => t('Dash') . ' \'-\'',
+                  'stroke' => t('Stroke') . ' \'/\'',
+                  'period' => t('Period') . ' \'.\'',
+                  'space' => t('Space') . ' \' \'',
+               ),
+    );
+    $form['date_order'] = array(
+      '#title' => t('Date Order'),
+      '#type' => 'select',
+      '#description' => "Select the separator between date elements.",
+      '#default_value' => $this->getSetting('date_order'),
+      '#options' => array(
+                  'big_endian' => t('Big-endian (year, month, day)'),
+                  'little_endian' => t('Little-endian (day, month, year)'),
+                  'middle_endian' => t('Middle-endian (month, day, year)'),
+               ),
+    );
+    $form['month_format'] = array(
+      '#title' => t('Month Format'),
+      '#type' => 'select',
+      '#default_value' => $this->getSetting('month_format'),
+      '#options' => array(
+                  'mm' => t('two-digit month, e.g. 04'),
+                  'm' => t('one-digit month for months below 10, e.g. 4'),
+                  'mmm' => t('three-letter abbreviation for month, ') . t('Apr'),
+                  'mmmm' => t('month spelled out in full, e.g. ') . t('April'),
+               ),
+    );
+    $form['day_format'] = array(
+      '#title' => t('Day Format'),
+      '#type' => 'select',
+      '#default_value' => $this->getSetting('day_format'),
+      '#options' => array(
+                  'dd' => t('two-digit day of the month, e.g. 02'),
+                  'd' => t('one-digit day of the month for days below 10, e.g. 2'),
+               ),
+    );
+    return $form;
   }
 
   /**
@@ -53,11 +110,8 @@ class TextEDTFHumanFormatter extends FormatterBase {
    */
   public function settingsSummary() {
     $summary = [];
-    if(!empty($this->getSetting('date_format'))){
-      $summary[] = t('Date Format: @format',
-                      array('@format' => $this->getSetting('date_format')));
-    }
-
+    $example_date = $this->formatDate('1996-04-22');
+    $summary[] = t('Date Format Example: @date', ['@date' => $example_date]);
     return $summary;
   }
 
@@ -66,10 +120,8 @@ class TextEDTFHumanFormatter extends FormatterBase {
    */
    public function viewElements(FieldItemListInterface $items, $langcode) {
      $element = array();
-     $entity = $items
-       ->getEntity();
-     $settings = $this
-       ->getSettings();
+     $entity = $items->getEntity();
+     $settings = $this->getSettings();
 
      foreach ($items as $delta => $item) {
        // Interval
@@ -81,13 +133,13 @@ class TextEDTFHumanFormatter extends FormatterBase {
        if(empty($end)){
          $element[$delta] = ['#markup' => $formatted_begin];
        } elseif ($end === 'unknown' || $end === 'open') {
-         $element[$delta] = ['#markup' => $formatted_begin .
-                                          t(' to ') .
+         $element[$delta] = ['#markup' => $formatted_begin . ' ' .
+                                          t('to') . ' ' .
                                           t($end)];
        } else {
          $formatted_end = $this->formatDate($end);
-         $element[$delta] = ['#markup' => $formatted_begin .
-                                          t(' to ') .
+         $element[$delta] = ['#markup' => $formatted_begin . ' ' .
+                                          t('to') . ' ' .
                                           $formatted_end];
        }
 
@@ -100,45 +152,80 @@ class TextEDTFHumanFormatter extends FormatterBase {
      $cleaned_datetime = $edtf_text;
      // TODO: Time?
 
-     // TODO: Uncertainty
+     // Uncertainty
+     $qualifiers_format = "%s";
+     if(!(strpos($edtf_text, '~') === false)){
+       $qualifiers_format = t('approximately') . ' ' . $qualifiers_format;
+     }
+     if(!(strpos($edtf_text, '?') === false)){
+       $qualifiers_format .= ' (' . t('uncertain'.')');
+     }
+     $cleaned_datetime = str_replace(array('?','~'),'',$cleaned_datetime);
 
-     // Format date TODO: time support
-     // TODO: bad formatting gives no warning.
-     if(!empty($settings['date_format'])){
-       // Set earliest date
-       list($year, $month, $day) = explode('-',$cleaned_datetime,3);
-       $month = (empty($month) ? '01' : $month);
-       $day = (empty($day) ? '01' : $day);
+     list($year, $month, $day) = explode('-',$cleaned_datetime,3);
 
-       // Parse the date
-       // $datetime_obj = DateTime::createFromFormat('Y-m-d\TH:i:s',
-       $datetime_obj = DateTime::createFromFormat('!'.'Y-m-d',
-                                                  "$year-$month-$day");
-       $errors = DateTime::getLastErrors();
-       if( !$datetime_obj || !empty($errors['warning_count']) ) {
-         drupal_set_message(
-           t('Either the date or the date format could not be used: ') .
-           "$year-$month-$day" .
-           ' ' . t('and') . ' ' .
-           'Y-m-d', 'warning');
-          return $cleaned_datetime;
-       } else { // Time to format
-         $formatted_date = $datetime_obj->format($settings['date_format']);
-         if($formatted_date){
-           return $formatted_date;
-         } else {
-           drupal_set_message(
-             t('Either the date or the date format could not be used: ') .
-             "$year-$month-$day" .
-             ' ' . t('and') . ' ' .
-             $settings['date_format'], 'warning');
-           return $cleaned_datetime;
-         }
-       }
+     // Which unspecified, if any?
+     $which_unspecified = '';
+     if (!(strpos($year, 'uu') === false)) {
+       $which_unspecified = t('decade');
+     }
+     if (!(strpos($year, 'u') === false)) {
+       $which_unspecified = t('year');
+     }
+     if (!(strpos($month, 'u') === false)) {
+       $which_unspecified = t('month');
+       $month = ''; // No partial months
+     }
+     if(!(strpos($day, 'u') === false)){
+       $which_unspecified = t('day');
+       $day = ''; // No partial days
+     }
+     // Add unspecified formatting if needed
+     if(!empty($which_unspecified)){
+       $qualifiers_format = t('an unspecified @part in', ['@part' => $which_unspecified]) . ' ' . $qualifiers_format;
+     }
+
+     // Clean-up unspecified year/decade
+     if (!(strpos($year,'u') === false)){
+       $year = str_replace( 'u', '0', $year );
+       $year = t('the @year\'s', ['@year' => $year ]);
      }
 
 
-     return $edtf_text;
+     // Format the month
+     if( !empty($month) ){
+       // IF 'mm', do nothing, it is already in this format.
+       if($settings['month_format'] === 'm'){
+         $month = ltrim($month,' 0');
+       } elseif ($settings['month_format'] === 'mmm' || $settings['month_format'] === 'mmmm' ){
+         $month = t($this->MONTHS[$month][$settings['month_format']]);
+       }
+     }
+
+     // Format the day
+     if( !empty($day) ){
+       if($settings['day_format'] === 'd'){
+         $day = ltrim($day,' 0');
+       }
+     }
+
+     // Put the parts back together
+     $parts_in_order = [$year, $month, $day]; // Big Endian by default
+
+     if($settings['date_order'] === 'little_endian'){
+       $parts_in_order = [$day, $month, $year];
+     } elseif ($settings['date_order'] === 'middle_endian') {
+       $parts_in_order = [$month, $day, $year];
+     } // Big Endian by default
+
+     $formatted_date = '';
+     if ($settings['date_order'] === 'middle_endian' && !preg_match('/\d/',$month) && !empty(array_filter($month,$day))) {
+         $cleaned_datetime = "$month $day, $year";
+     } else {
+       $cleaned_datetime = implode($this->DELIMITERS[$settings['date_separator']], array_filter( $parts_in_order ));
+     }
+
+     return sprintf($qualifiers_format, $cleaned_datetime);
    }
 
 }
