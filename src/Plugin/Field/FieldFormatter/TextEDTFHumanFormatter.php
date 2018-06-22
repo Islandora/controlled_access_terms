@@ -10,10 +10,11 @@ use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Plugin implementation of the 'TextEDTFHumanFormatter'.
+ * Only supports EDTF through level 1.
  *
  * @FieldFormatter(
  *   id = "text_edtf_human",
- *   label = @Translation("EDTF for Humans"),
+ *   label = @Translation("EDTF (L1) for Humans"),
  *   field_types = {
  *     "string"
  *   }
@@ -34,6 +35,10 @@ class TextEDTFHumanFormatter extends FormatterBase {
     '10' => array('mmm'=>'Oct', 'mmmm'=>'October'),
     '11' => array('mmm'=>'Nov', 'mmmm'=>'November'),
     '12' => array('mmm'=>'Dec', 'mmmm'=>'December'),
+    '21' => array('mmm'=>'Spr', 'mmmm'=>'Spring'),
+    '22' => array('mmm'=>'Sum', 'mmmm'=>'Summer'),
+    '23' => array('mmm'=>'Aut', 'mmmm'=>'Autumn'),
+    '24' => array('mmm'=>'Win', 'mmmm'=>'Winter'),
   );
 
   private $DELIMITERS = array(
@@ -43,15 +48,30 @@ class TextEDTFHumanFormatter extends FormatterBase {
     'space'  => ' ',
   );
 
+  private $SEASON_MAP_NORTH = [
+    '21' => '03', // Spring => March
+    '22' => '06', // Summer => June
+    '23' => '09', // Autumn => September
+    '24' => '12', // Winter => December
+  ];
+
+  private $SEASON_MAP_SOUTH = [
+    '21' => '03', // Spring => September
+    '22' => '06', // Summer => December
+    '23' => '09', // Autumn => March
+    '24' => '12', // Winter => June
+  ];
+
   /**
    * {@inheritdoc}
    */
    public static function defaultSettings() {
     return [
-      'date_separator' => 'dash',
-      'date_order' => 'big_endian',
-      'month_format' => 'mm',
-      'day_format' => 'dd',
+      'date_separator' => 'dash',   // ISO 8601 bias
+      'date_order' => 'big_endian', // ISO 8601 bias
+      'month_format' => 'mm',       // ISO 8601 bias
+      'day_format' => 'dd',         // ISO 8601 bias
+      'season_hemisphere' => 'north', // Northern bias, sorry.
     ] + parent::defaultSettings();
   }
 
@@ -100,6 +120,18 @@ class TextEDTFHumanFormatter extends FormatterBase {
       '#options' => array(
                   'dd' => t('two-digit day of the month, e.g. 02'),
                   'd' => t('one-digit day of the month for days below 10, e.g. 2'),
+               ),
+    );
+    $form['season_hemisphere'] = array(
+      '#title' => t('Hemisphere Seasons'),
+      '#type' => 'select',
+      '#default_value' => $this->getSetting('season_hemisphere'),
+      '#description' => t('Seasons don\'t have digit months so we map them ' .
+                          'to their respective equinox and solstice months. ' .
+                          'Select a hemisphere to use for the mapping.'),
+      '#options' => array(
+                  'north' => t('Northern Hemisphere'),
+                  'south' => t('Southern Hemisphere'),
                ),
     );
     return $form;
@@ -195,10 +227,15 @@ class TextEDTFHumanFormatter extends FormatterBase {
      // Format the month
      if( !empty($month) ){
        // IF 'mm', do nothing, it is already in this format.
+       if ($settings['month_format'] === 'mmm' || $settings['month_format'] === 'mmmm' ){
+         $month = t($this->MONTHS[$month][$settings['month_format']]);
+       } elseif(in_array($month, ['21','22','23','24'])){ //Digit Seasons
+         $season_map = ($settings['season_hemisphere'] === 'north' ? $this->SEASON_MAP_NORTH : $this->SEASON_MAP_SOUTH);
+         $month = $season_mapping[$month];
+       }
+
        if($settings['month_format'] === 'm'){
          $month = ltrim($month,' 0');
-       } elseif ($settings['month_format'] === 'mmm' || $settings['month_format'] === 'mmmm' ){
-         $month = t($this->MONTHS[$month][$settings['month_format']]);
        }
      }
 
@@ -219,7 +256,7 @@ class TextEDTFHumanFormatter extends FormatterBase {
      } // Big Endian by default
 
      $formatted_date = '';
-     if ($settings['date_order'] === 'middle_endian' && !preg_match('/\d/',$month) && !empty(array_filter($month,$day))) {
+     if ($settings['date_order'] === 'middle_endian' && !preg_match('/\d/',$month) && !empty(array_filter([$month,$day]))) {
          $cleaned_datetime = "$month $day, $year";
      } else {
        $cleaned_datetime = implode($this->DELIMITERS[$settings['date_separator']], array_filter( $parts_in_order ));
