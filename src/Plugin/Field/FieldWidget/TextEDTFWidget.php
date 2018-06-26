@@ -29,7 +29,7 @@ class TextEDTFWidget extends WidgetBase {
    */
    public static function defaultSettings() {
     return [
-      'strict_dates' => TRUE,
+      'strict_dates' => FALSE,
       'intervals' => FALSE,
     ] + parent::defaultSettings();
   }
