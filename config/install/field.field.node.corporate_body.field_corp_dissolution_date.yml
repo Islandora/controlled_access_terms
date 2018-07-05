@@ -2,15 +2,16 @@ langcode: en
 status: true
 dependencies:
   config:
+    - field.storage.node.field_corp_dissolution_date
     - node.type.corporate_body
-id: node.corporate_body.title
-field_name: title
+id: node.corporate_body.field_corp_dissolution_date
+field_name: field_corp_dissolution_date
 entity_type: node
 bundle: corporate_body
-label: 'Preferred Name'
+label: 'Dissolution Date'
 description: ''
-required: true
-translatable: true
+required: false
+translatable: false
 default_value: {  }
 default_value_callback: ''
 settings: {  }

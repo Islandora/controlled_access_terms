@@ -3,6 +3,8 @@ status: true
 dependencies:
   config:
     - node.type.corporate_body
+  module:
+    - node
 id: node.corporate_body
 targetEntityType: node
 bundle: corporate_body
@@ -28,6 +30,15 @@ fieldMappings:
   field_corp_alt_name:
     properties:
       - 'schema:alternateName'
+  field_corp_dissolution_date:
+    properties:
+      - 'schema:dissolutionDate'
+  field_corp_founding_date:
+    properties:
+      - 'schema:foundingDate'
+  field_corp_parent_org:
+    properties:
+      - 'schema:parentOrganization'
   field_corporate_body_authorities:
     properties:
       - 'schema:sameAs'
