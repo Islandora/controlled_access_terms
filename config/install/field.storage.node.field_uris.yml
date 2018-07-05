@@ -3,12 +3,12 @@ status: true
 dependencies:
   module:
     - node
-id: node.field_subjects
-field_name: field_subjects
+id: node.field_uris
+field_name: field_uris
 entity_type: node
-type: entity_reference
+type: string_long
 settings:
-  target_type: node
+  case_sensitive: false
 module: core
 locked: false
 cardinality: -1
