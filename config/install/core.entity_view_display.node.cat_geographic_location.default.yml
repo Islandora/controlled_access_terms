@@ -3,6 +3,7 @@ status: true
 dependencies:
   config:
     - field.field.node.cat_geographic_location.body
+    - field.field.node.cat_geographic_location.field_geo_alt_name
     - field.field.node.cat_geographic_location.field_geo_authority_link
     - field.field.node.cat_geographic_location.field_geo_geolocation
     - node.type.cat_geographic_location
@@ -22,6 +23,14 @@ content:
     weight: 3
     settings: {  }
     third_party_settings: {  }
+    region: content
+  field_geo_alt_name:
+    weight: 4
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    type: string
     region: content
   field_geo_authority_link:
     weight: 1
@@ -47,4 +56,5 @@ content:
     region: content
     settings: {  }
     third_party_settings: {  }
-hidden: {  }
+hidden:
+  langcode: true
