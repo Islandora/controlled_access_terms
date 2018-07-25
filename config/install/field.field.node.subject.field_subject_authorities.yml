@@ -20,6 +20,7 @@ settings:
   authority_sources:
     aat: 'Art & Architecture Thesaurus'
     cash: 'Canadian Subject Headings'
+    fast: 'FAST (Faceted Application of Subject Terminology)'
     gmgpc: 'TGM II, Genre and physical characteristic terms'
     lcsh: 'Library of Congress Subject Headings'
     lcshac: 'Library of Congress Children''s Subject Headings'
@@ -28,6 +29,7 @@ settings:
     rbgenr: 'Genre Terms: A Thesaurus for Use in Rare Book and Special Collections Cataloguing'
     rvm: 'Répertoire de vedettes-matière'
     tgn: 'Getty Thesaurus of Geographic Names'
+    tgm: 'Thesaurus for Graphic Materials'
     lcgft: 'Library of Congress Genre/Form Terms'
     other: Other
   title: 1
