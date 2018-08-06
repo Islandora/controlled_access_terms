@@ -30,10 +30,10 @@ fieldMappings:
   field_corp_alt_name:
     properties:
       - 'schema:alternateName'
-  field_corp_dissolution_date:
+  field_cat_date_end:
     properties:
       - 'schema:dissolutionDate'
-  field_corp_founding_date:
+  field_cat_date_begin:
     properties:
       - 'schema:foundingDate'
   field_corp_parent_org:

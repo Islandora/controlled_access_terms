@@ -31,3 +31,9 @@ fieldMappings:
   field_person_name_authorities:
     properties:
       - 'schema:sameAs'
+  field_cat_date_begin:
+    properties:
+      - 'schema:birthDate'
+  field_cat_date_end:
+    properties:
+      - 'schema:deathDate'

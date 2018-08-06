@@ -1,8 +1,11 @@
+uuid: 3083ad39-b458-4088-b090-e9940780e9f3
 langcode: en
 status: true
 dependencies:
   config:
     - field.field.node.person.body
+    - field.field.node.person.field_cat_date_begin
+    - field.field.node.person.field_cat_date_end
     - field.field.node.person.field_person_alternate_names
     - field.field.node.person.field_person_name_authorities
     - field.field.node.person.field_person_preferred_name
@@ -33,6 +36,22 @@ content:
     region: content
     settings: {  }
     third_party_settings: {  }
+  field_cat_date_begin:
+    weight: 26
+    settings:
+      strict_dates: false
+      intervals: false
+    third_party_settings: {  }
+    type: text_edtf
+    region: content
+  field_cat_date_end:
+    weight: 27
+    settings:
+      strict_dates: false
+      intervals: false
+    third_party_settings: {  }
+    type: text_edtf
+    region: content
   field_person_alternate_names:
     weight: 3
     settings: {  }

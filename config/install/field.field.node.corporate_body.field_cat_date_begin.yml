@@ -2,13 +2,13 @@ langcode: en
 status: true
 dependencies:
   config:
-    - field.storage.node.field_corp_dissolution_date
+    - field.storage.node.field_cat_date_begin
     - node.type.corporate_body
-id: node.corporate_body.field_corp_dissolution_date
-field_name: field_corp_dissolution_date
+id: node.corporate_body.field_cat_date_begin
+field_name: field_cat_date_begin
 entity_type: node
 bundle: corporate_body
-label: 'Dissolution Date'
+label: 'Founding Date'
 description: ''
 required: false
 translatable: false

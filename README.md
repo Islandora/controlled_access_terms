@@ -28,7 +28,7 @@ their fields. *Emphasized fields* are planned but have not yet been implemented.
   - Parent Organization
   - Authorities
   - Description
-  - *Type*
+  - *Type* *Abandoned due to an inability to alter JSON-LD's @type attribute based on a field.*
     - Organizational Unit (org:OrganizationalUnit)
     - Airline (schema:Airline)
     - Corporation (schema:Corporation)
@@ -49,8 +49,8 @@ their fields. *Emphasized fields* are planned but have not yet been implemented.
   - (Title is auto generated from Preferred Name)
   - Alternate Name
   - Preferred Name
-  - *Birth Date (EDTF v.1)*
-  - *Death Date (EDTF v.1)*
+  - Birth Date (EDTF v.1)
+  - Death Date (EDTF v.1)
   - Relation
   - Authorities
   - Description
@@ -65,7 +65,7 @@ their fields. *Emphasized fields* are planned but have not yet been implemented.
   - Title
   - Body
   - Authorities
-  - *Type*
+  - *Type* *Abandoned due to an inability to alter JSON-LD's @type attribute based on a field.*
     - Topical (mads:Topic)
     - Cultural Context
     - Genre/Form (mads:GenreForm)

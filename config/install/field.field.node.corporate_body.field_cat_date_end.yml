@@ -1,17 +1,18 @@
+uuid: fe8d182a-5193-46e8-a4ba-23c37eb20773
 langcode: en
 status: true
 dependencies:
   config:
-    - field.storage.node.field_corp_founding_date
+    - field.storage.node.field_cat_date_end
     - node.type.corporate_body
-id: node.corporate_body.field_corp_founding_date
-field_name: field_corp_founding_date
+id: node.corporate_body.field_cat_date_end
+field_name: field_cat_date_end
 entity_type: node
 bundle: corporate_body
-label: 'Founding Date'
+label: 'Dissolution Date'
 description: ''
 required: false
-translatable: false
+translatable: true
 default_value: {  }
 default_value_callback: ''
 settings: {  }

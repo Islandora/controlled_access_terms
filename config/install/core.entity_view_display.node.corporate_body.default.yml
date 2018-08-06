@@ -4,8 +4,8 @@ dependencies:
   config:
     - field.field.node.corporate_body.body
     - field.field.node.corporate_body.field_corp_alt_name
-    - field.field.node.corporate_body.field_corp_dissolution_date
-    - field.field.node.corporate_body.field_corp_founding_date
+    - field.field.node.corporate_body.field_cat_date_begin
+    - field.field.node.corporate_body.field_cat_date_end
     - field.field.node.corporate_body.field_corp_parent_org
     - field.field.node.corporate_body.field_corporate_body_authorities
     - field.field.node.corporate_body.field_relation
@@ -33,7 +33,7 @@ content:
     third_party_settings: {  }
     type: basic_string
     region: content
-  field_corp_dissolution_date:
+  field_cat_date_end:
     weight: 3
     label: above
     settings:
@@ -45,7 +45,7 @@ content:
     third_party_settings: {  }
     type: text_edtf_human
     region: content
-  field_corp_founding_date:
+  field_cat_date_begin:
     weight: 2
     label: above
     settings:

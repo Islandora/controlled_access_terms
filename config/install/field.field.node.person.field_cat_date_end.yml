@@ -1,0 +1,19 @@
+uuid: f4970e6c-42f1-4fc1-806e-267d07394185
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_cat_date_end
+    - node.type.person
+id: node.person.field_cat_date_end
+field_name: field_cat_date_end
+entity_type: node
+bundle: person
+label: 'Death Date'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string
