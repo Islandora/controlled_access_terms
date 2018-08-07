@@ -1,3 +1,4 @@
+uuid: 17a7c6eb-d8e6-41c5-a390-8820fc4698a0
 langcode: en
 status: true
 dependencies:
@@ -5,6 +6,7 @@ dependencies:
     - field.field.node.cat_geographic_location.body
     - field.field.node.cat_geographic_location.field_geo_alt_name
     - field.field.node.cat_geographic_location.field_geo_authority_link
+    - field.field.node.cat_geographic_location.field_geo_broader
     - field.field.node.cat_geographic_location.field_geo_geolocation
     - node.type.cat_geographic_location
   module:
@@ -42,19 +44,21 @@ content:
     third_party_settings: {  }
     type: authority_link_default
     region: content
+  field_geo_broader:
+    weight: 27
+    settings:
+      match_operator: CONTAINS
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: entity_reference_autocomplete
+    region: content
   field_geo_geolocation:
     weight: 4
     settings: {  }
     third_party_settings: {  }
     type: geolocation_latlng
     region: content
-  langcode:
-    type: language_select
-    weight: 2
-    region: content
-    settings:
-      include_locked: true
-    third_party_settings: {  }
   path:
     type: path
     weight: 1
@@ -81,4 +85,3 @@ hidden:
   promote: true
   sticky: true
   uid: true
-  

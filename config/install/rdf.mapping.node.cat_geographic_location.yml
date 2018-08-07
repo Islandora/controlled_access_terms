@@ -10,6 +10,7 @@ targetEntityType: node
 bundle: cat_geographic_location
 types:
   - 'dc:Location'
+  - 'schema:Place'
 fieldMappings:
   title:
     properties:
@@ -33,3 +34,6 @@ fieldMappings:
   field_geo_geolocation:
     properties:
       - 'wgs84_pos:lat_long'
+  field_geo_broader:
+    properties:
+      - 'schema:containedInPlace'

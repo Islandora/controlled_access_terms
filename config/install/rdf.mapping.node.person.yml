@@ -37,3 +37,6 @@ fieldMappings:
   field_cat_date_end:
     properties:
       - 'schema:deathDate'
+  field_cat_member_of:
+    properties:
+      - 'schema:memberOf'

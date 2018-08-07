@@ -18,13 +18,14 @@ greatly appreciated.
 ## Content Types
 
 Below is a list of the (at least partially) implemented content types with
-their fields. *Emphasized fields* are planned but have not yet been implemented.
+their fields. *Emphasized fields* were originally planned but proved infeasible
+given the structure of Drupal's RDF module and the Islandora JSON-LD module.
 
 - Corporate Body
   - Preferred Name (Title)
   - Alternate Name
-  - Founding Date
-  - Dissolution Date
+  - Founding Date (EDTF v.1)
+  - Dissolution Date (EDTF v.1)
   - Parent Organization
   - Authorities
   - Description
@@ -44,8 +45,8 @@ their fields. *Emphasized fields* are planned but have not yet been implemented.
   - Display Label (Title)
   - Authorities
   - Relation
-  - Date Begin
-  - Date End
+  - Date Begin (EDTF v.1)
+  - Date End (EDTF v.1)
 - Person
   - (Title is auto generated from Preferred Name)
   - Alternate Name
@@ -55,13 +56,13 @@ their fields. *Emphasized fields* are planned but have not yet been implemented.
   - Relation
   - Authorities
   - Description
-  - *Member Of (Family or Corporate Body)*
+  - Member Of (Family or Corporate Body)
 - Geographic Location
   - Name (Title)
   - Alternate Name
   - Authorities
   - Geographic Location ([WGS 84](https://en.wikipedia.org/wiki/World_Geodetic_System))
-  - *Broader*
+  - Broader
 - Subject
   - Title
   - Body
