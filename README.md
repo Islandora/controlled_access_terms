@@ -44,7 +44,8 @@ their fields. *Emphasized fields* are planned but have not yet been implemented.
   - Display Label (Title)
   - Authorities
   - Relation
-  - *Dates*
+  - Date Begin
+  - Date End
 - Person
   - (Title is auto generated from Preferred Name)
   - Alternate Name
