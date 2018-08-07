@@ -3,6 +3,8 @@ status: true
 dependencies:
   config:
     - field.field.node.family.field_family_name_authorities
+    - field.field.node.family.field_cat_date_begin
+    - field.field.node.family.field_cat_date_end
     - field.field.node.family.field_relation
     - node.type.family
   module:
@@ -26,6 +28,22 @@ content:
       placeholder_title: ''
     third_party_settings: {  }
     type: authority_link_default
+    region: content
+  field_cat_date_end:
+    weight: 9
+    settings:
+      strict_dates: false
+      intervals: false
+    third_party_settings: {  }
+    type: text_edtf
+    region: content
+  field_cat_date_begin:
+    weight: 8
+    settings:
+      strict_dates: false
+      intervals: false
+    third_party_settings: {  }
+    type: text_edtf
     region: content
   field_relation:
     weight: 121

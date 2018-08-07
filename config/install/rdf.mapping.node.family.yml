@@ -28,3 +28,9 @@ fieldMappings:
   field_family_name_authorities:
     properties:
       - 'schema:sameAs'
+  field_cat_date_end:
+    properties:
+      - 'schema:dissolutionDate'
+  field_cat_date_begin:
+    properties:
+      - 'schema:foundingDate'
