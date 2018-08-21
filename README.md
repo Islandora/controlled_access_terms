@@ -1,5 +1,9 @@
 # Controlled Access Terms
 
+[![Build Status][1]](https://travis-ci.org/Islandora-CLAW/controlled_access_terms)
+[![Contribution Guidelines][2]](./CONTRIBUTING.md)
+[![LICENSE][3]](./LICENSE)
+
 This Drupal 8 module creates bundles to represent common named entities
 in archival description (Corporate Bodies, Families, and Persons) as well as
 subject terms.
