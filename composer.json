@@ -1,17 +1,35 @@
 {
-  "name": "controlled_access_terms",
-  "description": "Controlled Access Terms",
-  "type": "drupal-module",
-  "keywords": ["Drupal"],
-  "homepage": "https://github.com/seth-shaw-unlv/controlled_access_terms",
+  "name": "islandora/controlled_access_terms",
+  "description": "Drupal module for subjects and agents",
+  "keywords": ["Drupal", "Islandora"],
+  "homepage": "https://github.com/islandora-claw/controlled_access_terms",
   "support": {
-    "issues": "https://github.com/seth-shaw-unlv/controlled_access_terms/issues",
+    "issues": "https://github.com/islandora-claw/CLAW/issues",
+    "irc": "irc://irc.freenode.net/islandora"
   },
+  "repositories": [
+    {
+      "type": "composer",
+      "url": "https://packages.drupal.org/8"
+    }
+  ],
   "require": {
     "drupal/auto_entitylabel": "^2.1@beta",
     "drupal/name": "^1.0@RC"
   },
+  "require-dev": {
+    "phpunit/phpunit": "^6",
+    "squizlabs/php_codesniffer": "2.7.1",
+    "drupal/coder": "*",
+    "sebastian/phpcpd": "*"
+  },
+  "license": "GPL-2.0+",
   "authors": [
+    {
+      "name": "Islandora Foundation",
+      "email": "community@islandora.ca",
+      "role": "Owner"
+    },
     {
       "name": "Seth Shaw",
       "email": "seth.shaw@unlv.edu",
