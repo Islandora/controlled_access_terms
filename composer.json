@@ -1,6 +1,7 @@
 {
   "name": "islandora/controlled_access_terms",
   "description": "Drupal module for subjects and agents",
+  "type": "drupal-module",
   "keywords": ["Drupal", "Islandora"],
   "homepage": "https://github.com/islandora-claw/controlled_access_terms",
   "support": {
