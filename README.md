@@ -77,3 +77,7 @@ given the structure of Drupal's RDF module and the Islandora JSON-LD module.
     - Genre/Form (mads:GenreForm)
     - Occupation (mads:Occupation)
     - Style/Period
+
+[1]: https://travis-ci.org/Islandora-CLAW/controlled_access_terms.png?branch=8.x-1.x
+[2]: http://img.shields.io/badge/CONTRIBUTING-Guidelines-blue.svg
+[3]: https://img.shields.io/badge/license-GPLv2-blue.svg?style=flat-square
