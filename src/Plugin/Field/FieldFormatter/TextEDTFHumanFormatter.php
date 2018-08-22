@@ -230,7 +230,7 @@ class TextEDTFHumanFormatter extends FormatterBase {
     $settings = $this->getSettings();
     $cleaned_datetime = $edtf_text;
     // TODO: Time?
-    $qualifiers_format = '';
+    $qualifiers_format = '%s';
     // Uncertainty.
     if (!(strpos($edtf_text, '~') === FALSE)) {
       $qualifiers_format = t('approximately');
