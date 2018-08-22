@@ -2,8 +2,6 @@
 
 namespace Drupal\controlled_access_terms\Plugin\Field\FieldFormatter;
 
-use \Datetime;
-use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Field\FormatterBase;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Form\FormStateInterface;
@@ -30,25 +28,35 @@ use Drupal\Core\Form\FormStateInterface;
 class TextEDTFiso8601 extends FormatterBase {
 
   private $SEASON_MAP_NORTH = [
-    '21' => '03', // Spring => March
-    '22' => '06', // Summer => June
-    '23' => '09', // Autumn => September
-    '24' => '12', // Winter => December
+  // Spring => March.
+    '21' => '03',
+  // Summer => June.
+    '22' => '06',
+  // Autumn => September.
+    '23' => '09',
+    '24' => '12', /**
+ * Winter => December.
+ */
   ];
 
   private $SEASON_MAP_SOUTH = [
-    '21' => '03', // Spring => September
-    '22' => '06', // Summer => December
-    '23' => '09', // Autumn => March
-    '24' => '12', // Winter => June
+  // Spring => September.
+    '21' => '03',
+  // Summer => December.
+    '22' => '06',
+  // Autumn => March.
+    '23' => '09',
+  // Winter => June.
+    '24' => '12',
   ];
 
   /**
    * {@inheritdoc}
    */
-   public static function defaultSettings() {
+  public static function defaultSettings() {
     return [
-      'season_hemisphere' => 'north', // Northern bias, sorry.
+    // Northern bias, sorry.
+      'season_hemisphere' => 'north',
     ] + parent::defaultSettings();
   }
 
@@ -56,7 +64,7 @@ class TextEDTFiso8601 extends FormatterBase {
    * {@inheritdoc}
    */
   public function settingsForm(array $form, FormStateInterface $form_state) {
-    $form['season_hemisphere'] = array(
+    $form['season_hemisphere'] = [
       '#title' => t('Hemisphere Seasons'),
       '#type' => 'select',
       '#default_value' => $this->getSetting('season_hemisphere'),
@@ -64,11 +72,11 @@ class TextEDTFiso8601 extends FormatterBase {
                           'We map them to their respective equinox and ' .
                           'solstice months. Select a hemisphere to use for ' .
                           'the mapping.'),
-      '#options' => array(
-                  'north' => t('Northern Hemisphere'),
-                  'south' => t('Southern Hemisphere'),
-               ),
-    );
+      '#options' => [
+        'north' => t('Northern Hemisphere'),
+        'south' => t('Southern Hemisphere'),
+      ],
+    ];
     return $form;
   }
 
@@ -77,40 +85,41 @@ class TextEDTFiso8601 extends FormatterBase {
    */
   public function settingsSummary() {
     $summary = [];
-    if($this->getSetting('strict_dates') === 'south'){
+    if ($this->getSetting('strict_dates') === 'south') {
       $summary[] = t('Seasons mapped to the southern hemisphere.');
     }
     return $summary;
   }
 
   /**
-  * {@inheritdoc}
-  */
+   * {@inheritdoc}
+   */
   public function viewElements(FieldItemListInterface $items, $langcode) {
-    $element = array();
+    $element = [];
     $entity = $items->getEntity();
     $settings = $this->getSettings();
 
     foreach ($items as $delta => $item) {
-      // Interval
-      list($begin, $end) = explode('/',$item->value);
+      // Interval.
+      list($begin, $end) = explode('/', $item->value);
       // End is currently ignored.
-
-
       // Strip approximations/uncertainty.
-      $begin = str_replace(array('?','~'),'',$begin);
+      $begin = str_replace(['?', '~'], '', $begin);
 
       // Replace unspecified.
-      $begin = str_replace( '-uu', '-01', $begin ); // Month/day
-      $begin = str_replace( 'u', '0', $begin ); // Zero-Year in decade/century
+      // Month/day.
+      $begin = str_replace('-uu', '-01', $begin);
+      // Zero-Year in decade/century.
+      $begin = str_replace('u', '0', $begin);
 
       drupal_set_message("Date before mapping: $begin");
-      // Seasons map
-      list($year, $month, $day) = explode('-',$begin,3);
-      if(in_array($month, ['21','22','23','24'])){ //Digit Seasons
+      // Seasons map.
+      list($year, $month, $day) = explode('-', $begin, 3);
+      // Digit Seasons.
+      if (in_array($month, ['21', '22', '23', '24'])) {
         $season_map = ($settings['season_hemisphere'] === 'north' ? $this->SEASON_MAP_NORTH : $this->SEASON_MAP_SOUTH);
         $month = $season_mapping[$month];
-        $begin = implode( '-', array_filter( [$year,$month,$day] ) );
+        $begin = implode('-', array_filter([$year, $month, $day]));
       }
 
       $element[$delta] = ['#markup' => $begin];
@@ -119,5 +128,3 @@ class TextEDTFiso8601 extends FormatterBase {
   }
 
 }
-
- ?>

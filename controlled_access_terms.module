@@ -1,7 +1,14 @@
 <?php
 
+/**
+ * @file
+ */
+
+/**
+ *
+ */
 function controlled_access_terms_rdf_namespaces() {
-  return array(
+  return [
     'wgs84_pos' => 'http://www.w3.org/2003/01/geo/wgs84_pos#',
-  );
+  ];
 }

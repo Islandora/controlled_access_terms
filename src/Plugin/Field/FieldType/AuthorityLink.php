@@ -3,7 +3,6 @@
 namespace Drupal\controlled_access_terms\Plugin\Field\FieldType;
 
 use Drupal\link\LinkItemInterface;
-use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\TypedData\DataDefinition;
@@ -21,7 +20,6 @@ use Drupal\link\Plugin\Field\FieldType\LinkItem;
  *   constraints = {"LinkType" = {}, "LinkAccess" = {}, "LinkExternalProtocols" = {}, "LinkNotExistingInternal" = {}}
  * )
  */
-
 class AuthorityLink extends LinkItem {
 
   /**
@@ -29,10 +27,10 @@ class AuthorityLink extends LinkItem {
    */
   public static function schema(FieldStorageDefinitionInterface $field_definition) {
     $schema = parent::schema($field_definition);
-    $schema['columns']['source'] = array(
+    $schema['columns']['source'] = [
       'type' => 'text',
       'size' => 'tiny',
-    );
+    ];
     return $schema;
   }
 
@@ -49,10 +47,10 @@ class AuthorityLink extends LinkItem {
   /**
    * {@inheritdoc}
    */
-   public static function defaultFieldSettings() {
-     $settings = parent::defaultFieldSettings();
-     $settings['authority_sources'] = ['other' => t('Other'),];
-     $settings['link_type'] = LinkItemInterface::LINK_EXTERNAL;
+  public static function defaultFieldSettings() {
+    $settings = parent::defaultFieldSettings();
+    $settings['authority_sources'] = ['other' => t('Other')];
+    $settings['link_type'] = LinkItemInterface::LINK_EXTERNAL;
     return $settings;
   }
 
@@ -69,22 +67,28 @@ class AuthorityLink extends LinkItem {
       '#element_validate' => [[get_class($this), 'validateValues']],
       '#required' => TRUE,
       '#min' => 1,
-      '#description' => '<p>' . t('Enter one value per line, in the format key|label.').
-        '<br/>' . t('The key is the stored value. The label will be used in displayed values and edit forms.').
-        '<br/>' . t('The label is optional: if a line contains a single string, it will be used as key and label.').
-        '</p>',
+      '#description' => '<p>' . t('Enter one value per line, in the format key|label.') .
+      '<br/>' . t('The key is the stored value. The label will be used in displayed values and edit forms.') .
+      '<br/>' . t('The label is optional: if a line contains a single string, it will be used as key and label.') .
+      '</p>',
     ];
 
     return $element;
   }
 
-  public function getSources(){
+  /**
+   *
+   */
+  public function getSources() {
     return $this->getSetting('authority_sources');
   }
 
-  protected function encodeTextSettingsField(array $settings){
+  /**
+   *
+   */
+  protected function encodeTextSettingsField(array $settings) {
     $output = '';
-    foreach($settings as $key => $value){
+    foreach ($settings as $key => $value) {
       $output .= "$key|$value\n";
     }
     return $output;
@@ -116,7 +120,7 @@ class AuthorityLink extends LinkItem {
         $key = trim($matches[1]);
         $value = trim($matches[2]);
       }
-      // Otherwise use the value as key and value
+      // Otherwise use the value as key and value.
       else {
         $key = $value = $text;
       }
@@ -151,12 +155,9 @@ class AuthorityLink extends LinkItem {
       //     $form_state->setError($element, $error);
       //     break;
       //   }
-      // }
-
+      // }.
       $form_state->setValueForElement($element, $values);
     }
   }
 
 }
-
-?>
