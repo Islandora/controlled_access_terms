@@ -39,16 +39,21 @@ class TextEDTFWidget extends WidgetBase {
    * {@inheritdoc}
    */
   public function settingsForm(array $form, FormStateInterface $form_state) {
+    $description_string = $this->t(
+        'Negative dates, and the level 1 features unspecified dates, 
+        extended years, and seasons
+        are not supported with strict date checking.'
+    );
+    $description_string .= ' <br /> ';
+    $description_string .= $this->t(
+      'Uncertain/Approximate dates will have their markers removed before
+        checking. (For example, "1984~?" will be checked as "1984".)'
+    );
     $element = parent::settingsForm($form, $form_state);
     $element['strict_dates'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Ensure provided date values are valid.'),
-      '#description' => $this->t(
-        'Negative dates, and the level 1 features unspecified dates, 
-        extended years, and seasons
-        are not supported with strict date checking.<br />
-        Uncertain/Approximate dates will have their markers removed before
-        checking. (For example, "1984~?" will be checked as "1984".)'),
+      '#description' => $description_string,
       '#default_value' => $this->getSetting('strict_dates'),
     ];
     $element['intervals'] = [
