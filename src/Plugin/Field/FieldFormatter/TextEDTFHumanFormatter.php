@@ -8,6 +8,7 @@ use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Plugin implementation of the 'TextEDTFHumanFormatter'.
+ *
  * Only supports EDTF through level 1.
  *
  * @FieldFormatter(
@@ -20,6 +21,11 @@ use Drupal\Core\Form\FormStateInterface;
  */
 class TextEDTFHumanFormatter extends FormatterBase {
 
+  /**
+   * Month/Season to text map.
+   *
+   * @var array
+   */
   private $MONTHS = [
     '01' => ['mmm' => 'Jan', 'mmmm' => 'January'],
     '02' => ['mmm' => 'Feb', 'mmmm' => 'February'],
@@ -39,6 +45,11 @@ class TextEDTFHumanFormatter extends FormatterBase {
     '24' => ['mmm' => 'Win', 'mmmm' => 'Winter'],
   ];
 
+  /**
+   * Various delimiters.
+   *
+   * @var array
+   */
   private $DELIMITERS = [
     'dash'   => '-',
     'stroke' => '/',
@@ -46,19 +57,28 @@ class TextEDTFHumanFormatter extends FormatterBase {
     'space'  => ' ',
   ];
 
-  private $SEASON_MAP_NORTH = [
+  /**
+   * Northern hemisphere season map.
+   *
+   * @var array
+   */
+  private $seasonMapNorth = [
   // Spring => March.
     '21' => '03',
   // Summer => June.
     '22' => '06',
   // Autumn => September.
     '23' => '09',
-    '24' => '12', /**
- * Winter => December.
- */
+  // Winter => December.
+    '24' => '12',
   ];
 
-  private $SEASON_MAP_SOUTH = [
+  /**
+   * Southern hemisphere season map.
+   *
+   * @var array
+   */
+  private $seasonMapSouth = [
   // Spring => September.
     '21' => '03',
   // Summer => December.
@@ -97,10 +117,10 @@ class TextEDTFHumanFormatter extends FormatterBase {
       '#description' => "Select the separator between date elements.",
       '#default_value' => $this->getSetting('date_separator'),
       '#options' => [
-        'dash' => t('Dash') . ' \'-\'',
-        'stroke' => t('Stroke') . ' \'/\'',
-        'period' => t('Period') . ' \'.\'',
-        'space' => t('Space') . ' \' \'',
+        'dash' => t("Dash '-'"),
+        'stroke' => t("Stroke '\'"),
+        'period' => t("Period '.'"),
+        'space' => t("Space ' '"),
       ],
     ];
     $form['date_order'] = [
@@ -121,8 +141,8 @@ class TextEDTFHumanFormatter extends FormatterBase {
       '#options' => [
         'mm' => t('two-digit month, e.g. 04'),
         'm' => t('one-digit month for months below 10, e.g. 4'),
-        'mmm' => t('three-letter abbreviation for month, ') . t('Apr'),
-        'mmmm' => t('month spelled out in full, e.g. ') . t('April'),
+        'mmm' => t('three-letter abbreviation for month, Apr'),
+        'mmmm' => t('month spelled out in full, e.g. April'),
       ],
     ];
     $form['day_format'] = [
@@ -138,9 +158,9 @@ class TextEDTFHumanFormatter extends FormatterBase {
       '#title' => t('Hemisphere Seasons'),
       '#type' => 'select',
       '#default_value' => $this->getSetting('season_hemisphere'),
-      '#description' => t('Seasons don\'t have digit months so we map them ' .
-                          'to their respective equinox and solstice months. ' .
-                          'Select a hemisphere to use for the mapping.'),
+      '#description' => t("Seasons don't have digit months so we map them 
+                          to their respective equinox and solstice months.
+                          Select a hemisphere to use for the mapping."),
       '#options' => [
         'north' => t('Northern Hemisphere'),
         'south' => t('Southern Hemisphere'),
@@ -164,8 +184,6 @@ class TextEDTFHumanFormatter extends FormatterBase {
    */
   public function viewElements(FieldItemListInterface $items, $langcode) {
     $element = [];
-    $entity = $items->getEntity();
-    $settings = $this->getSettings();
 
     foreach ($items as $delta => $item) {
       // Interval.
@@ -179,17 +197,19 @@ class TextEDTFHumanFormatter extends FormatterBase {
       }
       elseif ($end === 'unknown' || $end === 'open') {
         $element[$delta] = [
-          '#markup' => $formatted_begin . ' ' .
-          t('to') . ' ' .
-          t($end),
+          '#markup' => t('@begin to @end', [
+            '@begin' => $formatted_begin,
+            '@end' => $end,
+          ]),
         ];
       }
       else {
         $formatted_end = $this->formatDate($end);
         $element[$delta] = [
-          '#markup' => $formatted_begin . ' ' .
-          t('to') . ' ' .
-          $formatted_end,
+          '#markup' => t('@begin to @end', [
+            '@begin' => $formatted_begin,
+            '@end' => $formatted_end,
+          ]),
         ];
       }
 
@@ -198,19 +218,27 @@ class TextEDTFHumanFormatter extends FormatterBase {
   }
 
   /**
+   * Create a date format string.
    *
+   * @param string $edtf_text
+   *   The date to format.
+   *
+   * @return string
+   *   The date in EDTF format.
    */
   protected function formatDate($edtf_text) {
     $settings = $this->getSettings();
     $cleaned_datetime = $edtf_text;
     // TODO: Time?
+    $qualifiers_format = '';
     // Uncertainty.
-    $qualifiers_format = "%s";
     if (!(strpos($edtf_text, '~') === FALSE)) {
-      $qualifiers_format = t('approximately') . ' ' . $qualifiers_format;
+      $qualifiers_format = t('approximately');
+      $qualifiers_format .= ' %s';
     }
     if (!(strpos($edtf_text, '?') === FALSE)) {
-      $qualifiers_format .= ' (' . t('uncertain' . ')');
+      $qualifiers_format = '%s ';
+      $qualifiers_format .= t('(uncertain)');
     }
     $cleaned_datetime = str_replace(['?', '~'], '', $cleaned_datetime);
 
@@ -242,18 +270,18 @@ class TextEDTFHumanFormatter extends FormatterBase {
     // Clean-up unspecified year/decade.
     if (!(strpos($year, 'u') === FALSE)) {
       $year = str_replace('u', '0', $year);
-      $year = t('the @year\'s', ['@year' => $year]);
+      $year = t("the @year's", ['@year' => $year]);
     }
 
     // Format the month.
     if (!empty($month)) {
       // IF 'mm', do nothing, it is already in this format.
       if ($settings['month_format'] === 'mmm' || $settings['month_format'] === 'mmmm') {
-        $month = t($this->MONTHS[$month][$settings['month_format']]);
+        $month = $this->MONTHS[$month][$settings['month_format']];
       }
       // Digit Seasons.
       elseif (in_array($month, ['21', '22', '23', '24'])) {
-        $season_map = ($settings['season_hemisphere'] === 'north' ? $this->SEASON_MAP_NORTH : $this->SEASON_MAP_SOUTH);
+        $season_mapping = ($settings['season_hemisphere'] === 'north' ? $this->seasonMapNorth : $this->seasonMapSouth);
         $month = $season_mapping[$month];
       }
 
@@ -280,7 +308,6 @@ class TextEDTFHumanFormatter extends FormatterBase {
       $parts_in_order = [$month, $day, $year];
     } // Big Endian by default
 
-    $formatted_date = '';
     if ($settings['date_order'] === 'middle_endian' && !preg_match('/\d/', $month) && !empty(array_filter([$month, $day]))) {
       $cleaned_datetime = "$month $day, $year";
     }

@@ -2,10 +2,11 @@
 
 /**
  * @file
+ * Controlled Access Terms stuff.
  */
 
 /**
- *
+ * Implements hook_rdf_namespaces().
  */
 function controlled_access_terms_rdf_namespaces() {
   return [

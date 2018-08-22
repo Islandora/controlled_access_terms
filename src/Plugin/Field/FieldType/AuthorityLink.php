@@ -17,7 +17,12 @@ use Drupal\link\Plugin\Field\FieldType\LinkItem;
  *   description = @Translation("Stores a URL string, an authority source dropdown, an optional varchar link text, and optional blob of attributes to assemble a link."),
  *   default_widget = "authority_link_default",
  *   default_formatter = "authority_formatter_default",
- *   constraints = {"LinkType" = {}, "LinkAccess" = {}, "LinkExternalProtocols" = {}, "LinkNotExistingInternal" = {}}
+ *   constraints = {
+ *     "LinkType" = {},
+ *     "LinkAccess" = {},
+ *     "LinkExternalProtocols" = {},
+ *     "LinkNotExistingInternal" = {}
+ *   }
  * )
  */
 class AuthorityLink extends LinkItem {
@@ -77,14 +82,23 @@ class AuthorityLink extends LinkItem {
   }
 
   /**
+   * Get the authority sources.
    *
+   * @return mixed
+   *   The authority sources.
    */
   public function getSources() {
     return $this->getSetting('authority_sources');
   }
 
   /**
+   * Encode text settings as key|value.
    *
+   * @param array $settings
+   *   The settings to encode.
+   *
+   * @return string
+   *   The multi-line text of key|value pairs.
    */
   protected function encodeTextSettingsField(array $settings) {
     $output = '';
@@ -132,17 +146,17 @@ class AuthorityLink extends LinkItem {
   }
 
   /**
-   * #element_validate callback.
+   * An #element_validate callback function.
    *
-   * @param $element
+   * @param \Drupal\controlled_access_terms\Plugin\Field\FieldType\AuthorityLink $element
    *   An associative array containing the properties and children of the
    *   generic form element.
-   * @param $form_state
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   The current state of the form for the form this element belongs to.
    *
    * @see \Drupal\Core\Render\Element\FormElement::processPattern()
    */
-  public static function validateValues($element, FormStateInterface $form_state) {
+  public static function validateValues(AuthorityLink $element, FormStateInterface $form_state) {
     $values = static::extractPipedValues($element['#value']);
 
     if (!is_array($values)) {
@@ -150,12 +164,16 @@ class AuthorityLink extends LinkItem {
     }
     else {
       // We may want to validate key values in the future...
-      // foreach ($values as $key => $value) {
-      //   if ($error = static::validateAllowedValue($key)) {
-      //     $form_state->setError($element, $error);
-      //     break;
-      //   }
-      // }.
+      // @codingStandardsIgnoreStart
+      /*
+      foreach ($values as $key => $value) {
+        if ($error = static::validateAllowedValue($key)) {
+          $form_state->setError($element, $error);
+          break;
+        }
+      }
+      */
+      // @codingStandardsIgnoreStop
       $form_state->setValueForElement($element, $values);
     }
   }

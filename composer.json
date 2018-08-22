@@ -16,7 +16,8 @@
   ],
   "require": {
     "drupal/auto_entitylabel": "^2.1@beta",
-    "drupal/name": "^1.0@RC"
+    "drupal/name": "^1.0@RC",
+    "drupal/geolocation": "^2.0"
   },
   "require-dev": {
     "phpunit/phpunit": "^6",
@@ -24,7 +25,7 @@
     "drupal/coder": "*",
     "sebastian/phpcpd": "*"
   },
-  "license": "GPL-2.0+",
+  "license": "GPL-2.0-or-later",
   "authors": [
     {
       "name": "Islandora Foundation",
