@@ -3,7 +3,6 @@
 namespace Drupal\controlled_access_terms\Plugin\Field\FieldType;
 
 use Drupal\link\LinkItemInterface;
-use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\TypedData\DataDefinition;
@@ -18,10 +17,14 @@ use Drupal\link\Plugin\Field\FieldType\LinkItem;
  *   description = @Translation("Stores a URL string, an authority source dropdown, an optional varchar link text, and optional blob of attributes to assemble a link."),
  *   default_widget = "authority_link_default",
  *   default_formatter = "authority_formatter_default",
- *   constraints = {"LinkType" = {}, "LinkAccess" = {}, "LinkExternalProtocols" = {}, "LinkNotExistingInternal" = {}}
+ *   constraints = {
+ *     "LinkType" = {},
+ *     "LinkAccess" = {},
+ *     "LinkExternalProtocols" = {},
+ *     "LinkNotExistingInternal" = {}
+ *   }
  * )
  */
-
 class AuthorityLink extends LinkItem {
 
   /**
@@ -29,10 +32,10 @@ class AuthorityLink extends LinkItem {
    */
   public static function schema(FieldStorageDefinitionInterface $field_definition) {
     $schema = parent::schema($field_definition);
-    $schema['columns']['source'] = array(
+    $schema['columns']['source'] = [
       'type' => 'text',
       'size' => 'tiny',
-    );
+    ];
     return $schema;
   }
 
@@ -49,10 +52,10 @@ class AuthorityLink extends LinkItem {
   /**
    * {@inheritdoc}
    */
-   public static function defaultFieldSettings() {
-     $settings = parent::defaultFieldSettings();
-     $settings['authority_sources'] = ['other' => t('Other'),];
-     $settings['link_type'] = LinkItemInterface::LINK_EXTERNAL;
+  public static function defaultFieldSettings() {
+    $settings = parent::defaultFieldSettings();
+    $settings['authority_sources'] = ['other' => t('Other')];
+    $settings['link_type'] = LinkItemInterface::LINK_EXTERNAL;
     return $settings;
   }
 
@@ -69,22 +72,37 @@ class AuthorityLink extends LinkItem {
       '#element_validate' => [[get_class($this), 'validateValues']],
       '#required' => TRUE,
       '#min' => 1,
-      '#description' => '<p>' . t('Enter one value per line, in the format key|label.').
-        '<br/>' . t('The key is the stored value. The label will be used in displayed values and edit forms.').
-        '<br/>' . t('The label is optional: if a line contains a single string, it will be used as key and label.').
-        '</p>',
+      '#description' => '<p>' . t('Enter one value per line, in the format key|label.') .
+      '<br/>' . t('The key is the stored value. The label will be used in displayed values and edit forms.') .
+      '<br/>' . t('The label is optional: if a line contains a single string, it will be used as key and label.') .
+      '</p>',
     ];
 
     return $element;
   }
 
-  public function getSources(){
+  /**
+   * Get the authority sources.
+   *
+   * @return mixed
+   *   The authority sources.
+   */
+  public function getSources() {
     return $this->getSetting('authority_sources');
   }
 
-  protected function encodeTextSettingsField(array $settings){
+  /**
+   * Encode text settings as key|value.
+   *
+   * @param array $settings
+   *   The settings to encode.
+   *
+   * @return string
+   *   The multi-line text of key|value pairs.
+   */
+  protected function encodeTextSettingsField(array $settings) {
     $output = '';
-    foreach($settings as $key => $value){
+    foreach ($settings as $key => $value) {
       $output .= "$key|$value\n";
     }
     return $output;
@@ -116,7 +134,7 @@ class AuthorityLink extends LinkItem {
         $key = trim($matches[1]);
         $value = trim($matches[2]);
       }
-      // Otherwise use the value as key and value
+      // Otherwise use the value as key and value.
       else {
         $key = $value = $text;
       }
@@ -128,17 +146,17 @@ class AuthorityLink extends LinkItem {
   }
 
   /**
-   * #element_validate callback.
+   * An #element_validate callback function.
    *
-   * @param $element
+   * @param \Drupal\controlled_access_terms\Plugin\Field\FieldType\AuthorityLink $element
    *   An associative array containing the properties and children of the
    *   generic form element.
-   * @param $form_state
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   The current state of the form for the form this element belongs to.
    *
    * @see \Drupal\Core\Render\Element\FormElement::processPattern()
    */
-  public static function validateValues($element, FormStateInterface $form_state) {
+  public static function validateValues(AuthorityLink $element, FormStateInterface $form_state) {
     $values = static::extractPipedValues($element['#value']);
 
     if (!is_array($values)) {
@@ -146,17 +164,18 @@ class AuthorityLink extends LinkItem {
     }
     else {
       // We may want to validate key values in the future...
-      // foreach ($values as $key => $value) {
-      //   if ($error = static::validateAllowedValue($key)) {
-      //     $form_state->setError($element, $error);
-      //     break;
-      //   }
-      // }
-
+      // @codingStandardsIgnoreStart
+      /*
+      foreach ($values as $key => $value) {
+        if ($error = static::validateAllowedValue($key)) {
+          $form_state->setError($element, $error);
+          break;
+        }
+      }
+      */
+      // @codingStandardsIgnoreStop
       $form_state->setValueForElement($element, $values);
     }
   }
 
 }
-
-?>
