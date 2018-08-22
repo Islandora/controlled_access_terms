@@ -8,6 +8,7 @@ use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Plugin implementation of the 'TextEDTFiso8601'.
+ *
  * Only supports EDTF through level 1.
  *
  * Uses first interval. An option to select which interval
@@ -27,19 +28,28 @@ use Drupal\Core\Form\FormStateInterface;
  */
 class TextEDTFiso8601 extends FormatterBase {
 
-  private $SEASON_MAP_NORTH = [
+  /**
+   * Northern hemisphere season map.
+   *
+   * @var array
+   */
+  private $seasonMapNorth = [
   // Spring => March.
     '21' => '03',
   // Summer => June.
     '22' => '06',
   // Autumn => September.
     '23' => '09',
-    '24' => '12', /**
- * Winter => December.
- */
+  // Winter => December.
+    '24' => '12',
   ];
 
-  private $SEASON_MAP_SOUTH = [
+  /**
+   * Southern hemisphere season map.
+   *
+   * @var array
+   */
+  private $seasonMapSouth = [
   // Spring => September.
     '21' => '03',
   // Summer => December.
@@ -68,10 +78,10 @@ class TextEDTFiso8601 extends FormatterBase {
       '#title' => t('Hemisphere Seasons'),
       '#type' => 'select',
       '#default_value' => $this->getSetting('season_hemisphere'),
-      '#description' => t('Seasons aren\'t currently supported by iso 8601. ' .
-                          'We map them to their respective equinox and ' .
-                          'solstice months. Select a hemisphere to use for ' .
-                          'the mapping.'),
+      '#description' => t("Seasons aren't currently supported by iso 8601.
+                          We map them to their respective equinox and 
+                          solstice months. Select a hemisphere to use for 
+                          the mapping."),
       '#options' => [
         'north' => t('Northern Hemisphere'),
         'south' => t('Southern Hemisphere'),
@@ -96,7 +106,6 @@ class TextEDTFiso8601 extends FormatterBase {
    */
   public function viewElements(FieldItemListInterface $items, $langcode) {
     $element = [];
-    $entity = $items->getEntity();
     $settings = $this->getSettings();
 
     foreach ($items as $delta => $item) {
@@ -117,7 +126,7 @@ class TextEDTFiso8601 extends FormatterBase {
       list($year, $month, $day) = explode('-', $begin, 3);
       // Digit Seasons.
       if (in_array($month, ['21', '22', '23', '24'])) {
-        $season_map = ($settings['season_hemisphere'] === 'north' ? $this->SEASON_MAP_NORTH : $this->SEASON_MAP_SOUTH);
+        $season_mapping = ($settings['season_hemisphere'] === 'north' ? $this->seasonMapNorth : $this->seasonMapSouth);
         $month = $season_mapping[$month];
         $begin = implode('-', array_filter([$year, $month, $day]));
       }

@@ -9,6 +9,7 @@ use Drupal\Core\Form\FormStateInterface;
 
 /**
  * Plugin implementation of the 'text_edtf' widget.
+ *
  * Validates text values for compliance with EDTF 1.0, level 1.
  * http://www.loc.gov/standards/datetime/pre-submission.html.
  *
@@ -43,11 +44,11 @@ class TextEDTFWidget extends WidgetBase {
       '#type' => 'checkbox',
       '#title' => $this->t('Ensure provided date values are valid.'),
       '#description' => $this->t(
-        'Negative dates, and the level 1 features unspecified dates, ' .
-        'extended years, and seasons ' .
-        'are not supported with strict date checking.<br />' .
-        'Uncertain/Approximate dates will have their markers removed before ' .
-        'checking. (For example, "1984~?" will be checked as "1984".)'),
+        'Negative dates, and the level 1 features unspecified dates, 
+        extended years, and seasons
+        are not supported with strict date checking.<br />
+        Uncertain/Approximate dates will have their markers removed before
+        checking. (For example, "1984~?" will be checked as "1984".)'),
       '#default_value' => $this->getSetting('strict_dates'),
     ];
     $element['intervals'] = [
@@ -114,7 +115,7 @@ class TextEDTFWidget extends WidgetBase {
       // Begin.
       $error_message = $this->dateValidation($begin);
       if ($error_message) {
-        $form_state->setError($element, t($error_message));
+        $form_state->setError($element, $error_message);
       }
       // End either empty or valid extended interval values (5.2.3.)
       if (empty($end) || $end === 'unknown' || $end === 'open') {
@@ -122,22 +123,25 @@ class TextEDTFWidget extends WidgetBase {
       }
       $error_message = $this->dateValidation($end);
       if ($error_message) {
-        $form_state->setError($element, t($error_message));
+        $form_state->setError($element, $error_message);
       }
     }
     else {
       $error_message = $this->dateValidation($value);
       if ($error_message) {
-        $form_state->setError($element, t($error_message));
+        $form_state->setError($element, $error_message);
       }
     }
-
-    return;
   }
 
   /**
-   * Validate a date
-   * returns False if valid or a string explaining the reason for invalidation.
+   * Validate a date.
+   *
+   * @param string $datetime_str
+   *   The datetime string.
+   *
+   * @return bool|string
+   *   False if valid or a string explaining the reason for invalidation.
    */
   protected function dateValidation($datetime_str) {
 

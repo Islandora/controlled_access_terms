@@ -92,11 +92,13 @@ class TextDateWidget extends WidgetBase {
     $date_format = $this->getSetting('date_format');
     $date = DateTime::createFromFormat($date_format, $value);
     if (!$date) {
-      $form_state->setError($element, t("Date must match the pattern " . $date_format));
+      $form_state->setError($element, t("Date must match the pattern @format",
+        ['@format' => $date_format]));
     }
     $errors = DateTime::getLastErrors();
     if ($this->getSetting('strict_dates') && !empty($errors['warning_count'])) {
-      $form_state->setError($element, t("Strictly speaking, the date \"" . $value . "\" is invalid!"));
+      $form_state->setError($element, t('Strictly speaking, the date "@value" is invalid!',
+        ['@value' => $value]));
     }
   }
 
