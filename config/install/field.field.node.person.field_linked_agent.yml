@@ -1,0 +1,36 @@
+uuid: f7e611af-b0d6-4325-81dc-52839a6c56be
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_linked_agent
+    - node.type.corporate_body
+    - node.type.family
+    - node.type.person
+  module:
+    - controlled_access_terms
+id: node.person.field_linked_agent
+field_name: field_linked_agent
+entity_type: node
+bundle: person
+label: 'Linked Agent'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:node'
+  handler_settings:
+    target_bundles:
+      corporate_body: corporate_body
+      family: family
+      person: person
+    sort:
+      field: _none
+    auto_create: 0
+    auto_create_bundle: family
+  rel_types:
+    'schema:knows': Knows
+    'schema:spouse': Spouse
+field_type: typed_relation
