@@ -3,10 +3,9 @@
 namespace Drupal\controlled_access_terms\Plugin\Field\FieldType;
 
 use Drupal\Core\Field\Plugin\Field\FieldType\EntityReferenceItem;
-use Drupal\Core\Field\FieldItemInterface;
-use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Render\Element\FormElement;
 use Drupal\Core\TypedData\DataDefinition;
 
 /**
@@ -22,7 +21,6 @@ use Drupal\Core\TypedData\DataDefinition;
  *   list_class = "\Drupal\Core\Field\EntityReferenceFieldItemList",
  * )
  */
-
 class TypedRelation extends EntityReferenceItem {
 
   /**
@@ -57,8 +55,8 @@ class TypedRelation extends EntityReferenceItem {
   public function isEmpty() {
     $parentEmpty = parent::isEmpty();
 
-    // All must have a value
-    if ( $this->rel_type !== NULL &&
+    // All must have a value.
+    if ($this->rel_type !== NULL &&
          !empty($this->rel_type) &&
          !($parentEmpty)
        ) {
@@ -71,8 +69,8 @@ class TypedRelation extends EntityReferenceItem {
   /**
    * {@inheritdoc}
    */
-   public static function defaultFieldSettings() {
-    return [ 'rel_types' => [  ], ] + parent::defaultFieldSettings();
+  public static function defaultFieldSettings() {
+    return ['rel_types' => []] + parent::defaultFieldSettings();
   }
 
   /**
@@ -88,23 +86,38 @@ class TypedRelation extends EntityReferenceItem {
       '#element_validate' => [[get_class($this), 'validateValues']],
       '#required' => TRUE,
       '#min' => 1,
-      '#description' => '<p>' . t('Enter one value per line, in the format key|label.').
-        '<br/>' . t('The key is the stored value. The label will be used in displayed values and edit forms.').
-        '<br/>' . t('Keys may not contain dots (\'.\'). They will be removed if used.').
-        '<br/>' . t('The label is optional: if a line contains a single string, it will be used as key and label.').
-        '</p>',
+      '#description' => '<p>' . t('Enter one value per line, in the format key|label.') .
+      '<br/>' . t('The key is the stored value. The label will be used in displayed values and edit forms.') .
+      '<br/>' . t("Keys may not contain dots ('.'). They will be removed if used.") .
+      '<br/>' . t('The label is optional: if a line contains a single string, it will be used as key and label.') .
+      '</p>',
     ];
 
     return $element;
   }
 
-  public function getRelTypes(){
+  /**
+   * Convience method allowing the Formatter to get the rel_types.
+   *
+   * @return array
+   *   The array of relation types
+   */
+  public function getRelTypes() {
     return $this->getSetting('rel_types');
   }
 
-  protected function encodeTextSettingsField(array $settings){
+  /**
+   * Encodes pipe-delimited key/value pairs.
+   *
+   * @param array $settings
+   *   The array of key/value pairs to encode.
+   *
+   * @return string
+   *   The string of encoded key/value pairs.
+   */
+  protected function encodeTextSettingsField(array $settings) {
     $output = '';
-    foreach($settings as $key => $value){
+    foreach ($settings as $key => $value) {
       $output .= "$key|$value\n";
     }
     return $output;
@@ -134,10 +147,10 @@ class TypedRelation extends EntityReferenceItem {
       if (preg_match('/(.*)\|(.*)/', $text, $matches)) {
         // Trim key and value to avoid unwanted spaces issues.
         // Also remove dots in keys (which aren't permitted.)
-        $key = str_replace('.','',trim($matches[1]));
+        $key = str_replace('.', '', trim($matches[1]));
         $value = trim($matches[2]);
       }
-      // Otherwise use the value as key and value
+      // Otherwise use the value as key and value.
       else {
         $key = $value = $text;
       }
@@ -149,17 +162,17 @@ class TypedRelation extends EntityReferenceItem {
   }
 
   /**
-   * #element_validate callback.
+   * Callback for settings form.
    *
-   * @param $element
+   * @param \Drupal\Core\Render\Element\FormElement $element
    *   An associative array containing the properties and children of the
    *   generic form element.
-   * @param $form_state
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   The current state of the form for the form this element belongs to.
    *
    * @see \Drupal\Core\Render\Element\FormElement::processPattern()
    */
-  public static function validateValues($element, FormStateInterface $form_state) {
+  public static function validateValues(FormElement $element, FormStateInterface $form_state) {
     $values = static::extractPipedValues($element['#value']);
 
     if (!is_array($values)) {
@@ -167,17 +180,8 @@ class TypedRelation extends EntityReferenceItem {
     }
     else {
       // We may want to validate key values in the future...
-      // foreach ($values as $key => $value) {
-      //   if ($error = static::validateAllowedValue($key)) {
-      //     $form_state->setError($element, $error);
-      //     break;
-      //   }
-      // }
-
       $form_state->setValueForElement($element, $values);
     }
   }
 
 }
-
-?>

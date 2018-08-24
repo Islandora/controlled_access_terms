@@ -3,7 +3,6 @@
 namespace Drupal\controlled_access_terms\Plugin\Field\FieldFormatter;
 
 use Drupal\Core\Field\Plugin\Field\FieldFormatter\EntityReferenceLabelFormatter;
-use Drupal\Core\Field\FormatterBase;
 use Drupal\Core\Field\FieldItemListInterface;
 
 /**
@@ -17,9 +16,11 @@ use Drupal\Core\Field\FieldItemListInterface;
  *   }
  * )
  */
+class TypedRelationFormatter extends EntityReferenceLabelFormatter {
 
- class TypedRelationFormatter extends EntityReferenceLabelFormatter {
-
+  /**
+   * {@inheritdoc}
+   */
   public function viewElements(FieldItemListInterface $items, $langcode) {
     $elements = parent::viewElements($items, $langcode);
     $values = $items->getValue();
@@ -34,4 +35,5 @@ use Drupal\Core\Field\FieldItemListInterface;
 
     return $elements;
   }
+
 }

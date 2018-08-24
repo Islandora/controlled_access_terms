@@ -19,6 +19,9 @@ use Drupal\Core\Form\FormStateInterface;
  */
 class TypedRelationWidget extends EntityReferenceAutocompleteWidget {
 
+  /**
+   * {@inheritdoc}
+   */
   public function formElement(FieldItemListInterface $items, $delta, array $element, array &$form, FormStateInterface $form_state) {
     $widget = parent::formElement($items, $delta, $element, $form, $form_state);
 
@@ -35,4 +38,5 @@ class TypedRelationWidget extends EntityReferenceAutocompleteWidget {
 
     return $widget;
   }
+
 }
