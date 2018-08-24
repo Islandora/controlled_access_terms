@@ -32,5 +32,15 @@ settings:
     auto_create_bundle: family
   rel_types:
     'schema:knows': Knows
+    'schema:alumniOf': Alumni Of
+    'schema:children': Children
+    'schema:colleague': Colleague
+    'schema:follows': Follows
+    'schema:knowsAbout': Knows About
+    'schema:parent': Parent
+    'schema:relatedTo': Related To
+    'schema:sibling': Sibling
+    'schema:sponsor': Sponsor
     'schema:spouse': Spouse
+    'schema:worksFor': Works For (use only with Corporate Bodies)
 field_type: typed_relation
