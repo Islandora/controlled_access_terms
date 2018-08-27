@@ -13,3 +13,84 @@ field.field_settings.authority_link:
     link_type:
       type: integer
       label: 'Allowed link type'
+
+field.widget.settings.authority_link_default:
+  type: mapping
+  label: 'Link format settings'
+  mapping:
+    placeholder_url:
+      type: string
+      label: 'Placeholder for URL'
+    placeholder_title:
+      type: label
+      label: 'Placeholder for link text'
+
+field.widget.settings.text_edtf:
+  type: mapping
+  link: ''
+  mapping:
+    strict_dates:
+      type: boolean
+      label: 'Strict Dates Required'
+    intervals:
+      type: boolean
+      label: 'Intervals Permitted'
+
+field.widget.settings.text_date:
+  type: mapping
+  link: ''
+  mapping:
+    strict_dates:
+      type: boolean
+      label: 'Strict Dates Required'
+    date_format:
+      type: string
+      label: 'Date String Format'
+
+field.formatter.settings.authority_formatter_default:
+  type: mapping
+  label: 'Authority Link format settings'
+  mapping:
+    trim_length:
+      type: integer
+      label: 'Trim link text length'
+    url_only:
+      type: boolean
+      label: 'URL only'
+    url_plain:
+      type: boolean
+      label: 'Show URL as plain text'
+    rel:
+      type: string
+      label: 'Add rel="nofollow" to links'
+    target:
+      type: string
+      label: 'Open link in new window'
+
+field.formatter.settings.text_edtf_human:
+  type: mapping
+  label: 'EDTF for humans format settings'
+  mapping:
+    date_separator:
+      type: string
+      label: 'Date separator'
+    date_order:
+      type: string
+      label: 'Date Order'
+    month_format:
+      type: string
+      label: 'Month Format'
+    day_format:
+      type: string
+      label: 'Day Format'
+    season_hemisphere:
+      type: string
+      label: 'Hemisphere Seasons'
+
+field.formatter.settings.text_edtf_iso8601:
+  type: mapping
+  label: 'EDTF ISO8601 format settings'
+  mapping:
+    season_hemisphere:
+      type: string
+      label: 'Hemisphere Seasons'
