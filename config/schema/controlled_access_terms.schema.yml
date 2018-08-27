@@ -1,0 +1,15 @@
+field.field_settings.authority_link:
+  type: mapping
+  label: 'Authority Link settings'
+  mapping:
+    authority_sources:
+      type: sequence
+      label: 'Authority Sources'
+      sequence:
+        - type: string
+    title:
+      type: integer
+      label: 'Allow link text'
+    link_type:
+      type: integer
+      label: 'Allowed link type'
