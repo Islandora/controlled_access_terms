@@ -94,3 +94,29 @@ field.formatter.settings.text_edtf_iso8601:
     season_hemisphere:
       type: string
       label: 'Hemisphere Seasons'
+
+auto_entitylabel.settings.node.person:
+  type: mapping
+  mapping:
+    status:
+      type: integer
+      label: 'Automatic label generation'
+    pattern:
+      type: string
+      label: 'Pattern for the label'
+    php:
+      type: boolean
+      label: 'Use PHP for auto entity labels'
+    escape:
+      type: boolean
+      label: 'Escape special characters'
+    dependencies:
+      type: config_dependencies
+      label: 'Dependencies'
+    _core:
+      type: mapping
+      mapping:
+        default_config_hash:
+          type: string
+    langcode:
+      type: string
