@@ -148,7 +148,7 @@ class AuthorityLink extends LinkItem {
   /**
    * An #element_validate callback function.
    *
-   * @param \Drupal\controlled_access_terms\Plugin\Field\FieldType\AuthorityLink $element
+   * @param array $element
    *   An associative array containing the properties and children of the
    *   generic form element.
    * @param \Drupal\Core\Form\FormStateInterface $form_state
@@ -156,7 +156,7 @@ class AuthorityLink extends LinkItem {
    *
    * @see \Drupal\Core\Render\Element\FormElement::processPattern()
    */
-  public static function validateValues(AuthorityLink $element, FormStateInterface $form_state) {
+  public static function validateValues(array $element, FormStateInterface $form_state) {
     $values = static::extractPipedValues($element['#value']);
 
     if (!is_array($values)) {
