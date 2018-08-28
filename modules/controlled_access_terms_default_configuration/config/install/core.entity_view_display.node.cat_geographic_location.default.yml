@@ -25,15 +25,6 @@ content:
     settings: {  }
     third_party_settings: {  }
     region: content
-  display_media_entity_view_1:
-    weight: 10
-    region: content
-  display_media_service_file:
-    weight: 10
-    region: content
-  display_media_thumbnail:
-    weight: 10
-    region: content
   field_geo_alt_name:
     weight: 4
     label: inline

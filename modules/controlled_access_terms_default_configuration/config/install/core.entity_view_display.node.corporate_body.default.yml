@@ -26,15 +26,6 @@ content:
     settings: {  }
     third_party_settings: {  }
     region: content
-  display_media_entity_view_1:
-    weight: 10
-    region: content
-  display_media_service_file:
-    weight: 10
-    region: content
-  display_media_thumbnail:
-    weight: 10
-    region: content
   field_cat_date_begin:
     weight: 2
     label: above
