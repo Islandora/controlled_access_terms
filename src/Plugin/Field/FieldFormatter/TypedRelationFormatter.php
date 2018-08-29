@@ -23,7 +23,6 @@ class TypedRelationFormatter extends EntityReferenceLabelFormatter {
    */
   public function viewElements(FieldItemListInterface $items, $langcode) {
     $elements = parent::viewElements($items, $langcode);
-    $values = $items->getValue();
 
     foreach ($items as $delta => $item) {
 
