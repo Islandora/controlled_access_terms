@@ -38,9 +38,9 @@ content:
     weight: 1
     label: inline
     settings:
-      trim_length: '80'
-      url_only: ''
-      url_plain: ''
+      trim_length: 80
+      url_only: false
+      url_plain: false
       rel: ''
       target: _blank
     third_party_settings: {  }
