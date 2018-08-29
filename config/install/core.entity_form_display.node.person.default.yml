@@ -7,6 +7,7 @@ dependencies:
     - field.field.node.person.field_cat_date_begin
     - field.field.node.person.field_cat_date_end
     - field.field.node.person.field_cat_member_of
+    - field.field.node.person.field_linked_agent
     - field.field.node.person.field_person_alternate_names
     - field.field.node.person.field_person_name_authorities
     - field.field.node.person.field_person_preferred_name
@@ -61,6 +62,15 @@ content:
       placeholder: ''
     third_party_settings: {  }
     type: entity_reference_autocomplete
+    region: content
+  field_linked_agent:
+    weight: 29
+    settings:
+      match_operator: CONTAINS
+      size: '60'
+      placeholder: ''
+    third_party_settings: {  }
+    type: typed_relation_default
     region: content
   field_person_alternate_names:
     weight: 3

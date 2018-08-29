@@ -8,3 +8,4 @@ dependencies:
   - name
   - auto_entitylabel
   - geolocation
+  - token
