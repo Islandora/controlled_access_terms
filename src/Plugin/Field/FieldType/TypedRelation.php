@@ -5,7 +5,6 @@ namespace Drupal\controlled_access_terms\Plugin\Field\FieldType;
 use Drupal\Core\Field\Plugin\Field\FieldType\EntityReferenceItem;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Render\Element\FormElement;
 use Drupal\Core\TypedData\DataDefinition;
 
 /**
