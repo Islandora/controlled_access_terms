@@ -1,0 +1,34 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - taxonomy.vocabulary.corporate_body
+  module:
+    - taxonomy
+id: taxonomy_term.corporate_body
+targetEntityType: taxonomy_term
+bundle: corporate_body
+types:
+  - 'schema:Organization'
+fieldMappings:
+  name:
+    properties:
+      - 'schema:name'
+  description:
+    properties:
+      - 'schema:description'
+  field_corp_alt_name:
+    properties:
+      - 'schema:alternateName'
+  field_cat_date_end:
+    properties:
+      - 'schema:dissolutionDate'
+  field_cat_date_begin:
+    properties:
+      - 'schema:foundingDate'
+  field_corp_parent_org:
+    properties:
+      - 'schema:parentOrganization'
+  field_corporate_body_authorities:
+    properties:
+      - 'schema:sameAs'

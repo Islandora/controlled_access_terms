@@ -1,0 +1,8 @@
+langcode: en
+status: true
+dependencies: {  }
+name: Subject
+vid: subject
+description: ''
+hierarchy: 0
+weight: 0

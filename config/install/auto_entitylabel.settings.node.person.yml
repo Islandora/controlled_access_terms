@@ -1,7 +1,0 @@
-status: 1
-pattern: '[node:field_person_preferred_name:given] [node:field_person_preferred_name:middle] [node:field_person_preferred_name:family]'
-php: false
-escape: false
-dependencies:
-  config:
-    - node.type.person
