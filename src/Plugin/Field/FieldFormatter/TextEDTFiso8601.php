@@ -79,8 +79,8 @@ class TextEDTFiso8601 extends FormatterBase {
       '#type' => 'select',
       '#default_value' => $this->getSetting('season_hemisphere'),
       '#description' => t("Seasons aren't currently supported by iso 8601.
-                          We map them to their respective equinox and 
-                          solstice months. Select a hemisphere to use for 
+                          We map them to their respective equinox and
+                          solstice months. Select a hemisphere to use for
                           the mapping."),
       '#options' => [
         'north' => t('Northern Hemisphere'),
@@ -121,7 +121,6 @@ class TextEDTFiso8601 extends FormatterBase {
       // Zero-Year in decade/century.
       $begin = str_replace('u', '0', $begin);
 
-      drupal_set_message("Date before mapping: $begin");
       // Seasons map.
       list($year, $month, $day) = explode('-', $begin, 3);
       // Digit Seasons.
