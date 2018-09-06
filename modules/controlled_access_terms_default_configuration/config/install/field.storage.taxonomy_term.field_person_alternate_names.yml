@@ -1,0 +1,88 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - name
+    - taxonomy
+id: taxonomy_term.field_person_alternate_names
+field_name: field_person_alternate_names
+entity_type: taxonomy_term
+type: name
+settings:
+  components:
+    name: true
+    given: true
+    middle: true
+    family: true
+    generational: true
+    credentials: true
+  minimum_components:
+    given: true
+    family: true
+    name: false
+    middle: false
+    generational: false
+    credentials: false
+  labels:
+    name: Title
+    given: Given
+    middle: 'Middle name(s)'
+    family: Family
+    generational: Generational
+    credentials: Credentials
+  max_length:
+    name: 31
+    given: 63
+    middle: 127
+    family: 63
+    generational: 15
+    credentials: 255
+  autocomplete_source:
+    name:
+      name: title
+    given: {  }
+    middle: {  }
+    family: {  }
+    generational:
+      generational: '0'
+    credentials: {  }
+  autocomplete_separator:
+    name: ' '
+    given: ' -'
+    middle: ' -'
+    family: ' -'
+    generational: ' '
+    credentials: ', '
+  allow_family_or_given: true
+  title_options:
+    - '-- --'
+    - Mr.
+    - Mrs.
+    - Miss
+    - Ms.
+    - Dr.
+    - Prof.
+  generational_options:
+    - '-- --'
+    - Jr.
+    - Sr.
+    - I
+    - II
+    - III
+    - IV
+    - V
+    - VI
+    - VII
+    - VIII
+    - IX
+    - X
+  sort_options:
+    name: false
+    generational: false
+module: name
+locked: false
+cardinality: -1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

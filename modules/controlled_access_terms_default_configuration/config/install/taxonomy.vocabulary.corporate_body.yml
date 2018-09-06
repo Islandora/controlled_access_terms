@@ -1,0 +1,8 @@
+langcode: en
+status: true
+dependencies: {  }
+name: 'Corporate Body'
+vid: corporate_body
+description: 'An organization or group of persons that is identified by a particular name and that acts, or may act, as an entity. Also includes an individual acting in a corporate capacity.'
+hierarchy: 0
+weight: 0

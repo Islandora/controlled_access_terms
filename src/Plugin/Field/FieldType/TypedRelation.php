@@ -5,7 +5,6 @@ namespace Drupal\controlled_access_terms\Plugin\Field\FieldType;
 use Drupal\Core\Field\Plugin\Field\FieldType\EntityReferenceItem;
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Render\Element\FormElement;
 use Drupal\Core\TypedData\DataDefinition;
 
 /**
@@ -164,7 +163,7 @@ class TypedRelation extends EntityReferenceItem {
   /**
    * Callback for settings form.
    *
-   * @param \Drupal\Core\Render\Element\FormElement $element
+   * @param array $element
    *   An associative array containing the properties and children of the
    *   generic form element.
    * @param \Drupal\Core\Form\FormStateInterface $form_state
@@ -172,7 +171,7 @@ class TypedRelation extends EntityReferenceItem {
    *
    * @see \Drupal\Core\Render\Element\FormElement::processPattern()
    */
-  public static function validateValues(FormElement $element, FormStateInterface $form_state) {
+  public static function validateValues(array $element, FormStateInterface $form_state) {
     $values = static::extractPipedValues($element['#value']);
 
     if (!is_array($values)) {

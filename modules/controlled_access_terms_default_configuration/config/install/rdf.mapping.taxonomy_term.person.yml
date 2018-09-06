@@ -1,0 +1,34 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - taxonomy.vocabulary.person
+  module:
+    - taxonomy
+id: taxonomy_term.person
+targetEntityType: taxonomy_term
+bundle: person
+types:
+  - 'schema:Person'
+fieldMappings:
+  name:
+    properties:
+      - 'schema:name'
+  description:
+    properties:
+      - 'schema:description'
+  field_person_alternate_names:
+    properties:
+      - 'schema:alternateName'
+  field_person_name_authorities:
+    properties:
+      - 'schema:sameAs'
+  field_cat_date_begin:
+    properties:
+      - 'schema:birthDate'
+  field_cat_date_end:
+    properties:
+      - 'schema:deathDate'
+  field_cat_member_of:
+    properties:
+      - 'schema:memberOf'

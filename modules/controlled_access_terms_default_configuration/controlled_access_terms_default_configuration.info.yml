@@ -1,0 +1,17 @@
+name: 'Controlled Access Terms default configuration'
+description: 'Install content types for geographic location, corporate body, family, person and subject along with default form configuration and RDF mapping.'
+type: module
+core: 8.x
+dependencies:
+  - auto_entitylabel
+  - controlled_access_terms
+  - field
+  - geolocation
+  - menu_ui
+  - name
+  - node
+  - path
+  - rdf
+  - text
+  - user
+package: 'Controlled Access Terms'
