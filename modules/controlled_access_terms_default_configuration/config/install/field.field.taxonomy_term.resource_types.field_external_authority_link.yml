@@ -5,7 +5,6 @@ dependencies:
     - field.storage.taxonomy_term.field_external_authority_link
     - taxonomy.vocabulary.resource_types
   module:
-    - islandora_demo
     - controlled_access_terms
 id: taxonomy_term.resource_types.field_external_authority_link
 field_name: field_external_authority_link
