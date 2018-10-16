@@ -38,7 +38,8 @@ class TextDateWidget extends WidgetBase {
     $element = parent::settingsForm($form, $form_state);
     $element['date_format'] = [
       '#type' => 'textfield',
-      '#title' => $this->t('PHP DateTime Format String (http://php.net/manual/en/datetime.createfromformat.php).'),
+      '#title' => $this->t('PHP DateTime Format String.'),
+      '#description' => $this->t('See <a href="@phpdate">PHP DateTime Documentation</a> for details.', array('@phpdate' => 'http://php.net/manual/en/datetime.createfromformat.php')),
       '#default_value' => $this->getSetting('date_format'),
     ];
     $element['strict_dates'] = [
