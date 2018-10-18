@@ -54,7 +54,7 @@ class TextEDTFWidget extends WidgetBase {
        '#type' => 'markup',
        '#prefix' => '<div>',
        '#suffix' => '</div>',
-       '#markup' => $this->t('See <a href="@locedtf" target="_blank">Library of Congress EDTF Draft Submission</a> for details on formatting options.', array('@locedtf' => 'http://www.loc.gov/standards/datetime/pre-submission.html')),
+       '#markup' => $this->t('See <a href="@locedtf" target="_blank">Library of Congress EDTF Draft Submission</a> for details on formatting options.', ['@locedtf' => 'http://www.loc.gov/standards/datetime/pre-submission.html']),
     ];
     $element['strict_dates'] = [
       '#type' => 'checkbox',
