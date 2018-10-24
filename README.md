@@ -1,6 +1,6 @@
 # Controlled Access Terms
 
-[![Build Status][1]](https://travis-ci.org/Islandora-CLAW/controlled_access_terms)
+[![Build Status][1]](https://travis-ci.com/Islandora-CLAW/controlled_access_terms)
 [![Contribution Guidelines][2]](./CONTRIBUTING.md)
 [![LICENSE][3]](./LICENSE)
 
