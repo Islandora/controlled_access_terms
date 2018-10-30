@@ -18,7 +18,7 @@ fieldMappings:
   description:
     properties:
       - 'schema:description'
-  field_geo_authority_link:
+  field_authority_link:
     properties:
       - 'schema:sameAs'
   field_geo_geolocation:

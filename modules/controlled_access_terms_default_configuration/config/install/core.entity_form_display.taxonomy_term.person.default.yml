@@ -6,7 +6,7 @@ dependencies:
     - field.field.taxonomy_term.person.field_cat_date_end
     - field.field.taxonomy_term.person.field_cat_member_of
     - field.field.taxonomy_term.person.field_person_alternate_names
-    - field.field.taxonomy_term.person.field_person_name_authorities
+    - field.field.taxonomy_term.person.field_authority_link
     - field.field.taxonomy_term.person.field_person_preferred_name
     - field.field.taxonomy_term.person.field_relation
     - taxonomy.vocabulary.person
@@ -60,7 +60,7 @@ content:
     third_party_settings: {  }
     type: name_default
     region: content
-  field_person_name_authorities:
+  field_authority_link:
     weight: 1
     settings:
       placeholder_url: ''

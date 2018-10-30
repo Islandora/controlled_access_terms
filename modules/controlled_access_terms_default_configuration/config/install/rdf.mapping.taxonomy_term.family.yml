@@ -17,7 +17,7 @@ fieldMappings:
   description:
     properties:
       - 'schema:description'
-  field_family_name_authorities:
+  field_authority_link:
     properties:
       - 'schema:sameAs'
   field_cat_date_end:

@@ -29,6 +29,6 @@ fieldMappings:
   field_corp_parent_org:
     properties:
       - 'schema:parentOrganization'
-  field_corporate_body_authorities:
+  field_authority_link:
     properties:
       - 'schema:sameAs'

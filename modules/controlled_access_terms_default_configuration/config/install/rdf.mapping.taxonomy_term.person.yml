@@ -20,7 +20,7 @@ fieldMappings:
   field_person_alternate_names:
     properties:
       - 'schema:alternateName'
-  field_person_name_authorities:
+  field_authority_link:
     properties:
       - 'schema:sameAs'
   field_cat_date_begin:

@@ -2,7 +2,7 @@ langcode: en
 status: true
 dependencies:
   config:
-    - field.field.taxonomy_term.subject.field_subject_authorities
+    - field.field.taxonomy_term.subject.field_authority_link
     - taxonomy.vocabulary.subject
   module:
     - controlled_access_terms
@@ -22,7 +22,7 @@ content:
       placeholder: ''
     third_party_settings: {  }
     region: content
-  field_subject_authorities:
+  field_authority_link:
     weight: 123
     settings:
       placeholder_url: ''

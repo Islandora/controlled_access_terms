@@ -17,6 +17,6 @@ fieldMappings:
   description:
     properties:
       - 'schema:description'
-  field_subject_authorities:
+  field_authority_link:
     properties:
       - 'schema:sameAs'

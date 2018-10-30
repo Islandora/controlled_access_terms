@@ -6,7 +6,7 @@ dependencies:
     - field.field.taxonomy_term.corporate_body.field_cat_date_end
     - field.field.taxonomy_term.corporate_body.field_corp_alt_name
     - field.field.taxonomy_term.corporate_body.field_corp_parent_org
-    - field.field.taxonomy_term.corporate_body.field_corporate_body_authorities
+    - field.field.taxonomy_term.corporate_body.field_authority_link
     - field.field.taxonomy_term.corporate_body.field_relation
     - taxonomy.vocabulary.corporate_body
   module:
@@ -60,7 +60,7 @@ content:
     third_party_settings: {  }
     type: entity_reference_autocomplete
     region: content
-  field_corporate_body_authorities:
+  field_authority_link:
     weight: 7
     settings:
       placeholder_url: ''
