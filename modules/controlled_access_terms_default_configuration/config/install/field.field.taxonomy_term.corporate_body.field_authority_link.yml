@@ -2,12 +2,12 @@ langcode: en
 status: true
 dependencies:
   config:
-    - field.storage.taxonomy_term.field_corporate_body_authorities
+    - field.storage.taxonomy_term.field_authority_link
     - taxonomy.vocabulary.corporate_body
   module:
     - controlled_access_terms
-id: taxonomy_term.corporate_body.field_corporate_body_authorities
-field_name: field_corporate_body_authorities
+id: taxonomy_term.corporate_body.field_authority_link
+field_name: field_authority_link
 entity_type: taxonomy_term
 bundle: corporate_body
 label: 'Authority Sources'

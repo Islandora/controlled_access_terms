@@ -2,14 +2,14 @@ langcode: en
 status: true
 dependencies:
   module:
+    - controlled_access_terms
     - taxonomy
-id: taxonomy_term.field_uris
-field_name: field_uris
+id: taxonomy_term.field_authority_link
+field_name: field_authority_link
 entity_type: taxonomy_term
-type: string_long
-settings:
-  case_sensitive: false
-module: core
+type: authority_link
+settings: {  }
+module: controlled_access_terms
 locked: false
 cardinality: -1
 translatable: true

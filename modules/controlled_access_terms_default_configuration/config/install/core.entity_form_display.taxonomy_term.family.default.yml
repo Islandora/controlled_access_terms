@@ -4,7 +4,7 @@ dependencies:
   config:
     - field.field.taxonomy_term.family.field_cat_date_begin
     - field.field.taxonomy_term.family.field_cat_date_end
-    - field.field.taxonomy_term.family.field_family_name_authorities
+    - field.field.taxonomy_term.family.field_authority_link
     - field.field.taxonomy_term.family.field_relation
     - taxonomy.vocabulary.family
   module:
@@ -31,7 +31,7 @@ content:
     third_party_settings: {  }
     type: text_edtf
     region: content
-  field_family_name_authorities:
+  field_authority_link:
     weight: 122
     settings:
       placeholder_url: ''

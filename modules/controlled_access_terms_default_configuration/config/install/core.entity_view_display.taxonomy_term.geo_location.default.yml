@@ -3,7 +3,7 @@ status: true
 dependencies:
   config:
     - field.field.taxonomy_term.geo_location.field_geo_alt_name
-    - field.field.taxonomy_term.geo_location.field_geo_authority_link
+    - field.field.taxonomy_term.geo_location.field_authority_link
     - field.field.taxonomy_term.geo_location.field_geo_broader
     - field.field.taxonomy_term.geo_location.field_geo_geolocation
     - taxonomy.vocabulary.geo_location
@@ -32,7 +32,7 @@ content:
     third_party_settings: {  }
     type: string
     region: content
-  field_geo_authority_link:
+  field_authority_link:
     weight: 1
     label: inline
     settings:
