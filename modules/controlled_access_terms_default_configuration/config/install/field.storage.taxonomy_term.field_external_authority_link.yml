@@ -9,7 +9,7 @@ field_name: field_external_authority_link
 entity_type: taxonomy_term
 type: authority_link
 settings: {  }
-module: islandora_demo
+module: core
 locked: false
 cardinality: 1
 translatable: true
