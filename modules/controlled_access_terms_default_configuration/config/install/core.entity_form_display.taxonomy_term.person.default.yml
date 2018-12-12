@@ -2,13 +2,13 @@ langcode: en
 status: true
 dependencies:
   config:
+    - field.field.taxonomy_term.person.field_authority_link
     - field.field.taxonomy_term.person.field_cat_date_begin
     - field.field.taxonomy_term.person.field_cat_date_end
     - field.field.taxonomy_term.person.field_cat_member_of
     - field.field.taxonomy_term.person.field_person_alternate_names
-    - field.field.taxonomy_term.person.field_authority_link
     - field.field.taxonomy_term.person.field_person_preferred_name
-    - field.field.taxonomy_term.person.field_relation
+    - field.field.taxonomy_term.person.field_relationships
     - taxonomy.vocabulary.person
   module:
     - controlled_access_terms
@@ -28,6 +28,14 @@ content:
       summary_rows: 3
       placeholder: ''
     third_party_settings: {  }
+    region: content
+  field_authority_link:
+    weight: 1
+    settings:
+      placeholder_url: ''
+      placeholder_title: ''
+    third_party_settings: {  }
+    type: authority_link_default
     region: content
   field_cat_date_begin:
     weight: 26
@@ -60,27 +68,21 @@ content:
     third_party_settings: {  }
     type: name_default
     region: content
-  field_authority_link:
-    weight: 1
-    settings:
-      placeholder_url: ''
-      placeholder_title: ''
-    third_party_settings: {  }
-    type: authority_link_default
-    region: content
   field_person_preferred_name:
     weight: 2
     settings: {  }
     third_party_settings: {  }
     type: name_default
     region: content
-  langcode:
-    type: language_select
-    weight: 2
-    region: content
+  field_relationships:
+    weight: 29
     settings:
-      include_locked: true
+      match_operator: CONTAINS
+      size: '60'
+      placeholder: ''
     third_party_settings: {  }
+    type: typed_relation_default
+    region: content
   name:
     type: string_textfield
     weight: -5
