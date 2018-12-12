@@ -5,7 +5,6 @@ dependencies:
     - field.field.taxonomy_term.person.field_authority_link
     - field.field.taxonomy_term.person.field_cat_date_begin
     - field.field.taxonomy_term.person.field_cat_date_end
-    - field.field.taxonomy_term.person.field_cat_member_of
     - field.field.taxonomy_term.person.field_person_alternate_names
     - field.field.taxonomy_term.person.field_person_preferred_name
     - field.field.taxonomy_term.person.field_relationships
@@ -52,15 +51,6 @@ content:
       intervals: false
     third_party_settings: {  }
     type: text_edtf
-    region: content
-  field_cat_member_of:
-    weight: 28
-    settings:
-      match_operator: CONTAINS
-      size: 60
-      placeholder: ''
-    third_party_settings: {  }
-    type: entity_reference_autocomplete
     region: content
   field_person_alternate_names:
     weight: 3
