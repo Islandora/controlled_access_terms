@@ -3,9 +3,7 @@ status: true
 dependencies:
   config:
     - field.storage.taxonomy_term.field_relation
-    - taxonomy.vocabulary.corporate_body
     - taxonomy.vocabulary.family
-    - taxonomy.vocabulary.person
 id: taxonomy_term.family.field_relation
 field_name: field_relation
 entity_type: taxonomy_term

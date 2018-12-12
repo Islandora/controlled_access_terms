@@ -7,7 +7,7 @@ dependencies:
     - field.field.taxonomy_term.corporate_body.field_cat_date_end
     - field.field.taxonomy_term.corporate_body.field_corp_alt_name
     - field.field.taxonomy_term.corporate_body.field_corp_parent_org
-    - field.field.taxonomy_term.corporate_body.field_relation
+    - field.field.taxonomy_term.corporate_body.field_relationships
     - field.field.taxonomy_term.corporate_body.field_type
     - taxonomy.vocabulary.corporate_body
   module:
@@ -77,6 +77,14 @@ content:
     third_party_settings: {  }
     type: entity_reference_label
     region: content
+  field_relationships:
+    weight: 7
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    type: typed_relation_default
+    region: content
   field_type:
     weight: 0
     label: above
@@ -84,5 +92,4 @@ content:
     third_party_settings: {  }
     type: list_default
     region: content
-hidden:
-  field_relation: true
+hidden: {  }
