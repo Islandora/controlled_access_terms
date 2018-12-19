@@ -3,6 +3,6 @@ status: true
 dependencies: {  }
 name: Subject
 vid: subject
-description: ''
+description: 'Subject matter to which the records pertain, such as topics, events, people, and organizations.'
 hierarchy: 0
 weight: 0
