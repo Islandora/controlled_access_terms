@@ -3,6 +3,6 @@ status: true
 dependencies: {  }
 name: Family
 vid: family
-description: ''
+description: 'Two or more people related through marriage, birth, adoption, or other legal manner, or who present themselves as a family.'
 hierarchy: 0
 weight: 0
