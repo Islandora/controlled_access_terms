@@ -54,7 +54,7 @@ class EDTFConverter extends CommonDataConverter {
    * @return string
    *   Returns the ISO 8601 timestamp.
    */
-  public static function datetimeIso8601Value($data) {
+  public static function datetimeIso8601Value(array $data) {
     $date = explode('/', $data['value'])[0];
 
     // Strip approximations/uncertainty.
@@ -82,7 +82,7 @@ class EDTFConverter extends CommonDataConverter {
    * @return string
    *   Returns the ISO 8601 date.
    */
-  public static function dateIso8601Value($data) {
+  public static function dateIso8601Value(array $data) {
     $date = explode('/', $data['value'])[0];
 
     // Strip approximations/uncertainty.
