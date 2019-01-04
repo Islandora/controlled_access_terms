@@ -2,16 +2,17 @@ langcode: en
 status: true
 dependencies:
   config:
+    - field.field.taxonomy_term.corporate_body.field_authority_link
     - field.field.taxonomy_term.corporate_body.field_cat_date_begin
     - field.field.taxonomy_term.corporate_body.field_cat_date_end
     - field.field.taxonomy_term.corporate_body.field_corp_alt_name
-    - field.field.taxonomy_term.corporate_body.field_corp_parent_org
-    - field.field.taxonomy_term.corporate_body.field_authority_link
+    - field.field.taxonomy_term.corporate_body.field_relationships
+    - field.field.taxonomy_term.corporate_body.field_type
     - taxonomy.vocabulary.corporate_body
   module:
     - controlled_access_terms
+    - options
     - text
-    - user
 id: taxonomy_term.corporate_body.default
 targetEntityType: taxonomy_term
 bundle: corporate_body
@@ -23,6 +24,18 @@ content:
     weight: 5
     settings: {  }
     third_party_settings: {  }
+    region: content
+  field_authority_link:
+    weight: 1
+    label: above
+    settings:
+      trim_length: 80
+      url_only: false
+      url_plain: false
+      rel: ''
+      target: _blank
+    third_party_settings: {  }
+    type: authority_formatter_default
     region: content
   field_cat_date_begin:
     weight: 2
@@ -55,25 +68,19 @@ content:
     third_party_settings: {  }
     type: basic_string
     region: content
-  field_corp_parent_org:
+  field_relationships:
     weight: 7
     label: above
     settings:
       link: true
     third_party_settings: {  }
-    type: entity_reference_label
+    type: typed_relation_default
     region: content
-  field_authority_link:
-    weight: 1
+  field_type:
+    weight: 0
     label: above
-    settings:
-      trim_length: '80'
-      url_only: ''
-      url_plain: ''
-      rel: ''
-      target: _blank
+    settings: {  }
     third_party_settings: {  }
-    type: authority_formatter_default
+    type: list_default
     region: content
-hidden:
-  langcode: true
+hidden: {  }

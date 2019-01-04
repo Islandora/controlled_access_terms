@@ -33,7 +33,7 @@ given the structure of Drupal's RDF module and the Islandora JSON-LD module.
   - Parent Organization
   - Authorities
   - Description
-  - *Type* *Abandoned due to an inability to alter JSON-LD's @type attribute based on a field.*
+  - Type
     - Organizational Unit (org:OrganizationalUnit)
     - Airline (schema:Airline)
     - Corporation (schema:Corporation)
@@ -52,7 +52,7 @@ given the structure of Drupal's RDF module and the Islandora JSON-LD module.
   - Date Begin (EDTF v.1)
   - Date End (EDTF v.1)
 - Person
-  - (Title is auto generated from Preferred Name)
+  - Title/Display Name
   - Alternate Name
   - Preferred Name
   - Birth Date (EDTF v.1)
@@ -71,7 +71,7 @@ given the structure of Drupal's RDF module and the Islandora JSON-LD module.
   - Title
   - Body
   - Authorities
-  - *Type* *Abandoned due to an inability to alter JSON-LD's @type attribute based on a field.*
+  - Type
     - Topical (mads:Topic)
     - Cultural Context
     - Genre/Form (mads:GenreForm)

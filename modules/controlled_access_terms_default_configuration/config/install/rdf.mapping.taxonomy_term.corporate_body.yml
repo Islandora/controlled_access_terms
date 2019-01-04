@@ -26,9 +26,6 @@ fieldMappings:
   field_cat_date_begin:
     properties:
       - 'schema:foundingDate'
-  field_corp_parent_org:
-    properties:
-      - 'schema:parentOrganization'
   field_authority_link:
     properties:
       - 'schema:sameAs'

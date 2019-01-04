@@ -2,14 +2,15 @@ langcode: en
 status: true
 dependencies:
   module:
+    - controlled_access_terms
     - taxonomy
-id: taxonomy_term.field_relation
-field_name: field_relation
+id: taxonomy_term.field_relationships
+field_name: field_relationships
 entity_type: taxonomy_term
-type: entity_reference
+type: typed_relation
 settings:
-  target_type: node
-module: core
+  target_type: taxonomy_term
+module: controlled_access_terms
 locked: false
 cardinality: -1
 translatable: true
