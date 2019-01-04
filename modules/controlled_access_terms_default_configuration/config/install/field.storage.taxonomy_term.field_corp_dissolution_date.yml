@@ -6,7 +6,7 @@ dependencies:
 id: taxonomy_term.field_corp_dissolution_date
 field_name: field_corp_dissolution_date
 entity_type: taxonomy_term
-type: string
+type: edtf
 settings:
   max_length: 60
   is_ascii: false

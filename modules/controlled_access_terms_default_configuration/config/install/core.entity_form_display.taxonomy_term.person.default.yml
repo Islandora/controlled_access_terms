@@ -42,7 +42,7 @@ content:
       strict_dates: false
       intervals: false
     third_party_settings: {  }
-    type: text_edtf
+    type: edtf_default
     region: content
   field_cat_date_end:
     weight: 27
@@ -50,7 +50,7 @@ content:
       strict_dates: false
       intervals: false
     third_party_settings: {  }
-    type: text_edtf
+    type: edtf_default
     region: content
   field_person_alternate_names:
     weight: 3
