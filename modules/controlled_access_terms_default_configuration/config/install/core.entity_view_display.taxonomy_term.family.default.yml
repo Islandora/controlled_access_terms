@@ -2,13 +2,14 @@ langcode: en
 status: true
 dependencies:
   config:
+    - field.field.taxonomy_term.family.field_authority_link
     - field.field.taxonomy_term.family.field_cat_date_begin
     - field.field.taxonomy_term.family.field_cat_date_end
-    - field.field.taxonomy_term.family.field_authority_link
+    - field.field.taxonomy_term.family.field_relationships
     - taxonomy.vocabulary.family
   module:
     - controlled_access_terms
-    - user
+    - text
 id: taxonomy_term.family.default
 targetEntityType: taxonomy_term
 bundle: family
@@ -20,6 +21,18 @@ content:
     weight: 4
     settings: {  }
     third_party_settings: {  }
+    region: content
+  field_authority_link:
+    weight: 10
+    label: above
+    settings:
+      trim_length: 80
+      url_only: false
+      url_plain: false
+      rel: ''
+      target: _blank
+    third_party_settings: {  }
+    type: authority_formatter_default
     region: content
   field_cat_date_begin:
     weight: 8
@@ -45,17 +58,12 @@ content:
     third_party_settings: {  }
     type: text_edtf_human
     region: content
-  field_authority_link:
-    weight: 10
+  field_relationships:
+    weight: 11
     label: above
     settings:
-      trim_length: '80'
-      url_only: ''
-      url_plain: ''
-      rel: ''
-      target: _blank
+      link: true
     third_party_settings: {  }
-    type: authority_formatter_default
+    type: typed_relation_default
     region: content
-hidden:
-  langcode: true
+hidden: {  }
