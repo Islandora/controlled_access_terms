@@ -17,7 +17,7 @@ use Drupal\Core\Form\FormStateInterface;
  *
  * @FieldWidget(
  *   id = "edtf_default",
- *   label = @Translation("Extended Date Time Format, Level 1"),
+ *   label = @Translation("Default EDTF widget"),
  *   field_types = {
  *     "edtf"
  *   }

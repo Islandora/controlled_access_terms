@@ -13,7 +13,7 @@ use Drupal\Core\Form\FormStateInterface;
  *
  * @FieldFormatter(
  *   id = "edtf_default",
- *   label = @Translation("EDTF (L1) for Humans"),
+ *   label = @Translation("Default EDTF formatter"),
  *   field_types = {
  *     "edtf"
  *   }
