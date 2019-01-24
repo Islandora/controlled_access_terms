@@ -70,3 +70,69 @@ function controlled_access_terms_jsonld_alter_normalized_array(EntityInterface $
     }
   }
 }
+
+/**
+ * Change fields using the EDTF Widget to the new EDTF Field Type.
+ */
+function controlled_access_terms_update_8002() {
+  // Ensure the new EDTF plugins can be found.
+  \Drupal::service('plugin.manager.field.field_type')->clearCachedDefinitions();
+
+  // Find all the fields using the text_edtf widget via form configs.
+  $config_factory = \Drupal::configFactory();
+  foreach ($config_factory->listAll('core.entity_form_display.') as $entity_form_display_config_name) {
+    $entity_form_display = $config_factory->getEditable($entity_form_display_config_name);
+    $fields = $entity_form_display->get('content');
+    foreach ($fields as $field_name => $field_settings) {
+      if (isset($field_settings['type']) && $field_settings['type'] === 'text_edtf') {
+
+        // Update this form setting.
+        $entity_form_display->set("content.$field_name.type", 'edtf_default');
+
+        // Update the field setting.
+        if (!$fields = \Drupal::entityManager()->getStorage('field_config')->loadByProperties(['field_name' => $field_name])) {
+          continue;
+        }
+        else {
+          foreach ($fields as $field) {
+            $new_field = $field->toArray();
+            $new_field['field_type'] = 'edtf';
+            $new_field = FieldConfig::create($new_field);
+            $new_field->original = $new_field;
+            $new_field->enforceIsNew(FALSE);
+            $new_field->save();
+          }
+        }
+
+        // Update the field storage setting.
+        if (!$field_storage_configs = \Drupal::entityManager()->getStorage('field_storage_config')->loadByProperties(['field_name' => $field_name])) {
+          continue;
+        }
+        else {
+          foreach ($field_storage_configs as $field_storage) {
+            $new_field_storage = $field_storage->toArray();
+            $new_field_storage['type'] = 'edtf';
+            $new_field_storage = FieldStorageConfig::create($new_field_storage);
+            $new_field_storage->original = $new_field_storage;
+            $new_field_storage->enforceIsNew(FALSE);
+            $new_field_storage->save();
+          }
+        }
+      }
+    }
+    $entity_form_display->save(TRUE);
+  }
+
+  // Find display configs.
+  foreach ($config_factory->listAll('core.entity_view_display.') as $entity_view_display_config_name) {
+    $entity_view_display = $config_factory->getEditable($entity_view_display_config_name);
+    $fields = $entity_view_display->get('content');
+    foreach ($fields as $field_name => $field_settings) {
+      if (isset($field_settings['type']) && ($field_settings['type'] === 'text_edtf_human' || $field_settings['type'] === 'text_edtf_iso8601')) {
+        // Update this view setting.
+        $entity_view_display->set("content.$field_name.type", 'edtf_default');
+      }
+    }
+    $entity_view_display->save(TRUE);
+  }
+}
