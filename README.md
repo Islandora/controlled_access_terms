@@ -22,14 +22,16 @@ greatly appreciated.
 ## Content Types
 
 Below is a list of the (at least partially) implemented content types with
-their fields. *Emphasized fields* were originally planned but proved infeasible
-given the structure of Drupal's RDF module and the Islandora JSON-LD module.
+their fields. The fields with "EDTF L1" accept and display dates corresponding
+to the Library of Congress [2012 Extended Date/Time Format Specification](http://www.loc.gov/standards/datetime/pre-submission.html)
+_Level 1_.  [EDTF was incorporated in ISO 8601-2019 with some modifications](http://www.loc.gov/standards/datetime/edtf.html)
+which will be supported in a future update.
 
 - Corporate Body
   - Preferred Name (Title)
   - Alternate Name
-  - Founding Date (EDTF v.1)
-  - Dissolution Date (EDTF v.1)
+  - Founding Date (EDTF L1)
+  - Dissolution Date (EDTF L1)
   - Parent Organization
   - Authorities
   - Description
@@ -49,14 +51,14 @@ given the structure of Drupal's RDF module and the Islandora JSON-LD module.
   - Display Label (Title)
   - Authorities
   - Relation
-  - Date Begin (EDTF v.1)
-  - Date End (EDTF v.1)
+  - Date Begin (EDTF L1)
+  - Date End (EDTF L1)
 - Person
   - Title/Display Name
   - Alternate Name
   - Preferred Name
-  - Birth Date (EDTF v.1)
-  - Death Date (EDTF v.1)
+  - Birth Date (EDTF L1)
+  - Death Date (EDTF L1)
   - Relation
   - Authorities
   - Description
