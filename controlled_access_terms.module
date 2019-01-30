@@ -7,6 +7,9 @@
 
 use Drupal\jsonld\Normalizer\NormalizerBase;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\controlled_access_terms\EDTFConverter;
+use Drupal\field\Entity\FieldStorageConfig;
+use Drupal\field\Entity\FieldConfig;
 
 /**
  * Implements hook_rdf_namespaces().
@@ -15,6 +18,7 @@ function controlled_access_terms_rdf_namespaces() {
   return [
     'wgs84_pos' => 'http://www.w3.org/2003/01/geo/wgs84_pos#',
     'org' => 'https://www.w3.org/TR/vocab-org/#org:',
+    'xs' => 'http://www.w3.org/2001/XMLSchema#',
   ];
 }
 
@@ -24,17 +28,113 @@ function controlled_access_terms_rdf_namespaces() {
 function controlled_access_terms_jsonld_alter_normalized_array(EntityInterface $entity, array &$normalized, array $context) {
   if (isset($normalized['@graph']) && is_array($normalized['@graph'])) {
     foreach ($entity->getFieldDefinitions() as $field => $field_definition) {
-      if (($field_definition->getType() == 'typed_relation') && (!empty($entity->get($field)->getValue()))) {
-        foreach ($entity->get($field)->getValue() as $value) {
-          $predicate = NormalizerBase::escapePrefix($value['rel_type'], $context['namespaces']);
-          $referenced_entity = \Drupal::entityTypeManager()->getStorage($field_definition->getSetting('target_type'))->load($value['target_id']);
-          // We are assuming the first graph is the one corresponding
-          // to the node/taxonomy_term we are modifying.
-          $normalized['@graph'][0][$predicate][] = [
-            '@id' => $referenced_entity->toUrl('canonical', ['absolute' => TRUE])->setRouteParameter('_format', 'jsonld')->toString(),
-          ];
+      if (!empty($entity->get($field)->getValue())) {
+        if ($field_definition->getType() == 'typed_relation') {
+          foreach ($entity->get($field)->getValue() as $value) {
+            $predicate = NormalizerBase::escapePrefix($value['rel_type'], $context['namespaces']);
+            $referenced_entity = \Drupal::entityTypeManager()->getStorage($field_definition->getSetting('target_type'))->load($value['target_id']);
+            // We are assuming the first graph is the one corresponding
+            // to the node/taxonomy_term we are modifying.
+            $normalized['@graph'][0][$predicate][] = [
+              '@id' => $referenced_entity->toUrl('canonical', ['absolute' => TRUE])->setRouteParameter('_format', 'jsonld')->toString(),
+            ];
+          }
+        }
+        elseif ($field_definition->getType() == 'edtf') {
+          // Get the predicate to look in.
+          foreach ($context['current_entity_rdf_mapping']->get('fieldMappings')[$field]['properties'] as $predicate) {
+            // Find the predicate value that needs updating.
+            $predicate_normalized = NormalizerBase::escapePrefix($predicate, $context['namespaces']);
+            foreach ($normalized['@graph'][0][$predicate_normalized] as $index => $value) {
+              // Clean the date of ranges, uncertainty, and approximations.
+              // Have to remap the array from '@value' to 'value'.
+              $normalized_date = EDTFConverter::dateIso8601Value(['value' => $value['@value']]);
+
+              // Determine which type to use.
+              $date_type = NormalizerBase::escapePrefix('xs:date', $context['namespaces']);
+              switch (count(explode('-', $normalized_date))) {
+                case 1:
+                  $date_type = NormalizerBase::escapePrefix('xs:gYear', $context['namespaces']);
+                  break;
+
+                case 2:
+                  $date_type = NormalizerBase::escapePrefix('xs:gYearMonth', $context['namespaces']);
+                  break;
+              }
+              $normalized['@graph'][0][$predicate_normalized][] = [
+                '@value' => $normalized_date,
+                '@type'  => $date_type,
+              ];
+            }
+          }
         }
       }
     }
+  }
+}
+
+/**
+ * Change fields using the EDTF Widget to the new EDTF Field Type.
+ */
+function controlled_access_terms_update_8002() {
+  // Ensure the new EDTF plugins can be found.
+  \Drupal::service('plugin.manager.field.field_type')->clearCachedDefinitions();
+
+  // Find all the fields using the text_edtf widget via form configs.
+  $config_factory = \Drupal::configFactory();
+  foreach ($config_factory->listAll('core.entity_form_display.') as $entity_form_display_config_name) {
+    $entity_form_display = $config_factory->getEditable($entity_form_display_config_name);
+    $fields = $entity_form_display->get('content');
+    foreach ($fields as $field_name => $field_settings) {
+      if (isset($field_settings['type']) && $field_settings['type'] === 'text_edtf') {
+
+        // Update this form setting.
+        $entity_form_display->set("content.$field_name.type", 'edtf_default');
+
+        // Update the field setting.
+        if (!$fields = \Drupal::entityManager()->getStorage('field_config')->loadByProperties(['field_name' => $field_name])) {
+          continue;
+        }
+        else {
+          foreach ($fields as $field) {
+            $new_field = $field->toArray();
+            $new_field['field_type'] = 'edtf';
+            $new_field = FieldConfig::create($new_field);
+            $new_field->original = $new_field;
+            $new_field->enforceIsNew(FALSE);
+            $new_field->save();
+          }
+        }
+
+        // Update the field storage setting.
+        if (!$field_storage_configs = \Drupal::entityManager()->getStorage('field_storage_config')->loadByProperties(['field_name' => $field_name])) {
+          continue;
+        }
+        else {
+          foreach ($field_storage_configs as $field_storage) {
+            $new_field_storage = $field_storage->toArray();
+            $new_field_storage['type'] = 'edtf';
+            $new_field_storage = FieldStorageConfig::create($new_field_storage);
+            $new_field_storage->original = $new_field_storage;
+            $new_field_storage->enforceIsNew(FALSE);
+            $new_field_storage->save();
+          }
+        }
+      }
+    }
+    $entity_form_display->save(TRUE);
+  }
+
+  // Find display configs.
+  foreach ($config_factory->listAll('core.entity_view_display.') as $entity_view_display_config_name) {
+    $entity_view_display = $config_factory->getEditable($entity_view_display_config_name);
+    $fields = $entity_view_display->get('content');
+    foreach ($fields as $field_name => $field_settings) {
+      if (isset($field_settings['type']) && ($field_settings['type'] === 'text_edtf_human' || $field_settings['type'] === 'text_edtf_iso8601')) {
+        // Update this view setting.
+        $entity_view_display->set("content.$field_name.type", 'edtf_default');
+      }
+    }
+    $entity_view_display->save(TRUE);
   }
 }

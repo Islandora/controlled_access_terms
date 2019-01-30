@@ -7,19 +7,19 @@ use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Form\FormStateInterface;
 
 /**
- * Plugin implementation of the 'TextEDTFHumanFormatter'.
+ * Plugin implementation of the 'TextEDTFFormatter'.
  *
  * Only supports EDTF through level 1.
  *
  * @FieldFormatter(
- *   id = "text_edtf_human",
- *   label = @Translation("EDTF (L1) for Humans"),
+ *   id = "edtf_default",
+ *   label = @Translation("Default EDTF formatter"),
  *   field_types = {
- *     "string"
+ *     "edtf"
  *   }
  * )
  */
-class TextEDTFHumanFormatter extends FormatterBase {
+class EDTFFormatter extends FormatterBase {
 
   /**
    * Month/Season to text map.
@@ -158,7 +158,7 @@ class TextEDTFHumanFormatter extends FormatterBase {
       '#title' => t('Hemisphere Seasons'),
       '#type' => 'select',
       '#default_value' => $this->getSetting('season_hemisphere'),
-      '#description' => t("Seasons don't have digit months so we map them 
+      '#description' => t("Seasons don't have digit months so we map them
                           to their respective equinox and solstice months.
                           Select a hemisphere to use for the mapping."),
       '#options' => [
