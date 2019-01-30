@@ -8,6 +8,8 @@
 use Drupal\jsonld\Normalizer\NormalizerBase;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\controlled_access_terms\EDTFConverter;
+use Drupal\field\Entity\FieldStorageConfig;
+use Drupal\field\Entity\FieldConfig;
 
 /**
  * Implements hook_rdf_namespaces().
