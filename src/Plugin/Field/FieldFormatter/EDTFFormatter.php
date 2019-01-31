@@ -43,6 +43,25 @@ class EDTFFormatter extends FormatterBase {
     '22' => ['mmm' => 'Sum', 'mmmm' => 'Summer'],
     '23' => ['mmm' => 'Aut', 'mmmm' => 'Autumn'],
     '24' => ['mmm' => 'Win', 'mmmm' => 'Winter'],
+    '25' => ['mmm' => 'Spr', 'mmmm' => 'Spring - Northern Hemisphere'],
+    '26' => ['mmm' => 'Sum', 'mmmm' => 'Summer - Northern Hemisphere'],
+    '27' => ['mmm' => 'Aut', 'mmmm' => 'Autumn - Northern Hemisphere'],
+    '28' => ['mmm' => 'Win', 'mmmm' => 'Winter - Northern Hemisphere'],
+    '29' => ['mmm' => 'Spr', 'mmmm' => 'Spring - Southern Hemisphere'],
+    '30' => ['mmm' => 'Sum', 'mmmm' => 'Summer - Southern Hemisphere'],
+    '31' => ['mmm' => 'Aut', 'mmmm' => 'Autumn - Southern Hemisphere'],
+    '32' => ['mmm' => 'Win', 'mmmm' => 'Winter - Southern Hemisphere'],
+    '33' => ['mmm' => 'Q1', 'mmmm' => 'Quarter 1'],
+    '34' => ['mmm' => 'Q2', 'mmmm' => 'Quarter 2'],
+    '35' => ['mmm' => 'Q3', 'mmmm' => 'Quarter 3'],
+    '36' => ['mmm' => 'Q4', 'mmmm' => 'Quarter 4'],
+    // I'm making up the rest of these abbreviations
+    // because I can't find standardized ones.
+    '37' => ['mmm' => 'Quad1', 'mmmm' => 'Quadrimester 1'],
+    '38' => ['mmm' => 'Quad2', 'mmmm' => 'Quadrimester 2'],
+    '39' => ['mmm' => 'Quad3', 'mmmm' => 'Quadrimester 3'],
+    '40' => ['mmm' => 'Sem1', 'mmmm' => 'Semestral 1'],
+    '41' => ['mmm' => 'Sem2', 'mmmm' => 'Semestral 2'],
   ];
 
   /**
@@ -58,52 +77,15 @@ class EDTFFormatter extends FormatterBase {
   ];
 
   /**
-   * Northern hemisphere season map.
-   *
-   * @var array
-   */
-  private $seasonMapNorth = [
-  // Spring => March.
-    '21' => '03',
-  // Summer => June.
-    '22' => '06',
-  // Autumn => September.
-    '23' => '09',
-  // Winter => December.
-    '24' => '12',
-  ];
-
-  /**
-   * Southern hemisphere season map.
-   *
-   * @var array
-   */
-  private $seasonMapSouth = [
-  // Spring => September.
-    '21' => '03',
-  // Summer => December.
-    '22' => '06',
-  // Autumn => March.
-    '23' => '09',
-  // Winter => June.
-    '24' => '12',
-  ];
-
-  /**
    * {@inheritdoc}
    */
   public static function defaultSettings() {
     return [
     // ISO 8601 bias.
       'date_separator' => 'dash',
-    // ISO 8601 bias.
       'date_order' => 'big_endian',
-    // ISO 8601 bias.
       'month_format' => 'mm',
-    // ISO 8601 bias.
       'day_format' => 'dd',
-    // Northern bias, sorry.
-      'season_hemisphere' => 'north',
     ] + parent::defaultSettings();
   }
 
@@ -154,18 +136,6 @@ class EDTFFormatter extends FormatterBase {
         'd' => t('one-digit day of the month for days below 10, e.g. 2'),
       ],
     ];
-    $form['season_hemisphere'] = [
-      '#title' => t('Hemisphere Seasons'),
-      '#type' => 'select',
-      '#default_value' => $this->getSetting('season_hemisphere'),
-      '#description' => t("Seasons don't have digit months so we map them
-                          to their respective equinox and solstice months.
-                          Select a hemisphere to use for the mapping."),
-      '#options' => [
-        'north' => t('Northern Hemisphere'),
-        'south' => t('Southern Hemisphere'),
-      ],
-    ];
     return $form;
   }
 
@@ -187,32 +157,49 @@ class EDTFFormatter extends FormatterBase {
 
     foreach ($items as $delta => $item) {
       // Interval.
-      list($begin, $end) = explode('/', $item->value);
+      if (strpos($item->value, '/') !== FALSE) {
+        list($begin, $end) = explode('/', $item->value);
 
-      $formatted_begin = $this->formatDate($begin);
+        if (empty($begin) || $begin === '..') {
+          $formatted_begin = "open start";
+        }
+        else {
+          $formatted_begin = $this->formatDate($begin);
+        }
 
-      // End either empty or valid extended interval values (5.2.3.)
-      if (empty($end)) {
-        $element[$delta] = ['#markup' => $formatted_begin];
-      }
-      elseif ($end === 'unknown' || $end === 'open') {
-        $element[$delta] = [
-          '#markup' => t('@begin to @end', [
-            '@begin' => $formatted_begin,
-            '@end' => $end,
-          ]),
-        ];
-      }
-      else {
-        $formatted_end = $this->formatDate($end);
+        if (empty($end) || $end === '..') {
+          $formatted_end = "open end";
+        }
+        else {
+          $formatted_end = $this->formatDate($end);
+        }
+
         $element[$delta] = [
           '#markup' => t('@begin to @end', [
             '@begin' => $formatted_begin,
             '@end' => $formatted_end,
           ]),
         ];
+        continue;
+      }
+      // Sets.
+      if (strpos($item->value, '[') !== FALSE || strpos($item->value, '{') !== FALSE) {
+        $set_qualifier = (strpos($item->value, '[') !== FALSE) ? t('one of the dates:') : t('all of the dates:');
+        foreach (preg_split('/(,|\.\.)/', trim($item->value, '{}[]')) as $date) {
+          $formatted_dates[] = $this->formatDate($date);
+        }
+        $element[$delta] = [
+          '#markup' => t('@qualifier @list', [
+            '@qualifier' => $set_qualifier,
+            '@list' => implode(', ', $formatted_dates),
+          ]),
+        ];
+        continue;
       }
 
+      $element[$delta] = [
+        '#markup' => $this->formatDate($item->value),
+      ];
     }
     return $element;
   }
@@ -232,6 +219,7 @@ class EDTFFormatter extends FormatterBase {
     // TODO: Time?
     $qualifiers_format = '%s';
     // Uncertainty.
+    // TODO: Group Qualification
     if (!(strpos($edtf_text, '~') === FALSE)) {
       $qualifiers_format = t('approximately');
       $qualifiers_format .= ' %s';
@@ -240,24 +228,28 @@ class EDTFFormatter extends FormatterBase {
       $qualifiers_format = '%s ';
       $qualifiers_format .= t('(uncertain)');
     }
-    $cleaned_datetime = str_replace(['?', '~'], '', $cleaned_datetime);
+    if (!(strpos($edtf_text, '%') === FALSE)) {
+      $qualifiers_format = '%s ';
+      $qualifiers_format .= t('(approximate and uncertain)');
+    }
+    $cleaned_datetime = str_replace(['?', '~', '%'], '', $cleaned_datetime);
 
     list($year, $month, $day) = explode('-', $cleaned_datetime, 3);
 
     // Which unspecified, if any?
     $which_unspecified = '';
-    if (!(strpos($year, 'uu') === FALSE)) {
+    if (!(strpos($year, 'XX') === FALSE)) {
       $which_unspecified = t('decade');
     }
-    if (!(strpos($year, 'u') === FALSE)) {
+    if (!(strpos($year, 'X') === FALSE)) {
       $which_unspecified = t('year');
     }
-    if (!(strpos($month, 'u') === FALSE)) {
+    if (!(strpos($month, 'X') === FALSE)) {
       $which_unspecified = t('month');
       // No partial months.
       $month = '';
     }
-    if (!(strpos($day, 'u') === FALSE)) {
+    if (!(strpos($day, 'X') === FALSE)) {
       $which_unspecified = t('day');
       // No partial days.
       $day = '';
@@ -268,8 +260,8 @@ class EDTFFormatter extends FormatterBase {
     }
 
     // Clean-up unspecified year/decade.
-    if (!(strpos($year, 'u') === FALSE)) {
-      $year = str_replace('u', '0', $year);
+    if (!(strpos($year, 'X') === FALSE)) {
+      $year = str_replace('X', '0', $year);
       $year = t("the @year's", ['@year' => $year]);
     }
 
@@ -279,12 +271,6 @@ class EDTFFormatter extends FormatterBase {
       if ($settings['month_format'] === 'mmm' || $settings['month_format'] === 'mmmm') {
         $month = $this->MONTHS[$month][$settings['month_format']];
       }
-      // Digit Seasons.
-      elseif (in_array($month, ['21', '22', '23', '24'])) {
-        $season_mapping = ($settings['season_hemisphere'] === 'north' ? $this->seasonMapNorth : $this->seasonMapSouth);
-        $month = $season_mapping[$month];
-      }
-
       if ($settings['month_format'] === 'm') {
         $month = ltrim($month, ' 0');
       }
