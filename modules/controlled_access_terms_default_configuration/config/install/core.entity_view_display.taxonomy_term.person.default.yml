@@ -45,7 +45,6 @@ content:
       date_order: little_endian
       month_format: mmm
       day_format: dd
-      season_hemisphere: north
     third_party_settings: {  }
     type: edtf_default
     region: content
@@ -57,7 +56,6 @@ content:
       date_order: little_endian
       month_format: mmm
       day_format: dd
-      season_hemisphere: north
     third_party_settings: {  }
     type: edtf_default
     region: content
