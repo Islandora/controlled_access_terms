@@ -1,4 +1,4 @@
-<?
+<?php
 
 namespace Drupal\controlled_access_terms;
 
@@ -10,17 +10,17 @@ use Datetime;
 class EDTFUtils {
 
   // EDTF Date Parse REGEX Array Positions.
-  const DATE_PARSE_REGEX = '([%\?~])?(-?Y?-?([\dX]+)(E\d)?(S\d)?)([%\?~])?-?([%\?~])?([\dX]{2})?([%\?~])?-?([%\?~])?([\dX]{2})?([%\?~])?';
-  const FULL_MATCH             =  0;
-  const QUALIFIER_YEAR_ONLY    =  1;
-  const YEAR_FULL              =  2;
-  const YEAR_BASE              =  3;
-  const YEAR_EXPONENT          =  4;
-  const YEAR_SIGNIFICANT_DIGIT =  5;
-  const QUALIFIER_YEAR         =  6;
-  const QUALIFIER_MONTH_ONLY   =  7;
-  const MONTH                  =  8;
-  const QUALIFIER_MONTH        =  9;
+  const DATE_PARSE_REGEX       = '/^([%\?~])?(Y?(-?[\dX]+)(E\d)?(S\d)?)([%\?~])?-?([%\?~])?([\dX]{2})?([%\?~])?-?([%\?~])?([\dX]{2})?([%\?~])?$/';
+  const FULL_MATCH             = 0;
+  const QUALIFIER_YEAR_ONLY    = 1;
+  const YEAR_FULL              = 2;
+  const YEAR_BASE              = 3;
+  const YEAR_EXPONENT          = 4;
+  const YEAR_SIGNIFICANT_DIGIT = 5;
+  const QUALIFIER_YEAR         = 6;
+  const QUALIFIER_MONTH_ONLY   = 7;
+  const MONTH                  = 8;
+  const QUALIFIER_MONTH        = 9;
   const QUALIFIER_DAY_ONLY     = 10;
   const DAY                    = 11;
   const QUALIFIER_DAY          = 12;
@@ -68,12 +68,17 @@ class EDTFUtils {
     '41' => ['mmm' => 'Sem2', 'mmmm' => 'Semestral 2'],
   ];
 
-
   /**
    * Validate an EDTF expression.
    *
    * @param string $edtf_text
    *   The datetime string.
+   * @param bool $intervals
+   *   Are interval expressions permitted?
+   * @param bool $sets
+   *   Are set expressions permitted?
+   * @param bool $strict
+   *   Are only valid calendar dates permitted?
    *
    * @return array
    *   Array of error messages. Valid if empty.
@@ -90,7 +95,7 @@ class EDTFUtils {
         }
         // Test each date in set.
         foreach (preg_split('/(,|\.\.)/', trim($edtf_text, '{}[]')) as $date) {
-          $msgs = array_merge($msgs, self::validate_date($date, $strict));
+          $msgs = array_merge($msgs, self::validateDate($date, $strict));
         }
         return $msgs;
       }
@@ -102,13 +107,13 @@ class EDTFUtils {
       }
       foreach (explode('/', $$edtf_text) as $date) {
         if (!empty($date) && !$date === '..') {
-          $msgs = array_merge($msgs, self::validate_date($date, $strict));
+          $msgs = array_merge($msgs, self::validateDate($date, $strict));
         }
       }
       return $msgs;
     }
     // Single date (we assume at this point).
-    return self::validate_date($edtf_text, $strict);
+    return self::validateDate($edtf_text, $strict);
   }
 
   /**
@@ -116,11 +121,13 @@ class EDTFUtils {
    *
    * @param string $datetime_str
    *   The datetime string.
+   * @param bool $strict
+   *   Are only valid calendar dates permitted?
    *
    * @return array
    *   Array of error messages. Valid if empty.
    */
-  public static function validate_date($datetime_str, $strict = FALSE) {
+  public static function validateDate($datetime_str, $strict = FALSE) {
     $msgs = [];
 
     list($date, $time) = explode('T', $datetime_str);
@@ -129,37 +136,39 @@ class EDTFUtils {
 
     // "Something" is wrong with the provided date if it doesn't round-trip.
     // Includes (non-exhaustive):
-    //   - no invalid characters present,
-    //   - two-digit months and days, and
-    //   - capturing group qualifiers.
+    // - no invalid characters present,
+    // - two-digit months and days, and
+    // - capturing group qualifiers.
     if ($date !== $parsed_date[self::FULL_MATCH]) {
-      $msgs[] = ["Could not parse the date '$date'",];
+      $msgs[] = "Could not parse the date '$date'";
     }
 
     // Year.
-    if ((strpos($parsed_date[self::YEAR_FULL], 'Y') === 0) {
-      if ($strict){
-        $msgs[] = ["Extended years are not supported with the 'strict dates' option enabled."];
+    if (strpos($parsed_date[self::YEAR_FULL], 'Y') === 0) {
+      if ($strict) {
+        $msgs[] = "Extended years are not supported with the 'strict dates' option enabled.";
       }
       // Expand exponents.
       if (!empty($parsed_date[self::YEAR_EXPONENT])) {
         $exponent = intval(substr($parsed_date[self::YEAR_EXPONENT], 1));
         $parsed_date[self::YEAR_BASE] = strval((10 ** $exponent) * intval($parsed_date[self::YEAR_BASE]));
-        $parsed_date[self::YEAR_BASE] = self::expand_year($parsed_date[self::YEAR_FULL], $parsed_date[self::YEAR_BASE], $parsed_date[self::YEAR_EXPONENT]);
+        $parsed_date[self::YEAR_BASE] = self::expandYear($parsed_date[self::YEAR_FULL], $parsed_date[self::YEAR_BASE], $parsed_date[self::YEAR_EXPONENT]);
       }
-    } elseif (length($parsed_date[self::YEAR_BASE]) > 4) {
-      $msgs[] = ["Years longer than 4 digits must be prefixed with a 'Y'."];
-    } elseif (length($parsed_date[self::YEAR_BASE]) < 4) {
-      $msgs[] = ["Years must be at least 4 characters long."];
     }
-    $strict_pattern = 'Y'
+    elseif (strlen(ltrim($parsed_date[self::YEAR_BASE], '-')) > 4) {
+      $msgs[] = "Years longer than 4 digits must be prefixed with a 'Y'.";
+    }
+    elseif (strlen($parsed_date[self::YEAR_BASE]) < 4) {
+      $msgs[] = "Years must be at least 4 characters long.";
+    }
+    $strict_pattern = 'Y';
 
     // Month.
     if (!array_key_exists(self::MONTH, $parsed_date) && !empty($parsed_date[self::MONTH])) {
       // Valid month values?
       if (!array_key_exists($parsed_date[self::MONTH], self::MONTHS_MAP) &&
-          strpos($parsed_date[self::MONTH], 'X') === FALSE ) {
-        $msgs[] = ["Provided month value '$parsed_date[self::MONTH]' is not valid."];
+          strpos($parsed_date[self::MONTH], 'X') === FALSE) {
+        $msgs[] = "Provided month value '" . $parsed_date[self::MONTH] . "' is not valid.";
       }
       $strict_pattern = 'Y-m';
     }
@@ -169,7 +178,7 @@ class EDTFUtils {
       // Valid day values?
       if (strpos($parsed_date[self::DAY], 'X') === FALSE &&
           !in_array(intval($parsed_date[self::DAY]), range(1, 31))) {
-        $msgs[] = ["Provided day value '$parsed_date[self::DAY]' is not valid."];
+        $msgs[] = "Provided day value '" . $parsed_date[self::DAY] . "' is not valid.";
       }
       $strict_pattern = 'Y-m-d';
     }
@@ -197,7 +206,8 @@ class EDTFUtils {
       // Assemble the parts again.
       if ($time) {
         $cleaned_datetime = $datetime_str;
-      } else {
+      }
+      else {
         $cleaned_datetime = implode('-', [
           $parsed_date[self::YEAR_BASE],
           $parsed_date[self::MONTH],
@@ -219,17 +229,27 @@ class EDTFUtils {
     return $msgs;
   }
 
-  public static function expand_year($year_full, $year_base, $year_exponent){
-    $year = '';
-    // Apply negative to base.
-    // Note that the minus sign can be before or after the 'Y'
-    // in the full date field; thus, simply check not FALSE.
-    if (strpos($year_full,'-') !== FALSE) {
-      $year = '-';
+  /**
+   * Expand an exponent year.
+   *
+   * @param string $year_full
+   *   The full year expression from the EDTF string.
+   * @param string $year_base
+   *   The base expression from the EDTF string.
+   * @param string $year_exponent
+   *   The exponent expression from the EDTF string.
+   *
+   * @return string
+   *   The expanded year value.
+   */
+  public static function expandYear($year_full, $year_base, $year_exponent) {
+    if (!empty($year_exponent)) {
+      $exponent = intval(substr($year_exponent, 1));
+      return strval((10 ** $exponent) * intval($year_base));
     }
-    // Expand exponents.
-    $exponent = intval(substr($year_exponent, 1));
-    $year .= strval((10 ** $exponent) * intval($year_base));
+    else {
+      return $year_base;
+    }
   }
 
 }

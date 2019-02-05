@@ -173,7 +173,7 @@ class EDTFFormatter extends FormatterBase {
    */
   protected function formatDate($edtf_text) {
 
-    list($date, $time) = explode('T', $datetime_str);
+    list($date, $time) = explode('T', $edtf_text);
 
     // Formatted versions of the date elements.
     $year = '';
@@ -181,7 +181,8 @@ class EDTFFormatter extends FormatterBase {
     $day = '';
 
     preg_match(EDTFUtils::DATE_PARSE_REGEX, $date, $parsed_date);
-    $parsed_date[EDTFUtils::YEAR_BASE] = EDTFUtils::expand_year($parsed_date[EDTFUtils::YEAR_FULL], $parsed_date[EDTFUtils::YEAR_BASE], $parsed_date[EDTFUtils::YEAR_EXPONENT]);
+
+    $parsed_date[EDTFUtils::YEAR_BASE] = EDTFUtils::expandYear($parsed_date[EDTFUtils::YEAR_FULL], $parsed_date[EDTFUtils::YEAR_BASE], $parsed_date[EDTFUtils::YEAR_EXPONENT]);
     $settings = $this->getSettings();
 
     // Unspecified.
@@ -195,25 +196,33 @@ class EDTFFormatter extends FormatterBase {
     elseif (strpos($parsed_date[EDTFUtils::YEAR_BASE], 'XX') !== FALSE) {
       $unspecified[] = t('decade');
     }
-    elseif (strpos($parsed_date[EDTFUtils::YEAR_BASE], 'XXXX') !== FALSE) {
+    elseif (strpos($parsed_date[EDTFUtils::YEAR_BASE], 'X') !== FALSE) {
       $unspecified[] = t('year');
     }
     // Clean-up unspecified year/decade.
     $year = str_replace('X', '0', $parsed_date[EDTFUtils::YEAR_BASE]);
 
-    if (array_key_exists(self::MONTH, $parsed_date) && strpos($parsed_date[EDTFUtils::MONTH], 'X') !== FALSE) {
-      $unspecified[] = t('month');
+    if (array_key_exists(EDTFUtils::MONTH, $parsed_date)) {
+      if (strpos($parsed_date[EDTFUtils::MONTH], 'X') !== FALSE) {
+        $unspecified[] = t('month');
+      }
       // IF 'mm', do nothing, it is already in this format.
       if ($settings['month_format'] === 'mmm' || $settings['month_format'] === 'mmmm') {
         $month = EDTFUtils::MONTHS_MAP[$parsed_date[EDTFUtils::MONTH]][$settings['month_format']];
       }
-      if ($settings['month_format'] === 'm') {
+      elseif ($settings['month_format'] === 'm') {
         $month = ltrim($parsed_date[EDTFUtils::MONTH], ' 0');
       }
+      else {
+        $month = $parsed_date[EDTFUtils::MONTH];
+      }
     }
-    if (array_key_exists(self::DAY, $parsed_date) && strpos($parsed_date[EDTFUtils::DAY], 'X') !== FALSE) {
-      $unspecified[] = t('day');
-      if ($settings['day_format'] === 'd') {
+
+    if (array_key_exists(EDTFUtils::DAY, $parsed_date)) {
+      if (strpos($parsed_date[EDTFUtils::DAY], 'X') !== FALSE) {
+        $unspecified[] = t('day');
+      }
+      elseif ($settings['day_format'] === 'd') {
         $day = ltrim($parsed_date[EDTFUtils::DAY], ' 0');
       }
       else {
@@ -221,7 +230,6 @@ class EDTFFormatter extends FormatterBase {
       }
     }
 
-    // TODO: Qualified.
     // Put the parts back together.
     if ($settings['date_order'] === 'little_endian') {
       $parts_in_order = [$day, $month, $year];
@@ -241,8 +249,171 @@ class EDTFFormatter extends FormatterBase {
       $formatted_date = implode($this->DELIMITERS[$settings['date_separator']], array_filter($parts_in_order));
     }
 
-    // TODO: Time.
-    // Return sprintf($qualifiers_format, $formatted_date);.
+    // Time.
+    // TODO: Add time formatting options.
+    if (isset($time) && !empty($time)) {
+      $formatted_date .= ' ' . $time;
+    }
+
+    // Unspecified.
+    // Year = 1, Month = 2, Day = 4.
+    switch (count($unspecified)) {
+      case 1:
+        $formatted_date = t('unspecified @time_unit in @date', [
+          '@time_unit' => $unspecified[0],
+          '@date' => $formatted_date,
+        ]);
+        break;
+
+      case 2:
+        $formatted_date = t('unspecified @time_unit1 and @time_unit2 in @date', [
+          '@time_unit1' => $unspecified[0],
+          '@time_unit2' => $unspecified[1],
+          '@date' => $formatted_date,
+        ]);
+        break;
+
+      case 3:
+        $formatted_date = t('unspecified @time_unit1, @time_unit2, and @time_unit3 in @date', [
+          '@time_unit1' => $unspecified[0],
+          '@time_unit2' => $unspecified[1],
+          '@time_unit2' => $unspecified[2],
+          '@date' => $formatted_date,
+        ]);
+        break;
+    }
+
+    // Qualified.
+    // This is ugly and terrible, but I'm out of ideas for simplifying it.
+    $qualifiers = [
+      'uncertain' => [],
+      'approximate' => [],
+    ];
+    if (array_key_exists(EDTFUtils::QUALIFIER_YEAR, $parsed_date) && !empty($parsed_date[EDTFUtils::QUALIFIER_YEAR])) {
+      switch ($parsed_date[EDTFUtils::QUALIFIER_YEAR]) {
+        case '?':
+          $qualifiers['uncertain']['year'] = TRUE;
+          break;
+
+        case '~':
+          $qualifiers['approximate']['year'] = TRUE;
+          break;
+
+        case '%':
+          $qualifiers['uncertain']['year'] = TRUE;
+          $qualifiers['approximate']['year'] = TRUE;
+          break;
+      }
+    }
+    if (array_key_exists(EDTFUtils::QUALIFIER_YEAR_ONLY, $parsed_date) && !empty($parsed_date[EDTFUtils::QUALIFIER_YEAR_ONLY])) {
+      switch ($parsed_date[EDTFUtils::QUALIFIER_YEAR_ONLY]) {
+        case '?':
+          $qualifiers['uncertain']['year'] = TRUE;
+          break;
+
+        case '~':
+          $qualifiers['approximate']['year'] = TRUE;
+          break;
+
+        case '%':
+          $qualifiers['uncertain']['year'] = TRUE;
+          $qualifiers['approximate']['year'] = TRUE;
+          break;
+      }
+    }
+    if (array_key_exists(EDTFUtils::QUALIFIER_MONTH, $parsed_date) && !empty($parsed_date[EDTFUtils::QUALIFIER_MONTH])) {
+      switch ($parsed_date[EDTFUtils::QUALIFIER_MONTH]) {
+        case '?':
+          $qualifiers['uncertain']['year'] = TRUE;
+          $qualifiers['uncertain']['month'] = TRUE;
+          break;
+
+        case '~':
+          $qualifiers['approximate']['year'] = TRUE;
+          $qualifiers['approximate']['month'] = TRUE;
+          break;
+
+        case '%':
+          $qualifiers['uncertain']['year'] = TRUE;
+          $qualifiers['uncertain']['month'] = TRUE;
+          $qualifiers['approximate']['year'] = TRUE;
+          $qualifiers['approximate']['month'] = TRUE;
+          break;
+      }
+    }
+    if (array_key_exists(EDTFUtils::QUALIFIER_MONTH_ONLY, $parsed_date) && !empty($parsed_date[EDTFUtils::QUALIFIER_MONTH_ONLY])) {
+      switch ($parsed_date[EDTFUtils::QUALIFIER_MONTH_ONLY]) {
+        case '?':
+          $qualifiers['uncertain']['month'] = TRUE;
+          break;
+
+        case '~':
+          $qualifiers['approximate']['month'] = TRUE;
+          break;
+
+        case '%':
+          $qualifiers['uncertain']['month'] = TRUE;
+          $qualifiers['approximate']['month'] = TRUE;
+          break;
+      }
+    }
+    if (array_key_exists(EDTFUtils::QUALIFIER_DAY, $parsed_date) && !empty($parsed_date[EDTFUtils::QUALIFIER_DAY])) {
+      switch ($parsed_date[EDTFUtils::QUALIFIER_DAY]) {
+        case '?':
+          $qualifiers['uncertain']['year'] = TRUE;
+          $qualifiers['uncertain']['month'] = TRUE;
+          $qualifiers['uncertain']['day'] = TRUE;
+          break;
+
+        case '~':
+          $qualifiers['approximate']['year'] = TRUE;
+          $qualifiers['approximate']['month'] = TRUE;
+          $qualifiers['approximate']['day'] = TRUE;
+          break;
+
+        case '%':
+          $qualifiers['uncertain']['year'] = TRUE;
+          $qualifiers['uncertain']['month'] = TRUE;
+          $qualifiers['uncertain']['day'] = TRUE;
+          $qualifiers['approximate']['year'] = TRUE;
+          $qualifiers['approximate']['month'] = TRUE;
+          $qualifiers['approximate']['day'] = TRUE;
+          break;
+      }
+    }
+    if (array_key_exists(EDTFUtils::QUALIFIER_DAY_ONLY, $parsed_date) && !empty($parsed_date[EDTFUtils::QUALIFIER_DAY_ONLY])) {
+      switch ($parsed_date[EDTFUtils::QUALIFIER_DAY_ONLY]) {
+        case '?':
+          $qualifiers['uncertain']['day'] = TRUE;
+          break;
+
+        case '~':
+          $qualifiers['approximate']['day'] = TRUE;
+          break;
+
+        case '%':
+          $qualifiers['uncertain']['day'] = TRUE;
+          $qualifiers['approximate']['day'] = TRUE;
+          break;
+      }
+    }
+    $qualifier_parts = [];
+    foreach ($qualifiers as $qualifier => $parts) {
+      $keys = array_keys($parts);
+      switch (count($keys)) {
+        case 1:
+        case 2:
+          $qualifier_parts[] = implode(' ' . t('and') . ' ', $keys) . ' ' . $qualifier;
+          break;
+
+        case 3:
+          $qualifier_parts[] = $qualifier;
+          break;
+      }
+    }
+    if (count($qualifier_parts) > 0) {
+      return $formatted_date . ' (' . implode('; ', $qualifier_parts) . ')';
+    }
     return $formatted_date;
   }
 

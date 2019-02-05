@@ -125,9 +125,7 @@ class EDTFWidget extends WidgetBase {
     }
     $errors = EDTFUtils::validate($value, $this->getSetting('intervals'), $this->getSetting('sets'), $this->getSetting('strict_dates'));
     if (!empty($errors)) {
-      foreach ($errors as $err) {
-        $form_state->setError($element, $err);
-      }
+      $form_state->setError($element, implode("\n", $errors));
     }
   }
 
