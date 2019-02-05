@@ -95,7 +95,9 @@ class EDTFUtils {
         }
         // Test each date in set.
         foreach (preg_split('/(,|\.\.)/', trim($edtf_text, '{}[]')) as $date) {
-          $msgs = array_merge($msgs, self::validateDate($date, $strict));
+          if (!empty($date)) {
+            $msgs = array_merge($msgs, self::validateDate($date, $strict));
+          }
         }
         return $msgs;
       }

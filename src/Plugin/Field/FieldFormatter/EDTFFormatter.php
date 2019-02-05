@@ -143,8 +143,30 @@ class EDTFFormatter extends FormatterBase {
       // Sets.
       if (strpos($item->value, '[') !== FALSE || strpos($item->value, '{') !== FALSE) {
         $set_qualifier = (strpos($item->value, '[') !== FALSE) ? t('one of the dates:') : t('all of the dates:');
-        foreach (preg_split('/(,|\.\.)/', trim($item->value, '{}[]')) as $date) {
-          $formatted_dates[] = $this->formatDate($date);
+        foreach (explode(',', trim($item->value, '{}[] ')) as $date) {
+          $date_range = explode('..', $date);
+          switch (count($date_range)) {
+            case 1:
+              $formatted_dates[] = $this->formatDate($date);
+              break;
+
+            case 2:
+              if (empty($date_range[0])) {
+                $formatted_dates[] = t('@date or some earlier date', [
+                  '@date' => $this->formatDate($date_range[1])
+                ]);
+              } elseif (empty($date_range[1])) {
+                $formatted_dates[] = t('@date or some later date', [
+                  '@date' => $this->formatDate($date_range[0])
+                ]);
+              } else {
+                $formatted_dates[] = t('@date_begin until @date_end', [
+                  '@date_begin' => $this->formatDate($date_range[0]),
+                  '@date_end' => $this->formatDate($date_range[1]),
+                ]);
+              }
+              break;
+          }
         }
         $element[$delta] = [
           '#markup' => t('@qualifier @list', [
