@@ -153,13 +153,15 @@ class EDTFFormatter extends FormatterBase {
             case 2:
               if (empty($date_range[0])) {
                 $formatted_dates[] = t('@date or some earlier date', [
-                  '@date' => $this->formatDate($date_range[1])
+                  '@date' => $this->formatDate($date_range[1]),
                 ]);
-              } elseif (empty($date_range[1])) {
+              }
+              elseif (empty($date_range[1])) {
                 $formatted_dates[] = t('@date or some later date', [
-                  '@date' => $this->formatDate($date_range[0])
+                  '@date' => $this->formatDate($date_range[0]),
                 ]);
-              } else {
+              }
+              else {
                 $formatted_dates[] = t('@date_begin until @date_end', [
                   '@date_begin' => $this->formatDate($date_range[0]),
                   '@date_end' => $this->formatDate($date_range[1]),
