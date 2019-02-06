@@ -229,14 +229,15 @@ class EDTFFormatter extends FormatterBase {
     if (array_key_exists(EDTFUtils::MONTH, $parsed_date)) {
       if (strpos($parsed_date[EDTFUtils::MONTH], 'X') !== FALSE) {
         $unspecified[] = t('month');
+        // Month remains blank for output.
       }
-      // IF 'mm', do nothing, it is already in this format.
-      if ($settings['month_format'] === 'mmm' || $settings['month_format'] === 'mmmm') {
+      elseif ($settings['month_format'] === 'mmm' || $settings['month_format'] === 'mmmm') {
         $month = EDTFUtils::MONTHS_MAP[$parsed_date[EDTFUtils::MONTH]][$settings['month_format']];
       }
       elseif ($settings['month_format'] === 'm') {
         $month = ltrim($parsed_date[EDTFUtils::MONTH], ' 0');
       }
+      // IF 'mm', do nothing, it is already in this format.
       else {
         $month = $parsed_date[EDTFUtils::MONTH];
       }
