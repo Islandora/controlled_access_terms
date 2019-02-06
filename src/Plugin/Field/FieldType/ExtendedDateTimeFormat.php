@@ -9,7 +9,7 @@ use Drupal\Core\Field\Plugin\Field\FieldType\StringItem;
  *
  * @FieldType(
  *   id = "edtf",
- *   label = @Translation("EDTF, level 1"),
+ *   label = @Translation("EDTF"),
  *   module = "controlled_access_terms",
  *   description = @Translation("Extended Date Time Format field"),
  *   default_formatter = "edtf_default",
