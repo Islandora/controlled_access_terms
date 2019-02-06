@@ -73,6 +73,40 @@ function controlled_access_terms_jsonld_alter_normalized_array(EntityInterface $
   }
 }
 
+
+/**
+ * Update EDTF fields from the 2012 draft to match the 2018 spec.
+ */
+function controlled_access_terms_update_8003() {
+  $db = \Drupal::database();
+
+  // Find all the fields using edtf.
+  $config_factory = \Drupal::configFactory();
+  foreach ($config_factory->listAll('field.storage.') as $field_storage_config_name) {
+    $field_storage_config = $config_factory->get($field_storage_config_name);
+    if ($field_storage_config->get('type') === 'edtf'){
+
+      // Run through each update. Make sure 'unknown' is updated before 'u'.
+      $updates = [
+        'open' => '..',
+        'unknown' => '',
+        'y' => 'Y',
+        'u' => 'X',
+        '?~' => '%',
+        '~?' => '%',
+      ];
+      foreach ($updates as $old => $new) {
+        $db->update($field_storage_config->get('entity_type') . '__' . $field_storage_config->get('field_name'))
+        ->expression($field_storage_config->get('field_name') . '_value', 'replace('. $field_storage_config->get('field_name') . '_value, :old, :new)', [
+          ':old' => $old,
+          ':new' => $new
+        ])
+        ->execute();
+      }
+    }
+  }
+}
+
 /**
  * Change fields using the EDTF Widget to the new EDTF Field Type.
  */
