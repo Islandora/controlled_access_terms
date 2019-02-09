@@ -197,14 +197,14 @@ class EDTFFormatter extends FormatterBase {
    */
   protected function formatDate($edtf_text) {
 
-    list($date, $time) = explode('T', $edtf_text);
+    $date_time = explode('T', $edtf_text);
 
     // Formatted versions of the date elements.
     $year = '';
     $month = '';
     $day = '';
 
-    preg_match(EDTFUtils::DATE_PARSE_REGEX, $date, $parsed_date);
+    preg_match(EDTFUtils::DATE_PARSE_REGEX, $date_time[0], $parsed_date);
 
     $parsed_date[EDTFUtils::YEAR_BASE] = EDTFUtils::expandYear($parsed_date[EDTFUtils::YEAR_FULL], $parsed_date[EDTFUtils::YEAR_BASE], $parsed_date[EDTFUtils::YEAR_EXPONENT]);
     $settings = $this->getSettings();
@@ -276,8 +276,8 @@ class EDTFFormatter extends FormatterBase {
 
     // Time.
     // TODO: Add time formatting options.
-    if (isset($time) && !empty($time)) {
-      $formatted_date .= ' ' . $time;
+    if (array_key_exists(1, $date_time) && !empty($date_time[1])) {
+      $formatted_date .= ' ' . $date_time[1];
     }
 
     // Unspecified.
