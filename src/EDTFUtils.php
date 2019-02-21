@@ -68,6 +68,54 @@ class EDTFUtils {
     '41' => ['mmm' => 'Sem2', 'mmmm' => 'Semestral 2'],
   ];
 
+  const SEASONS_MAP = [
+    // Northern Hemisphere bias for 21-24.
+    '21' => '03',
+    '22' => '06',
+    '23' => '09',
+    '24' => '12',
+    // Northern seasons.
+    '25' => '03',
+    '26' => '06',
+    '27' => '09',
+    '28' => '12',
+    // Southern seasons.
+    '29' => '09',
+    '30' => '12',
+    '31' => '03',
+    '32' => '06',
+    // Quarters.
+    '33' => '01',
+    '34' => '04',
+    '35' => '07',
+    '36' => '10',
+    // Quadrimesters.
+    '37' => '01',
+    '38' => '05',
+    '39' => '09',
+    // Semesters.
+    '40' => '01',
+    '41' => '07',
+  ];
+
+  /**
+   * Southern hemisphere season map.
+   *
+   * (Currently unused until a config for this is established.)
+   *
+   * @var array
+   */
+  private $seasonMapSouth = [
+  // Spring => September.
+    '21' => '03',
+  // Summer => December.
+    '22' => '06',
+  // Autumn => March.
+    '23' => '09',
+  // Winter => June.
+    '24' => '12',
+  ];
+
   /**
    * Validate an EDTF expression.
    *
@@ -252,6 +300,59 @@ class EDTFUtils {
     else {
       return $year_base;
     }
+  }
+
+  /**
+   * Converts an EDTF string into an ISO 8601 timestamp string.
+   *
+   * @param string $edtf
+   *   The array containing the 'value' element.
+   *
+   * @return string
+   *   Returns the ISO 8601 timestamp.
+   */
+  public static function iso8601Value(string $edtf) {
+
+    $date_time = explode('T', $edtf);
+
+    preg_match(EDTFUtils::DATE_PARSE_REGEX, $date_time[0], $parsed_date);
+
+    $year = '';
+    $month = '';
+    $day = '';
+
+    $parsed_date[EDTFUtils::YEAR_BASE] = EDTFUtils::expandYear($parsed_date[EDTFUtils::YEAR_FULL], $parsed_date[EDTFUtils::YEAR_BASE], $parsed_date[EDTFUtils::YEAR_EXPONENT]);
+
+    // Clean-up unspecified year/decade.
+    $year = str_replace('X', '0', $parsed_date[EDTFUtils::YEAR_BASE]);
+
+    if (array_key_exists(EDTFUtils::MONTH, $parsed_date)) {
+      $month = str_replace('XX', '01', $parsed_date[EDTFUtils::MONTH]);
+      $month = str_replace('X', '0', $month);
+
+      // ISO 8601 doesn't support seasonal notation yet. Swap them out.
+      if (array_key_exists($month, EDTFUtils::SEASONS_MAP)) {
+        $month = EDTFUtils::SEASONS_MAP[$month];
+      }
+    }
+
+    if (array_key_exists(EDTFUtils::DAY, $parsed_date)) {
+      $day = str_replace('XX', '01', $parsed_date[EDTFUtils::DAY]);
+      $day = str_replace('X', '0', $day);
+    }
+
+    $formatted_date = implode('-', array_filter([$year, $month, $day]));
+
+    // Time.
+    if (array_key_exists(1, $date_time) && !empty($date_time[1])) {
+      $formatted_date .= 'T' . $date_time[1];
+    }
+    else {
+      $formatted_date .= 'T00:00:00';
+    }
+
+    return $formatted_date;
+
   }
 
 }
