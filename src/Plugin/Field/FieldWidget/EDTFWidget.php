@@ -2,18 +2,16 @@
 
 namespace Drupal\controlled_access_terms\Plugin\Field\FieldWidget;
 
-use Datetime;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\WidgetBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\controlled_access_terms\EDTFUtils;
 
 /**
  * Plugin implementation of the 'edtf' widget.
  *
- * Validates text values for compliance with EDTF 1.0, level 1.
- * http://www.loc.gov/standards/datetime/pre-submission.html.
- *
- * // TODO: maybe some day support level 2.
+ * Validates text values for compliance with EDTF (2018).
+ * https://www.loc.gov/standards/datetime/edtf.html.
  *
  * @FieldWidget(
  *   id = "edtf_default",
@@ -32,6 +30,7 @@ class EDTFWidget extends WidgetBase {
     return [
       'strict_dates' => FALSE,
       'intervals' => FALSE,
+      'sets' => FALSE,
     ] + parent::defaultSettings();
   }
 
@@ -40,21 +39,19 @@ class EDTFWidget extends WidgetBase {
    */
   public function settingsForm(array $form, FormStateInterface $form_state) {
     $description_string = $this->t(
-        'Negative dates, and the level 1 features unspecified dates,
-        extended years, and seasons
-        are not supported with strict date checking.'
+        'Most level 1 and 2 features are not supported with strict date checking.'
     );
     $description_string .= ' <br /> ';
     $description_string .= $this->t(
       'Uncertain/Approximate dates will have their markers removed before
-        checking. (For example, "1984~?" will be checked as "1984".)'
+        checking. (For example, "1984?", "1984~", and "1984%" will be checked as "1984".)'
     );
     $element = parent::settingsForm($form, $form_state);
     $element['description'] = [
       '#type' => 'markup',
       '#prefix' => '<div>',
       '#suffix' => '</div>',
-      '#markup' => $this->t('See <a href="@locedtf" target="_blank">Library of Congress EDTF Draft Submission</a> for details on formatting options.', ['@locedtf' => 'http://www.loc.gov/standards/datetime/pre-submission.html']),
+      '#markup' => $this->t('See <a href="@locedtf" target="_blank">Library of Congress EDTF Specification</a> for details on formatting options.', ['@locedtf' => 'https://www.loc.gov/standards/datetime/edtf.html']),
     ];
     $element['strict_dates'] = [
       '#type' => 'checkbox',
@@ -66,6 +63,11 @@ class EDTFWidget extends WidgetBase {
       '#type' => 'checkbox',
       '#title' => $this->t('Permit date intervals.'),
       '#default_value' => $this->getSetting('intervals'),
+    ];
+    $element['sets'] = [
+      '#type' => 'checkbox',
+      '#title' => $this->t('Permit date sets. (Not recommended; make the field repeatable instead.)'),
+      '#default_value' => $this->getSetting('sets'),
     ];
     return $element;
   }
@@ -84,6 +86,12 @@ class EDTFWidget extends WidgetBase {
     }
     else {
       $summary[] = t('Date intervals are not permitted');
+    }
+    if ($this->getSetting('sets')) {
+      $summary[] = t('Date sets permitted');
+    }
+    else {
+      $summary[] = t('Date sets are not permitted');
     }
 
     return $summary;
@@ -115,134 +123,10 @@ class EDTFWidget extends WidgetBase {
       $form_state->setValueForElement($element, '');
       return;
     }
-
-    // Intervals.
-    if ($this->getSetting('intervals')) {
-      if (strpos($value, 'T') !== FALSE) {
-        $form_state->setError($element, t("Date intervals cannot include times."));
-      }
-
-      list($begin, $end) = explode('/', $value);
-      // Begin.
-      $error_message = $this->dateValidation($begin);
-      if ($error_message) {
-        $form_state->setError($element, $error_message);
-      }
-      // End either empty or valid extended interval values (5.2.3.)
-      if (empty($end) || $end === 'unknown' || $end === 'open') {
-        return;
-      }
-      $error_message = $this->dateValidation($end);
-      if ($error_message) {
-        $form_state->setError($element, $error_message);
-      }
+    $errors = EDTFUtils::validate($value, $this->getSetting('intervals'), $this->getSetting('sets'), $this->getSetting('strict_dates'));
+    if (!empty($errors)) {
+      $form_state->setError($element, implode("\n", $errors));
     }
-    else {
-      $error_message = $this->dateValidation($value);
-      if ($error_message) {
-        $form_state->setError($element, $error_message);
-      }
-    }
-  }
-
-  /**
-   * Validate a date.
-   *
-   * @param string $datetime_str
-   *   The datetime string.
-   *
-   * @return bool|string
-   *   False if valid or a string explaining the reason for invalidation.
-   */
-  protected function dateValidation($datetime_str) {
-
-    list($date, $time) = explode('T', $datetime_str);
-
-    $date = trim($date);
-    $extended_year = (strpos($date, 'y') === 0 ? TRUE : FALSE);
-    if ($extended_year && $this->getSetting('strict_dates')) {
-      return "Extended years (5.2.4.) are not supported with the 'strict dates' option enabled.";
-    }
-    // Uncertainty characters on the end are valid Level 1 features (5.2.1.),
-    // pull them off to make checking the rest easier.
-    $date = rtrim($date, '?~');
-
-    // Negative year? That is fine, but remove it
-    // and the extended year indicator before exploding the date.
-    $date = ltrim($date, 'y-');
-
-    // Now to check the parts.
-    list($year, $month, $day) = explode('-', $date, 3);
-
-    // Year.
-    if (!preg_match('/^\d\d(\d\d|\du|uu)$/', $year) && !$extended_year) {
-      return "The year '$year' is invalid. Please enter a four-digit year.";
-    }
-    elseif ($extended_year && !preg_match('/^\d{5,}$/', $year)) {
-      return "Invalid extended year. Please enter at least a four-digit year.";
-    }
-    $strict_pattern = 'Y';
-
-    // Month.
-    if (!empty($month) && !preg_match('/^(\d\d|\du|uu)$/', $month)) {
-      return "The month '$month' is invalid. Please enter a two-digit month.";
-    }
-    if (!empty($month)) {
-      if (strpos($year, 'u') !== FALSE && strpos($month, 'u') === FALSE) {
-        return "The month must either be blank or unspecified when the year is unspecified.";
-      }
-      $strict_pattern = 'Y-m';
-    }
-
-    // Day.
-    if (!empty($day) && !preg_match('/^(\d\d|\du|uu)$/', $day)) {
-      return "The day '$day' is invalid. Please enter a two-digit day.";
-    }
-    if (!empty($day)) {
-      if (strpos($month, 'u') !== FALSE && strpos($day, 'u') === FALSE) {
-        return "The day must either be blank or unspecified when the month is unspecified.";
-      }
-      $strict_pattern = 'Y-m-d';
-    }
-
-    // Time.
-    if (strpos($datetime_str, 'T') !== FALSE && empty($time)) {
-      return "Time not provided with time seperator (T).";
-    }
-
-    if ($time) {
-      if (!preg_match('/^-?(\d{4})(-\d{2}){2}T\d{2}(:\d{2}){2}(Z|(\+|-)\d{2}:\d{2})?$/', $datetime_str, $matches)) {
-        return "The date/time '$datetime_str' is invalid. See EDTF 1.0, 5.1.2.";
-      }
-      drupal_set_message(print_r($matches, TRUE));
-      $strict_pattern = 'Y-m-d\TH:i:s';
-      if (count($matches) > 4) {
-        if ($matches[4] === 'Z') {
-          $strict_pattern .= '\Z';
-        }
-        else {
-          $strict_pattern .= 'P';
-        }
-      }
-    }
-
-    if ($this->getSetting('strict_dates')) {
-      // Clean the date/time string to ensure it parses correctly.
-      $cleaned_datetime = str_replace('u', '1', $datetime_str);
-      $datetime_obj = DateTime::createFromFormat('!' . $strict_pattern, $cleaned_datetime);
-      $errors = DateTime::getLastErrors();
-      if (!$datetime_obj ||
-          !empty($errors['warning_count']) ||
-          // DateTime will create valid dates from Y-m without warning,
-          // so validate we still have what it was given.
-          !($cleaned_datetime === $datetime_obj->format($strict_pattern))
-        ) {
-        return "Strictly speaking, the date (and/or time) '$datetime_str' is invalid.";
-      }
-
-    }
-
-    return FALSE;
   }
 
 }
