@@ -7,7 +7,6 @@ dependencies:
   module:
     - controlled_access_terms
     - text
-    - user
 id: taxonomy_term.subject.default
 targetEntityType: taxonomy_term
 bundle: subject

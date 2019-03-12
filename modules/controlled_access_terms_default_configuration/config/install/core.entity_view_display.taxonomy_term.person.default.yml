@@ -99,4 +99,5 @@ content:
     third_party_settings: {  }
     type: typed_relation_default
     region: content
-hidden: {  }
+hidden:
+  langcode: true
