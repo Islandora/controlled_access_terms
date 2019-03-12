@@ -2,8 +2,8 @@ langcode: en
 status: true
 dependencies:
   config:
-    - field.field.taxonomy_term.geo_location.field_geo_alt_name
     - field.field.taxonomy_term.geo_location.field_authority_link
+    - field.field.taxonomy_term.geo_location.field_geo_alt_name
     - field.field.taxonomy_term.geo_location.field_geo_broader
     - field.field.taxonomy_term.geo_location.field_geo_geolocation
     - taxonomy.vocabulary.geo_location
@@ -11,7 +11,6 @@ dependencies:
     - controlled_access_terms
     - geolocation
     - text
-    - user
 id: taxonomy_term.geo_location.default
 targetEntityType: taxonomy_term
 bundle: geo_location
@@ -24,14 +23,6 @@ content:
     settings: {  }
     third_party_settings: {  }
     region: content
-  field_geo_alt_name:
-    weight: 4
-    label: inline
-    settings:
-      link_to_entity: false
-    third_party_settings: {  }
-    type: string
-    region: content
   field_authority_link:
     weight: 1
     label: inline
@@ -43,6 +34,14 @@ content:
       target: _blank
     third_party_settings: {  }
     type: authority_formatter_default
+    region: content
+  field_geo_alt_name:
+    weight: 4
+    label: inline
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+    type: string
     region: content
   field_geo_broader:
     weight: 5

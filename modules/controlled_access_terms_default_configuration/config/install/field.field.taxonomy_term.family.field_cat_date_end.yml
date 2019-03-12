@@ -4,6 +4,8 @@ dependencies:
   config:
     - field.storage.taxonomy_term.field_cat_date_end
     - taxonomy.vocabulary.family
+  module:
+    - controlled_access_terms
 id: taxonomy_term.family.field_cat_date_end
 field_name: field_cat_date_end
 entity_type: taxonomy_term

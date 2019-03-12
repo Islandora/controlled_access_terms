@@ -2,8 +2,8 @@ langcode: en
 status: true
 dependencies:
   config:
-    - field.field.taxonomy_term.geo_location.field_geo_alt_name
     - field.field.taxonomy_term.geo_location.field_authority_link
+    - field.field.taxonomy_term.geo_location.field_geo_alt_name
     - field.field.taxonomy_term.geo_location.field_geo_broader
     - field.field.taxonomy_term.geo_location.field_geo_geolocation
     - taxonomy.vocabulary.geo_location
@@ -26,14 +26,6 @@ content:
       placeholder: ''
     third_party_settings: {  }
     region: content
-  field_geo_alt_name:
-    weight: 26
-    settings:
-      size: 60
-      placeholder: ''
-    third_party_settings: {  }
-    type: string_textfield
-    region: content
   field_authority_link:
     weight: 3
     settings:
@@ -41,6 +33,14 @@ content:
       placeholder_title: ''
     third_party_settings: {  }
     type: authority_link_default
+    region: content
+  field_geo_alt_name:
+    weight: 26
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textfield
     region: content
   field_geo_broader:
     weight: 27
@@ -64,6 +64,14 @@ content:
     settings:
       include_locked: true
     third_party_settings: {  }
+  name:
+    type: string_textfield
+    weight: 0
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
   path:
     type: path
     weight: 1
@@ -76,14 +84,6 @@ content:
       display_label: true
     weight: 2
     region: content
-    third_party_settings: {  }
-  name:
-    type: string_textfield
-    weight: 0
-    region: content
-    settings:
-      size: 60
-      placeholder: ''
     third_party_settings: {  }
 hidden:
   created: true

@@ -4,6 +4,8 @@ dependencies:
   config:
     - field.storage.taxonomy_term.field_cat_date_begin
     - taxonomy.vocabulary.corporate_body
+  module:
+    - controlled_access_terms
 id: taxonomy_term.corporate_body.field_cat_date_begin
 field_name: field_cat_date_begin
 entity_type: taxonomy_term
