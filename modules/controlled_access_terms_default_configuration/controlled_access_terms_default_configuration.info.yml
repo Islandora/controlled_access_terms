@@ -6,7 +6,6 @@ dependencies:
   - auto_entitylabel
   - controlled_access_terms
   - field
-  - field_permissions
   - geolocation
   - menu_ui
   - name

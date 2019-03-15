@@ -18,12 +18,12 @@ fieldMappings:
   description:
     properties:
       - 'schema:description'
+  parent:
+    properties:
+      - 'schema:containedInPlace'
   field_authority_link:
     properties:
       - 'schema:sameAs'
   field_geo_geolocation:
     properties:
       - 'wgs84_pos:lat_long'
-  field_geo_broader:
-    properties:
-      - 'schema:containedInPlace'

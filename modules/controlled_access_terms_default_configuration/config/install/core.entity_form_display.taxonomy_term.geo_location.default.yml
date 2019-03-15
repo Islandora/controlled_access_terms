@@ -4,7 +4,6 @@ dependencies:
   config:
     - field.field.taxonomy_term.geo_location.field_authority_link
     - field.field.taxonomy_term.geo_location.field_geo_alt_name
-    - field.field.taxonomy_term.geo_location.field_geo_broader
     - field.field.taxonomy_term.geo_location.field_geo_geolocation
     - taxonomy.vocabulary.geo_location
   module:
@@ -41,15 +40,6 @@ content:
       placeholder: ''
     third_party_settings: {  }
     type: string_textfield
-    region: content
-  field_geo_broader:
-    weight: 27
-    settings:
-      match_operator: CONTAINS
-      size: 60
-      placeholder: ''
-    third_party_settings: {  }
-    type: entity_reference_autocomplete
     region: content
   field_geo_geolocation:
     weight: 4
