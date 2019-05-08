@@ -39,7 +39,7 @@ class EdtfUtilsTest extends KernelTestBase {
     '190' => ['Years must be at least 4 characters long.'],
     '190-99-52' => ['Years must be at least 4 characters long.',
       'Provided month value \'99\' is not valid.',
-      'Provided day value \'52\' is not valid.'
+      'Provided day value \'52\' is not valid.',
     ],
     '1900-01-02T' => ['Time not provided with time seperator (T).'],
     '1900-01-02T1:1:1' => ['The date/time \'1900-01-02T1:1:1\' is invalid.'],
