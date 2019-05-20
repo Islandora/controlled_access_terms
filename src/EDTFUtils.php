@@ -333,7 +333,10 @@ class EDTFUtils {
     $month = '';
     $day = '';
 
-    $parsed_date[EDTFUtils::YEAR_BASE] = EDTFUtils::expandYear($parsed_date[EDTFUtils::YEAR_FULL], $parsed_date[EDTFUtils::YEAR_BASE], $parsed_date[EDTFUtils::YEAR_EXPONENT]);
+    // Expand the year if the Year Exponent exists.
+    if (array_key_exists(EDTFUtils::YEAR_EXPONENT, $parsed_date) && !empty($parsed_date[EDTFUtils::YEAR_EXPONENT])) {
+      $parsed_date[EDTFUtils::YEAR_BASE] = EDTFUtils::expandYear($parsed_date[EDTFUtils::YEAR_FULL], $parsed_date[EDTFUtils::YEAR_BASE], $parsed_date[EDTFUtils::YEAR_EXPONENT]);
+    }
 
     // Clean-up unspecified year/decade.
     $year = str_replace('X', '0', $parsed_date[EDTFUtils::YEAR_BASE]);
