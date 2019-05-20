@@ -16,7 +16,7 @@
   ],
   "require": {
     "drupal/auto_entitylabel": "^2.1@beta",
-    "drupal/name": "^1.0@RC",
+    "drupal/name": "1.x-dev",
     "drupal/geolocation": "^3.0",
     "drupal/token": "^1.3"
   },
