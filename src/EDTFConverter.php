@@ -40,7 +40,7 @@ class EDTFConverter extends CommonDataConverter {
    * @return string
    *   Returns the ISO 8601 date.
    */
-  public static function dateIso8601Value(array $data) {
+  public static function dateIso8601Value($data) {
 
     return explode('T', EDTFConverter::datetimeIso8601Value($data))[0];
 
