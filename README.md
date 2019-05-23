@@ -22,16 +22,15 @@ greatly appreciated.
 ## Content Types
 
 Below is a list of the (at least partially) implemented content types with
-their fields. The fields with "EDTF L1" accept and display dates corresponding
-to the Library of Congress [2012 Extended Date/Time Format Specification](http://www.loc.gov/standards/datetime/pre-submission.html)
-_Level 1_.  [EDTF was incorporated in ISO 8601-2019 with some modifications](http://www.loc.gov/standards/datetime/edtf.html)
-which will be supported in a future update.
+their fields. The fields with "EDTF" accept and display dates corresponding
+to the Library of Congress 2018 Extended Date/Time Format Specification (EDTF).
+See the section below for more information on EDTF.
 
 - Corporate Body
   - Preferred Name (Title)
   - Alternate Name
-  - Founding Date (EDTF L1)
-  - Dissolution Date (EDTF L1)
+  - Founding Date (EDTF)
+  - Dissolution Date (EDTF)
   - Parent Organization
   - Authorities
   - Description
@@ -51,14 +50,14 @@ which will be supported in a future update.
   - Display Label (Title)
   - Authorities
   - Relation
-  - Date Begin (EDTF L1)
-  - Date End (EDTF L1)
+  - Date Begin (EDTF)
+  - Date End (EDTF)
 - Person
   - Title/Display Name
   - Alternate Name
   - Preferred Name
-  - Birth Date (EDTF L1)
-  - Death Date (EDTF L1)
+  - Birth Date (EDTF)
+  - Death Date (EDTF)
   - Relation
   - Authorities
   - Description
@@ -79,6 +78,26 @@ which will be supported in a future update.
     - Genre/Form (mads:GenreForm)
     - Occupation (mads:Occupation)
     - Style/Period
+
+## Extended Date/Time Format (EDTF)
+
+The Library of Congress created the [Extended Date/Time Format Specification](http://www.loc.gov/standards/datetime/edtf.html)
+which was subsequently incorporated with ISO 8601-2019. This modules provides
+a custom EDTF field type with a corresponding formatter (for display) and widget
+(for data entry).
+
+Both the formatter and widget include settings for controlling
+how the EDTF is entered and displayed. For example, the widget allows EDTF
+values to use intervals; however, the widget settings (accessible through the
+bundle's form display page) can restrict the field to only accept single-dates.
+
+Note: widget settings will not apply to data imported through other means (e.g.
+the Migrate API or REST-based updates).
+
+The formatter settings allow administrators to control how the date is
+displayed. The default setting is YYYY-MM-DD (e.g. 1900-01-31) but settings
+can change, for example, the separator and the date order to display dates in
+'mm/dd/yyyy' format (e.g. 01/31/1900).
 
 [1]: https://travis-ci.org/Islandora-CLAW/controlled_access_terms.png?branch=8.x-1.x
 [2]: http://img.shields.io/badge/CONTRIBUTING-Guidelines-blue.svg
