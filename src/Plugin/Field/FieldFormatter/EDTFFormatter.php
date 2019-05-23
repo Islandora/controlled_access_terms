@@ -197,6 +197,9 @@ class EDTFFormatter extends FormatterBase {
    */
   protected function formatDate($edtf_text) {
 
+    $settings = $this->getSettings();
+
+    // Separate into date and time components.
     $date_time = explode('T', $edtf_text);
 
     // Formatted versions of the date elements.
@@ -206,8 +209,10 @@ class EDTFFormatter extends FormatterBase {
 
     preg_match(EDTFUtils::DATE_PARSE_REGEX, $date_time[0], $parsed_date);
 
-    $parsed_date[EDTFUtils::YEAR_BASE] = EDTFUtils::expandYear($parsed_date[EDTFUtils::YEAR_FULL], $parsed_date[EDTFUtils::YEAR_BASE], $parsed_date[EDTFUtils::YEAR_EXPONENT]);
-    $settings = $this->getSettings();
+    // Expand the year if the Year Exponent exists.
+    if (array_key_exists(EDTFUtils::YEAR_EXPONENT, $parsed_date) && !empty($parsed_date[EDTFUtils::YEAR_EXPONENT])) {
+      $parsed_date[EDTFUtils::YEAR_BASE] = EDTFUtils::expandYear($parsed_date[EDTFUtils::YEAR_FULL], $parsed_date[EDTFUtils::YEAR_BASE], $parsed_date[EDTFUtils::YEAR_EXPONENT]);
+    }
 
     // Unspecified.
     $unspecified = [];
