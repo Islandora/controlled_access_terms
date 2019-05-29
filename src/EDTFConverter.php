@@ -14,13 +14,13 @@ class EDTFConverter extends CommonDataConverter {
    *
    * It assumes the earliest valid date for approximations and intervals.
    *
-   * @param array $data
+   * @param mixed $data
    *   The array containing the 'value' element.
    *
    * @return string
    *   Returns the ISO 8601 timestamp.
    */
-  public static function datetimeIso8601Value(array $data) {
+  public static function datetimeIso8601Value($data) {
 
     // Take first possible date.
     $date = preg_split('/(,|\.\.|\/)/', trim($data['value'], '{}[]'))[0];
@@ -34,13 +34,13 @@ class EDTFConverter extends CommonDataConverter {
    *
    * It assumes the earliest valid date for approximations and intervals.
    *
-   * @param array $data
+   * @param mixed $data
    *   The array containing the 'value' element.
    *
    * @return string
    *   Returns the ISO 8601 date.
    */
-  public static function dateIso8601Value(array $data) {
+  public static function dateIso8601Value($data) {
 
     return explode('T', EDTFConverter::datetimeIso8601Value($data))[0];
 

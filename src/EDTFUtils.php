@@ -155,7 +155,7 @@ class EDTFUtils {
       if (strpos($edtf_text, 'T') !== FALSE) {
         $msgs[] = "Date intervals cannot include times.";
       }
-      foreach (explode('/', $$edtf_text) as $date) {
+      foreach (explode('/', $edtf_text) as $date) {
         if (!empty($date) && !$date === '..') {
           $msgs = array_merge($msgs, self::validateDate($date, $strict));
         }
@@ -180,17 +180,23 @@ class EDTFUtils {
   public static function validateDate($datetime_str, $strict = FALSE) {
     $msgs = [];
 
-    list($date, $time) = explode('T', $datetime_str);
+    if (strpos($datetime_str, 'T') > -1) {
+      list($date, $time) = explode('T', $datetime_str);
+    }
+    else {
+      $date = (string) $datetime_str;
+      $time = NULL;
+    }
 
-    preg_match(self::DATE_PARSE_REGEX, $date, $parsed_date);
+    if (preg_match(self::DATE_PARSE_REGEX, $date, $parsed_date) !== 1 ||
+      $date !== $parsed_date[self::FULL_MATCH]) {
 
-    // "Something" is wrong with the provided date if it doesn't round-trip.
-    // Includes (non-exhaustive):
-    // - no invalid characters present,
-    // - two-digit months and days, and
-    // - capturing group qualifiers.
-    if ($date !== $parsed_date[self::FULL_MATCH]) {
-      $msgs[] = "Could not parse the date '$date'";
+      // "Something" is wrong with the provided date if it doesn't round-trip.
+      // Includes (non-exhaustive):
+      // - no invalid characters present,
+      // - two-digit months and days, and
+      // - capturing group qualifiers.
+      return ["Could not parse the date '$date'."];
     }
 
     // Year.
@@ -214,9 +220,15 @@ class EDTFUtils {
     $strict_pattern = 'Y';
 
     // Month.
-    if (!array_key_exists(self::MONTH, $parsed_date) && !empty($parsed_date[self::MONTH])) {
+    if (array_key_exists(self::MONTH, $parsed_date) && !empty($parsed_date[self::MONTH])) {
       // Valid month values?
-      if (!array_key_exists($parsed_date[self::MONTH], self::MONTHS_MAP) &&
+      if (
+        // Month doesn't exist in mapping or does exist in mapping, but is > 12
+        // and there is a day part.
+        (!array_key_exists($parsed_date[self::MONTH], self::MONTHS_MAP) ||
+          (array_key_exists($parsed_date[self::MONTH], self::MONTHS_MAP) &&
+          array_key_exists(self::DAY, $parsed_date) &&
+          $parsed_date[self::MONTH] > 12)) &&
           strpos($parsed_date[self::MONTH], 'X') === FALSE) {
         $msgs[] = "Provided month value '" . $parsed_date[self::MONTH] . "' is not valid.";
       }
@@ -224,7 +236,7 @@ class EDTFUtils {
     }
 
     // Day.
-    if (!array_key_exists(self::DAY) && !empty($parsed_date[self::DAY])) {
+    if (array_key_exists(self::DAY, $parsed_date) && !empty($parsed_date[self::DAY])) {
       // Valid day values?
       if (strpos($parsed_date[self::DAY], 'X') === FALSE &&
           !in_array(intval($parsed_date[self::DAY]), range(1, 31))) {
@@ -321,7 +333,10 @@ class EDTFUtils {
     $month = '';
     $day = '';
 
-    $parsed_date[EDTFUtils::YEAR_BASE] = EDTFUtils::expandYear($parsed_date[EDTFUtils::YEAR_FULL], $parsed_date[EDTFUtils::YEAR_BASE], $parsed_date[EDTFUtils::YEAR_EXPONENT]);
+    // Expand the year if the Year Exponent exists.
+    if (array_key_exists(EDTFUtils::YEAR_EXPONENT, $parsed_date) && !empty($parsed_date[EDTFUtils::YEAR_EXPONENT])) {
+      $parsed_date[EDTFUtils::YEAR_BASE] = EDTFUtils::expandYear($parsed_date[EDTFUtils::YEAR_FULL], $parsed_date[EDTFUtils::YEAR_BASE], $parsed_date[EDTFUtils::YEAR_EXPONENT]);
+    }
 
     // Clean-up unspecified year/decade.
     $year = str_replace('X', '0', $parsed_date[EDTFUtils::YEAR_BASE]);

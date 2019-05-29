@@ -29,7 +29,7 @@ class EDTFWidget extends WidgetBase {
   public static function defaultSettings() {
     return [
       'strict_dates' => FALSE,
-      'intervals' => FALSE,
+      'intervals' => TRUE,
       'sets' => FALSE,
     ] + parent::defaultSettings();
   }

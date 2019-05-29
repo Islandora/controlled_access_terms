@@ -13,7 +13,7 @@ bundle: geo_location
 label: 'Authority Link'
 description: 'A universal resource identifier representing a known place in a geographical database. For example, "http://www.geonames.org/5506956/" for "Las Vegas, Nevada".'
 required: false
-translatable: false
+translatable: true
 default_value: {  }
 default_value_callback: ''
 settings:
