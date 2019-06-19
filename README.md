@@ -10,7 +10,7 @@ subject terms.
 
 It is intended to be used in conjunction with both the [ArchivesSpace/Drupal 8
 Integration project](https://github.com/jasloe/archivesspace-drupal) and
-[Islandora CLAW](https://github.com/Islandora-CLAW/CLAW).
+[Islandora 8](https://github.com/Islandora-CLAW/CLAW).
 
 This module is under active development and will be in flux although master
 should always work (theoretically). There are some field naming inconsistencies
