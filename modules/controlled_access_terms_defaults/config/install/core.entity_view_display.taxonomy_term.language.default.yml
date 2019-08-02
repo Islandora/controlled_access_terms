@@ -2,7 +2,7 @@ langcode: en
 status: true
 dependencies:
   config:
-    - field.field.taxonomy_term.language.field_authority_sources
+    - field.field.taxonomy_term.language.field_authority_link
     - taxonomy.vocabulary.language
   module:
     - controlled_access_terms
