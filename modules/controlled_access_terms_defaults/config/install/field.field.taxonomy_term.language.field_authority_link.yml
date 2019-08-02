@@ -2,12 +2,12 @@ langcode: en
 status: true
 dependencies:
   config:
-    - field.storage.taxonomy_term.field_authority_sources
+    - field.storage.taxonomy_term.field_authority_link
     - taxonomy.vocabulary.language
   module:
     - controlled_access_terms
-id: taxonomy_term.language.field_authority_sources
-field_name: field_authority_sources
+id: taxonomy_term.language.field_authority_link
+field_name: field_authority_link
 entity_type: taxonomy_term
 bundle: language
 label: 'Authority Sources'
