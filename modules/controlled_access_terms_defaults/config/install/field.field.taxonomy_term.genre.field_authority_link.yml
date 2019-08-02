@@ -1,0 +1,25 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.taxonomy_term.field_authority_link
+    - taxonomy.vocabulary.genre
+  module:
+    - controlled_access_terms
+id: taxonomy_term.genre.field_authority_link
+field_name: field_authority_link
+entity_type: taxonomy_term
+bundle: genre
+label: 'Authority Sources'
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  authority_sources:
+    lgcft: 'Library of Congress Genre/Form Terms'
+    other: Other
+  title: 1
+  link_type: 16
+field_type: authority_link
