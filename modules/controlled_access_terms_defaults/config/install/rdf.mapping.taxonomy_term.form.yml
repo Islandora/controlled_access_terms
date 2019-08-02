@@ -2,12 +2,12 @@ langcode: en
 status: true
 dependencies:
   config:
-    - taxonomy.vocabulary.genre
+    - taxonomy.vocabulary.form
   module:
     - taxonomy
-id: taxonomy_term.genre
+id: taxonomy_term.form
 targetEntityType: taxonomy_term
-bundle: genre
+bundle: form
 types:
   - 'schema:Thing'
 fieldMappings:
