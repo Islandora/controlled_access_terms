@@ -1,0 +1,23 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - taxonomy.vocabulary.country
+  module:
+    - taxonomy
+id: taxonomy_term.country
+targetEntityType: taxonomy_term
+bundle: country
+types:
+  - 'schema:Country'
+fieldMappings:
+  name:
+    properties:
+      - 'schema:name'
+  description:
+    properties:
+      - 'schema:description'
+  field_authority_link:
+    properties:
+      - 'schema:sameAs'
+
