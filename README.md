@@ -50,13 +50,7 @@ to the Library of Congress 2018 Extended Date/Time Format Specification (EDTF).
 See the section below for more information on EDTF.
 
 - Corporate Body
-  - Preferred Name (Title)
-  - Alternate Name
-  - Founding Date (EDTF)
-  - Dissolution Date (EDTF)
-  - Parent Organization
-  - Authorities
-  - Description
+  - Preferred Name (Name)
   - Type
     - Organizational Unit (org:OrganizationalUnit)
     - Airline (schema:Airline)
@@ -69,38 +63,40 @@ See the section below for more information on EDTF.
     - Performing Group (schema:PerformingGroup)
     - Sports Organization (schema:SportsOrganization)
     - Sports Team (schema:SportsTeam)
+  - Authority Link
+  - Founding Date (EDTF)
+  - Dissolution Date (EDTF)
+  - Alternate Name
+  - Description
+  - Related Entities
 - Family
-  - Display Label (Title)
-  - Authorities
-  - Relation
+  - Display Label (Name)
+  - Description
   - Date Begin (EDTF)
   - Date End (EDTF)
+  - Authority Link
+  - Relation
 - Person
-  - Title/Display Name
-  - Alternate Name
+  - (Display) Name
+  - Authority Link
   - Preferred Name
+  - Alternate Name
+  - Description
   - Birth Date (EDTF)
   - Death Date (EDTF)
-  - Relation
-  - Authorities
-  - Description
-  - Member Of (Family or Corporate Body)
+  - Relationships
 - Geographic Location
   - Name (Title)
+  - Authority Link
+  - Latitude/Longitude ([WGS 84](https://en.wikipedia.org/wiki/World_Geodetic_System))
+  - Description
   - Alternate Name
-  - Authorities
-  - Geographic Location ([WGS 84](https://en.wikipedia.org/wiki/World_Geodetic_System))
   - Broader
 - Subject
-  - Title
-  - Body
-  - Authorities
-  - Type
-    - Topical (mads:Topic)
-    - Cultural Context
-    - Genre/Form (mads:GenreForm)
-    - Occupation (mads:Occupation)
-    - Style/Period
+  - Name
+  - Language
+  - Description
+  - Authority Link
 
 ## Extended Date/Time Format (EDTF)
 
