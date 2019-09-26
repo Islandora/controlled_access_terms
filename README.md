@@ -1,4 +1,4 @@
-# Controlled Access Terms
+# ![Mascot](https://user-images.githubusercontent.com/2371345/65697828-0063ee80-e052-11e9-8f33-f648c4d6cccc.png) Controlled Access Terms
 
 [![Build Status][1]](https://travis-ci.com/Islandora-CLAW/controlled_access_terms)
 [![Contribution Guidelines][2]](./CONTRIBUTING.md)
