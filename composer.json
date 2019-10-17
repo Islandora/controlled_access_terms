@@ -3,10 +3,9 @@
   "description": "Drupal module for subjects and agents",
   "type": "drupal-module",
   "keywords": ["Drupal", "Islandora"],
-  "homepage": "https://github.com/islandora-claw/controlled_access_terms",
+  "homepage": "https://github.com/Islandora/controlled_access_terms",
   "support": {
-    "issues": "https://github.com/islandora-claw/CLAW/issues",
-    "irc": "irc://irc.freenode.net/islandora"
+    "issues": "https://github.com/Islandora/documentation/issues"
   },
   "repositories": [
     {
