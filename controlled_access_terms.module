@@ -74,6 +74,17 @@ function controlled_access_terms_jsonld_alter_normalized_array(EntityInterface $
 }
 
 /**
+ * Implements hook_jsonld_field_mappings().
+ */
+function controlled_access_terms_jsonld_field_mappings() {
+  return [
+    "authority_link" => [
+      "@type" => "xsd:anyURI",
+    ],
+  ];
+}
+
+/**
  * Update EDTF fields from the 2012 draft to match the 2018 spec.
  */
 function controlled_access_terms_update_8003() {

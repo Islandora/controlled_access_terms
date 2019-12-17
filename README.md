@@ -1,39 +1,56 @@
-# Controlled Access Terms
+# ![Mascot](https://user-images.githubusercontent.com/2371345/65699309-4752e380-e054-11e9-8bb1-d1aee8e2724e.png) Controlled Access Terms
 
 [![Build Status][1]](https://travis-ci.com/Islandora-CLAW/controlled_access_terms)
 [![Contribution Guidelines][2]](./CONTRIBUTING.md)
 [![LICENSE][3]](./LICENSE)
 
-This Drupal 8 module creates bundles to represent common named entities
+## Introduction
+
+This Drupal 8 module creates vocabularies to represent common named entities
 in archival description (Corporate Bodies, Families, and Persons) as well as
 subject terms.
 
 It is intended to be used in conjunction with both the [ArchivesSpace/Drupal 8
-Integration project](https://github.com/jasloe/archivesspace-drupal) and
+Integration project](https://github.com/UNLV-Libraries/archivesspace-drupal) and
 [Islandora 8](https://github.com/Islandora-CLAW/CLAW).
 
-This module is under active development and will be in flux although master
-should always work (theoretically). There are some field naming inconsistencies
-that will be cleaned up along the way.
 
-Feel free to add issues or post pull requests. Feedback and suggestions are
-greatly appreciated.
+## Requirements
 
-## Content Types
+This module requires the following modules:
 
-Below is a list of the (at least partially) implemented content types with
-their fields. The fields with "EDTF" accept and display dates corresponding
+- [name](https://www.drupal.org/project/name)
+- [auto_entitylabel](https://www.drupal.org/project/auto_entitylabel)
+- [geolocation](https://www.drupal.org/project/geolocation)
+- [token](https://www.drupal.org/project/token)
+
+## Installation
+
+Download and install [as with other Drupal modules](https://www.drupal.org/docs/8/extending-drupal-8/installing-drupal-8-modules).
+
+For example, using composer from the Drupal site's web directory:
+
+```
+$ composer require islandora/controlled_access_terms
+$ drush en -y controlled_access_terms
+```
+
+Enable controlled_access_terms_defaults to create the default vocabularies.
+
+## Configuration
+
+Provided vocabularies and fields may be configured in the same manner as
+other Drupal 8 vocabularies.
+
+## Provided Vocabularies
+
+Below is a list of the vocabularies provided by controlled_access_terms_defaults.
+The fields with "EDTF" accept and display dates corresponding
 to the Library of Congress 2018 Extended Date/Time Format Specification (EDTF).
 See the section below for more information on EDTF.
 
 - Corporate Body
-  - Preferred Name (Title)
-  - Alternate Name
-  - Founding Date (EDTF)
-  - Dissolution Date (EDTF)
-  - Parent Organization
-  - Authorities
-  - Description
+  - Preferred Name (Name)
   - Type
     - Organizational Unit (org:OrganizationalUnit)
     - Airline (schema:Airline)
@@ -46,38 +63,40 @@ See the section below for more information on EDTF.
     - Performing Group (schema:PerformingGroup)
     - Sports Organization (schema:SportsOrganization)
     - Sports Team (schema:SportsTeam)
+  - Authority Link
+  - Founding Date (EDTF)
+  - Dissolution Date (EDTF)
+  - Alternate Name
+  - Description
+  - Related Entities
 - Family
-  - Display Label (Title)
-  - Authorities
-  - Relation
+  - Display Label (Name)
+  - Description
   - Date Begin (EDTF)
   - Date End (EDTF)
+  - Authority Link
+  - Relation
 - Person
-  - Title/Display Name
-  - Alternate Name
+  - (Display) Name
+  - Authority Link
   - Preferred Name
+  - Alternate Name
+  - Description
   - Birth Date (EDTF)
   - Death Date (EDTF)
-  - Relation
-  - Authorities
-  - Description
-  - Member Of (Family or Corporate Body)
+  - Relationships
 - Geographic Location
   - Name (Title)
+  - Authority Link
+  - Latitude/Longitude ([WGS 84](https://en.wikipedia.org/wiki/World_Geodetic_System))
+  - Description
   - Alternate Name
-  - Authorities
-  - Geographic Location ([WGS 84](https://en.wikipedia.org/wiki/World_Geodetic_System))
   - Broader
 - Subject
-  - Title
-  - Body
-  - Authorities
-  - Type
-    - Topical (mads:Topic)
-    - Cultural Context
-    - Genre/Form (mads:GenreForm)
-    - Occupation (mads:Occupation)
-    - Style/Period
+  - Name
+  - Language
+  - Description
+  - Authority Link
 
 ## Extended Date/Time Format (EDTF)
 
@@ -102,3 +121,32 @@ can change, for example, the separator and the date order to display dates in
 [1]: https://travis-ci.org/Islandora-CLAW/controlled_access_terms.png?branch=8.x-1.x
 [2]: http://img.shields.io/badge/CONTRIBUTING-Guidelines-blue.svg
 [3]: https://img.shields.io/badge/license-GPLv2-blue.svg?style=flat-square
+
+## Documentation
+
+Further documentation for this module is available on the [Islandora 8 documentation site](https://islandora-claw.github.io/CLAW/).
+
+## Troubleshooting/Issues
+
+Having problems or solved a problem? Check out the Islandora google groups for a solution.
+
+* [Islandora Group](https://groups.google.com/forum/?hl=en&fromgroups#!forum/islandora)
+* [Islandora Dev Group](https://groups.google.com/forum/?hl=en&fromgroups#!forum/islandora-dev)
+
+## Maintainers/Sponsors
+
+Current maintainers:
+
+* [Seth Shaw](https://github.com/seth-shaw-unlv)
+
+## Development
+
+If you would like to contribute, please get involved by attending our weekly [Tech Call](https://github.com/Islandora-CLAW/CLAW/wiki). We love to hear from you!
+
+If you would like to contribute code to the project, you need to be covered by an Islandora Foundation [Contributor License Agreement](http://islandora.ca/sites/default/files/islandora_cla.pdf) or [Corporate Contributor License Agreement](http://islandora.ca/sites/default/files/islandora_ccla.pdf). Please see the [Contributors](http://islandora.ca/resources/contributors) pages on Islandora.ca for more information.
+
+We recommend using the [claw-playbook](https://github.com/Islandora-Devops/claw-playbook) to get started.
+
+## License
+
+[GPLv2](./LICENSE).
