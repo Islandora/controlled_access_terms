@@ -27,7 +27,7 @@ class EDTFFormatter extends FormatterBase {
    *
    * @var array
    */
-  private $DELIMITERS = [
+  private const $DELIMITERS = [
     'dash'   => '-',
     'stroke' => '/',
     'period' => '.',
@@ -276,7 +276,7 @@ class EDTFFormatter extends FormatterBase {
       $formatted_date = "$month $day, $year";
     }
     else {
-      $formatted_date = implode($this->DELIMITERS[$settings['date_separator']], array_filter($parts_in_order));
+      $formatted_date = implode(self::DELIMITERS[$settings['date_separator']], array_filter($parts_in_order));
     }
 
     // Time.
