@@ -27,7 +27,7 @@ class EDTFFormatter extends FormatterBase {
    *
    * @var array
    */
-  private const $DELIMITERS = [
+  private const DELIMITERS = [
     'dash'   => '-',
     'stroke' => '/',
     'period' => '.',
