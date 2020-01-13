@@ -1,8 +1,0 @@
-langcode: en
-status: true
-dependencies: {  }
-name: Country
-vid: country
-description: 'The MARC Code List for Countries contains a list of places and their associated two- or three-character lowercase alphabetic cod'
-weight: 0
-
