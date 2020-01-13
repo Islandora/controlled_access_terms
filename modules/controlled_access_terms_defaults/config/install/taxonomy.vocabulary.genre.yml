@@ -1,0 +1,8 @@
+langcode: en
+status: true
+dependencies: {  }
+name: Genre
+vid: genre
+description: 'A term or terms that designate a category characterizing a particular style, form, or content, such as artistic, musical, literary composition, etc.'
+weight: 0
+

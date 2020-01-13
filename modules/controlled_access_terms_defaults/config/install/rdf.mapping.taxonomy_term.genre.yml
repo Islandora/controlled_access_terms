@@ -1,0 +1,23 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - taxonomy.vocabulary.genre
+  module:
+    - taxonomy
+id: taxonomy_term.genre
+targetEntityType: taxonomy_term
+bundle: genre
+types:
+  - 'schema:Thing'
+fieldMappings:
+  name:
+    properties:
+      - 'schema:name'
+  description:
+    properties:
+      - 'schema:description'
+  field_authority_link:
+    properties:
+      - 'schema:sameAs'
+
