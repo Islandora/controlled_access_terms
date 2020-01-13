@@ -6,7 +6,6 @@ dependencies:
   - content_translation
   - controlled_access_terms
   - field
-  - field_permissions
   - geolocation
   - language
   - menu_ui
