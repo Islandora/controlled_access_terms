@@ -6,6 +6,5 @@ package: 'Controlled Access Terms'
 
 dependencies:
   - name
-  - auto_entitylabel
   - geolocation
   - token
