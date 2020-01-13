@@ -2,7 +2,7 @@ langcode: en
 status: true
 dependencies:
   config:
-    - taxonomy.vocabulary.form
+    - taxonomy.vocabulary.physical_form
   module:
     - content_translation
 third_party_settings:
@@ -10,9 +10,9 @@ third_party_settings:
     enabled: true
     bundle_settings:
       untranslatable_fields_hide: '0'
-id: taxonomy_term.form
+id: taxonomy_term.physical_form
 target_entity_type_id: taxonomy_term
-target_bundle: form
+target_bundle: physical_form
 default_langcode: site_default
 language_alterable: true
 

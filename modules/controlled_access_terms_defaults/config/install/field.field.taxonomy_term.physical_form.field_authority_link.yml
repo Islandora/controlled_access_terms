@@ -3,13 +3,13 @@ status: true
 dependencies:
   config:
     - field.storage.taxonomy_term.field_authority_link
-    - taxonomy.vocabulary.form
+    - taxonomy.vocabulary.physical_form
   module:
     - controlled_access_terms
-id: taxonomy_term.form.field_authority_link
+id: taxonomy_term.physical_form.field_authority_link
 field_name: field_authority_link
 entity_type: taxonomy_term
-bundle: form
+bundle: physical_form
 label: 'Authority Sources'
 description: ''
 required: false

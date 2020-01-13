@@ -2,15 +2,15 @@ langcode: en
 status: true
 dependencies:
   config:
-    - field.field.taxonomy_term.form.field_authority_link
-    - taxonomy.vocabulary.form
+    - field.field.taxonomy_term.physical_form.field_authority_link
+    - taxonomy.vocabulary.physical_form
   module:
     - controlled_access_terms
     - path
     - text
-id: taxonomy_term.form.default
+id: taxonomy_term.physical_form.default
 targetEntityType: taxonomy_term
-bundle: form
+bundle: physical_form
 mode: default
 content:
   description:
