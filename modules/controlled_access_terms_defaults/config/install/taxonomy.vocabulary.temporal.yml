@@ -1,0 +1,8 @@
+langcode: en
+status: true
+dependencies: {  }
+name: Temporal
+vid: temporal
+description: 'Used for chronological subject terms or temporal coverage.'
+weight: 0
+

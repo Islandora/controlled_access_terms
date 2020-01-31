@@ -1,6 +1,6 @@
 # ![Mascot](https://user-images.githubusercontent.com/2371345/65699309-4752e380-e054-11e9-8bb1-d1aee8e2724e.png) Controlled Access Terms
 
-[![Build Status][1]](https://travis-ci.com/Islandora-CLAW/controlled_access_terms)
+[![Build Status][1]](https://travis-ci.com/Islandora/controlled_access_terms)
 [![Contribution Guidelines][2]](./CONTRIBUTING.md)
 [![LICENSE][3]](./LICENSE)
 
@@ -12,7 +12,7 @@ subject terms.
 
 It is intended to be used in conjunction with both the [ArchivesSpace/Drupal 8
 Integration project](https://github.com/UNLV-Libraries/archivesspace-drupal) and
-[Islandora 8](https://github.com/Islandora-CLAW/CLAW).
+[Islandora 8](https://github.com/Islandora/islandora/tree/8.x-1.x).
 
 
 ## Requirements
@@ -118,13 +118,13 @@ displayed. The default setting is YYYY-MM-DD (e.g. 1900-01-31) but settings
 can change, for example, the separator and the date order to display dates in
 'mm/dd/yyyy' format (e.g. 01/31/1900).
 
-[1]: https://travis-ci.org/Islandora-CLAW/controlled_access_terms.png?branch=8.x-1.x
+[1]: https://travis-ci.org/Islandora/controlled_access_terms.png?branch=8.x-1.x
 [2]: http://img.shields.io/badge/CONTRIBUTING-Guidelines-blue.svg
 [3]: https://img.shields.io/badge/license-GPLv2-blue.svg?style=flat-square
 
 ## Documentation
 
-Further documentation for this module is available on the [Islandora 8 documentation site](https://islandora-claw.github.io/CLAW/).
+Further documentation for this module is available on the [Islandora 8 documentation site](https://islandora.github.io/documentation/).
 
 ## Troubleshooting/Issues
 
@@ -141,11 +141,11 @@ Current maintainers:
 
 ## Development
 
-If you would like to contribute, please get involved by attending our weekly [Tech Call](https://github.com/Islandora-CLAW/CLAW/wiki). We love to hear from you!
+If you would like to contribute, please get involved by attending our weekly [Tech Call](https://github.com/Islandora/documentation/wiki#islandora-8-tech-calls). We love to hear from you!
 
 If you would like to contribute code to the project, you need to be covered by an Islandora Foundation [Contributor License Agreement](http://islandora.ca/sites/default/files/islandora_cla.pdf) or [Corporate Contributor License Agreement](http://islandora.ca/sites/default/files/islandora_ccla.pdf). Please see the [Contributors](http://islandora.ca/resources/contributors) pages on Islandora.ca for more information.
 
-We recommend using the [claw-playbook](https://github.com/Islandora-Devops/claw-playbook) to get started.
+We recommend using the [islandora-playbook](https://github.com/Islandora-Devops/islandora-playbook) to get started.
 
 ## License
 

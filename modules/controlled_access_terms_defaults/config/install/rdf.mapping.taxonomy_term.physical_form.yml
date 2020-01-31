@@ -1,0 +1,23 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - taxonomy.vocabulary.physical_form
+  module:
+    - taxonomy
+id: taxonomy_term.physical_form
+targetEntityType: taxonomy_term
+bundle: physical_form
+types:
+  - 'schema:Thing'
+fieldMappings:
+  name:
+    properties:
+      - 'schema:name'
+  description:
+    properties:
+      - 'schema:description'
+  field_authority_link:
+    properties:
+      - 'schema:sameAs'
+

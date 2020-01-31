@@ -3,11 +3,9 @@ description: 'Install content types for geographic location, corporate body, fam
 type: module
 core: 8.x
 dependencies:
-  - auto_entitylabel
   - content_translation
   - controlled_access_terms
   - field
-  - field_permissions
   - geolocation
   - language
   - menu_ui
