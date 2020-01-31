@@ -29,3 +29,8 @@ fieldMappings:
   field_cat_date_end:
     properties:
       - 'schema:deathDate'
+  changed:
+    properties:
+      - 'schema:dateModified'
+    datatype_callback:
+      callable: 'Drupal\rdf\CommonDataConverter::dateIso8601Value'
