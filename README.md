@@ -20,7 +20,6 @@ Integration project](https://github.com/UNLV-Libraries/archivesspace-drupal) and
 This module requires the following modules:
 
 - [name](https://www.drupal.org/project/name)
-- [auto_entitylabel](https://www.drupal.org/project/auto_entitylabel)
 - [geolocation](https://www.drupal.org/project/geolocation)
 - [token](https://www.drupal.org/project/token)
 
