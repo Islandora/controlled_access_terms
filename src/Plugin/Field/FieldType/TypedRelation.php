@@ -96,7 +96,7 @@ class TypedRelation extends EntityReferenceItem {
   }
 
   /**
-   * Convience method allowing the Formatter to get the rel_types.
+   * Convenience method allowing the Formatter to get the rel_types.
    *
    * @return array
    *   The array of relation types
