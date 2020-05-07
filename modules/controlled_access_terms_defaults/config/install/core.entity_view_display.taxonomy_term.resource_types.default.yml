@@ -1,0 +1,36 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.taxonomy_term.resource_types.field_authority_link
+    - taxonomy.vocabulary.resource_types
+  module:
+    - controlled_access_terms
+    - link
+    - text
+id: taxonomy_term.resource_types.default
+targetEntityType: taxonomy_term
+bundle: resource_types
+mode: default
+content:
+  description:
+    label: hidden
+    type: text_default
+    weight: 0
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_authority_link:
+    weight: 1
+    label: above
+    settings:
+      trim_length: 80
+      url_only: false
+      url_plain: false
+      rel: ''
+      target: ''
+    third_party_settings: {  }
+    type: link
+    region: content
+hidden:
+  langcode: true
