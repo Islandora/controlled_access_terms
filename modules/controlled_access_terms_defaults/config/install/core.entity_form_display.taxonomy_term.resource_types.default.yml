@@ -2,9 +2,10 @@ langcode: en
 status: true
 dependencies:
   config:
-    - field.field.taxonomy_term.resource_types.field_external_authority_link
+    - field.field.taxonomy_term.resource_types.field_authority_link
     - taxonomy.vocabulary.resource_types
   module:
+    - controlled_access_terms
     - link
     - path
     - text
@@ -21,7 +22,7 @@ content:
       placeholder: ''
       rows: 5
     third_party_settings: {  }
-  field_external_authority_link:
+  field_authority_link:
     weight: 2
     settings:
       placeholder_url: ''
