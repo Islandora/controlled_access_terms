@@ -137,9 +137,10 @@ class EDTFUtils {
     if ($sets) {
       if (strpos($edtf_text, '[') !== FALSE || strpos($edtf_text, '{') !== FALSE) {
         // Test for valid enclosing characters and valid characters inside.
-        $match = preg_match('/^([\[,\{])[\d,\-,X,Y,E,S,.]*([\],\}])$/', $edtf_text);
-        if (!$match || $match[1] !== $match[2]) {
+        $has_match = preg_match('/^([\[\{])[\d\-XYES.,]+([\]\}])$/', $edtf_text, $match);
+        if (!$has_match) {
           $msgs[] = "The set is improperly encoded.";
+          return $msgs;
         }
         // Test each date in set.
         foreach (preg_split('/(,|\.\.)/', trim($edtf_text, '{}[]')) as $date) {
@@ -156,7 +157,7 @@ class EDTFUtils {
         $msgs[] = "Date intervals cannot include times.";
       }
       foreach (explode('/', $edtf_text) as $date) {
-        if (!empty($date) && !$date === '..') {
+        if (!empty($date) && !($date == '..')) {
           $msgs = array_merge($msgs, self::validateDate($date, $strict));
         }
       }
