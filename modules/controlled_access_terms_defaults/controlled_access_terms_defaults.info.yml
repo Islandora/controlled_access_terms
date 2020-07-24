@@ -9,7 +9,6 @@ dependencies:
   - geolocation
   - language
   - menu_ui
-  - name
   - node
   - options
   - path
