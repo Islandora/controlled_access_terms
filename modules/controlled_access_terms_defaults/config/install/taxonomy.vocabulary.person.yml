@@ -3,6 +3,6 @@ status: true
 dependencies: {  }
 name: Person
 vid: person
-description: 'An individual of the human species. '
+description: 'A representation of a person or named individual.'
 hierarchy: 0
 weight: 0

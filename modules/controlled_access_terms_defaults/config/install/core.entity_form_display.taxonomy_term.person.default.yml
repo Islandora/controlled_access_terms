@@ -2,16 +2,14 @@ langcode: en
 status: true
 dependencies:
   config:
+    - field.field.taxonomy_term.person.field_alternate_name
     - field.field.taxonomy_term.person.field_authority_link
     - field.field.taxonomy_term.person.field_cat_date_begin
     - field.field.taxonomy_term.person.field_cat_date_end
-    - field.field.taxonomy_term.person.field_person_alternate_names
-    - field.field.taxonomy_term.person.field_person_preferred_name
     - field.field.taxonomy_term.person.field_relationships
     - taxonomy.vocabulary.person
   module:
     - controlled_access_terms
-    - name
     - path
     - text
 id: taxonomy_term.person.default
@@ -29,7 +27,7 @@ content:
     third_party_settings: {  }
     region: content
   field_authority_link:
-    weight: 1
+    weight: 2
     settings:
       placeholder_url: ''
       placeholder_title: ''
@@ -52,17 +50,13 @@ content:
     third_party_settings: {  }
     type: edtf_default
     region: content
-  field_person_alternate_names:
-    weight: 3
-    settings: {  }
+  field_alternate_name:
+    weight: 1
+    settings:
+      size: 100
+      placeholder: ''
     third_party_settings: {  }
-    type: name_default
-    region: content
-  field_person_preferred_name:
-    weight: 2
-    settings: {  }
-    third_party_settings: {  }
-    type: name_default
+    type: string_textfield
     region: content
   field_relationships:
     weight: 29
@@ -85,7 +79,7 @@ content:
     weight: -5
     region: content
     settings:
-      size: 60
+      size: 100
       placeholder: ''
     third_party_settings: {  }
   path:
