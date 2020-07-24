@@ -20,3 +20,8 @@ fieldMappings:
   field_authority_link:
     properties:
       - 'schema:sameAs'
+  changed:
+    properties:
+      - 'schema:dateModified'
+    datatype_callback:
+      callable: 'Drupal\rdf\CommonDataConverter::dateIso8601Value'

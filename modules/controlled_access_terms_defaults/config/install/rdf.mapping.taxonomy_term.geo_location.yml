@@ -27,3 +27,8 @@ fieldMappings:
   field_geo_broader:
     properties:
       - 'schema:containedInPlace'
+  changed:
+    properties:
+      - 'schema:dateModified'
+    datatype_callback:
+      callable: 'Drupal\rdf\CommonDataConverter::dateIso8601Value'
