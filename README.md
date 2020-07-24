@@ -19,7 +19,6 @@ Integration project](https://github.com/UNLV-Libraries/archivesspace-drupal) and
 
 This module requires the following modules:
 
-- [name](https://www.drupal.org/project/name)
 - [geolocation](https://www.drupal.org/project/geolocation)
 - [token](https://www.drupal.org/project/token)
 
@@ -78,7 +77,6 @@ See the section below for more information on EDTF.
 - Person
   - (Display) Name
   - Authority Link
-  - Preferred Name
   - Alternate Name
   - Description
   - Birth Date (EDTF)
