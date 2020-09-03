@@ -31,8 +31,28 @@ function controlled_access_terms_jsonld_alter_normalized_array(EntityInterface $
       if (!empty($entity->get($field)->getValue())) {
         if ($field_definition->getType() == 'typed_relation') {
           foreach ($entity->get($field)->getValue() as $value) {
+            if (empty($value['target_id'])) {
+              \Drupal::logger('controlled_access_terms')->warning("Missing target entity for %field in %entity_type/%id (%bundle)",
+              [
+                '%field' => $field,
+                '%entity_type' => $entity->getEntityTypeId(),
+                '%bundle' => $entity->bundle(),
+                '%id' => $entity->id(),
+              ]);
+              continue;
+            }
             $predicate = NormalizerBase::escapePrefix($value['rel_type'], $context['namespaces']);
             $referenced_entity = \Drupal::entityTypeManager()->getStorage($field_definition->getSetting('target_type'))->load($value['target_id']);
+            if (empty($referenced_entity)) {
+              \Drupal::logger('controlled_access_terms')->warning("Invalid target entity for %field in %entity_type/%id (%bundle)",
+              [
+                '%field' => $field,
+                '%entity_type' => $entity->getEntityTypeId(),
+                '%bundle' => $entity->bundle(),
+                '%id' => $entity->id(),
+              ]);
+              continue;
+            }
             // We are assuming the first graph is the one corresponding
             // to the node/taxonomy_term we are modifying.
             $normalized['@graph'][0][$predicate][] = [
