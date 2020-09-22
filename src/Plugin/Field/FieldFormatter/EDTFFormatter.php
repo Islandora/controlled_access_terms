@@ -272,7 +272,9 @@ class EDTFFormatter extends FormatterBase {
       $parts_in_order = [$year, $month, $day];
     }
 
-    if ($settings['date_order'] === 'middle_endian' && !preg_match('/\d/', $month) && !empty(array_filter([$month, $day]))) {
+    if ($settings['date_order'] === 'middle_endian' &&
+        !preg_match('/\d/', $month) &&
+        !empty(array_filter([$month, $day]))) {
       $formatted_date = "$month $day, $year";
     }
     else {
