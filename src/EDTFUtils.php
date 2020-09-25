@@ -2,8 +2,6 @@
 
 namespace Drupal\controlled_access_terms;
 
-use Datetime;
-
 /**
  * Utility functions for working with Extended Date Time Format.
  */
