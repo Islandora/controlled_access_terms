@@ -2,16 +2,14 @@ langcode: en
 status: true
 dependencies:
   config:
+    - field.field.taxonomy_term.person.field_alternate_name
     - field.field.taxonomy_term.person.field_authority_link
     - field.field.taxonomy_term.person.field_cat_date_begin
     - field.field.taxonomy_term.person.field_cat_date_end
-    - field.field.taxonomy_term.person.field_person_alternate_names
-    - field.field.taxonomy_term.person.field_person_preferred_name
     - field.field.taxonomy_term.person.field_relationships
     - taxonomy.vocabulary.person
   module:
     - controlled_access_terms
-    - name
     - path
     - text
 id: taxonomy_term.person.default
@@ -20,13 +18,20 @@ bundle: person
 mode: default
 content:
   description:
-    type: text_textfield
-    weight: 10
+    type: text_textarea
+    weight: 5
     settings:
       rows: 9
-      summary_rows: 3
       placeholder: ''
     third_party_settings: {  }
+    region: content
+  field_alternate_name:
+    weight: 4
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: string_textfield
     region: content
   field_authority_link:
     weight: 1
@@ -37,39 +42,30 @@ content:
     type: authority_link_default
     region: content
   field_cat_date_begin:
-    weight: 26
+    weight: 7
     settings:
       strict_dates: false
       intervals: false
+      sets: false
     third_party_settings: {  }
     type: edtf_default
     region: content
   field_cat_date_end:
-    weight: 27
+    weight: 8
     settings:
       strict_dates: false
       intervals: false
+      sets: false
     third_party_settings: {  }
     type: edtf_default
     region: content
-  field_person_alternate_names:
-    weight: 3
-    settings: {  }
-    third_party_settings: {  }
-    type: name_default
-    region: content
-  field_person_preferred_name:
-    weight: 2
-    settings: {  }
-    third_party_settings: {  }
-    type: name_default
-    region: content
   field_relationships:
-    weight: 29
+    weight: 9
     settings:
       match_operator: CONTAINS
       size: '60'
       placeholder: ''
+      match_limit: 10
     third_party_settings: {  }
     type: typed_relation_default
     region: content
@@ -82,7 +78,7 @@ content:
     third_party_settings: {  }
   name:
     type: string_textfield
-    weight: -5
+    weight: 0
     region: content
     settings:
       size: 60
@@ -90,7 +86,19 @@ content:
     third_party_settings: {  }
   path:
     type: path
-    weight: 8
+    weight: 3
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  status:
+    type: boolean_checkbox
+    settings:
+      display_label: true
+    weight: 10
+    region: content
+    third_party_settings: {  }
+  translation:
+    weight: 6
     region: content
     settings: {  }
     third_party_settings: {  }

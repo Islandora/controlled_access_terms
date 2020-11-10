@@ -3,14 +3,17 @@ status: true
 dependencies:
   module:
     - taxonomy
-id: taxonomy_term.field_external_authority_link
-field_name: field_external_authority_link
+id: taxonomy_term.field_alternate_name
+field_name: field_alternate_name
 entity_type: taxonomy_term
-type: authority_link
-settings: {  }
+type: string
+settings:
+  max_length: 999
+  is_ascii: false
+  case_sensitive: false
 module: core
 locked: false
-cardinality: 1
+cardinality: -1
 translatable: true
 indexes: {  }
 persist_with_no_fields: false

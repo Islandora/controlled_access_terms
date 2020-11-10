@@ -26,3 +26,8 @@ fieldMappings:
   field_cat_date_begin:
     properties:
       - 'schema:foundingDate'
+  changed:
+    properties:
+      - 'schema:dateModified'
+    datatype_callback:
+      callable: 'Drupal\rdf\CommonDataConverter::dateIso8601Value'

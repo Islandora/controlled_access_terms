@@ -2,15 +2,15 @@ langcode: en
 status: true
 dependencies:
   config:
-    - field.storage.taxonomy_term.field_external_authority_link
+    - field.storage.taxonomy_term.field_authority_link
     - taxonomy.vocabulary.resource_types
   module:
     - controlled_access_terms
-id: taxonomy_term.resource_types.field_external_authority_link
-field_name: field_external_authority_link
+id: taxonomy_term.resource_types.field_authority_link
+field_name: field_authority_link
 entity_type: taxonomy_term
 bundle: resource_types
-label: 'External Authority Link'
+label: 'Authority Sources'
 description: ''
 required: false
 translatable: true

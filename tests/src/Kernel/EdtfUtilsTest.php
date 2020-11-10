@@ -6,7 +6,7 @@ use Drupal\controlled_access_terms\EDTFUtils;
 use Drupal\KernelTests\KernelTestBase;
 
 /**
- * Class EdtfUtilsTest.
+ * Tests the EDTF Utils.
  *
  * @package Drupal\Tests\controlled_access_terms\Kernel
  * @group controlled_access_terms

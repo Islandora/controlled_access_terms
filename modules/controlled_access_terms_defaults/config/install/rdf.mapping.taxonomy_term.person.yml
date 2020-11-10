@@ -17,6 +17,9 @@ fieldMappings:
   description:
     properties:
       - 'schema:description'
+  field_alternate_name:
+    properties:
+      - 'schema:alternateName'
   field_person_alternate_names:
     properties:
       - 'schema:alternateName'
@@ -29,3 +32,8 @@ fieldMappings:
   field_cat_date_end:
     properties:
       - 'schema:deathDate'
+  changed:
+    properties:
+      - 'schema:dateModified'
+    datatype_callback:
+      callable: 'Drupal\rdf\CommonDataConverter::dateIso8601Value'
