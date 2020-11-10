@@ -2,8 +2,6 @@
 
 namespace Drupal\controlled_access_terms;
 
-use DateTime;
-
 /**
  * Utility functions for working with Extended Date Time Format.
  */
@@ -277,8 +275,8 @@ class EDTFUtils {
           $parsed_date[self::DAY],
         ]);
       }
-      $datetime_obj = DateTime::createFromFormat('!' . $strict_pattern, $cleaned_datetime);
-      $errors = DateTime::getLastErrors();
+      $datetime_obj = \DateTime::createFromFormat('!' . $strict_pattern, $cleaned_datetime);
+      $errors = \DateTime::getLastErrors();
       if (!$datetime_obj ||
           !empty($errors['warning_count']) ||
           // DateTime will create valid dates from Y-m without warning,
