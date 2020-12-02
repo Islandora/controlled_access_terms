@@ -19,6 +19,7 @@ default_value_callback: ''
 settings:
   authority_sources:
     lgcft: 'Library of Congress Temporal Terms'
+    wiki: 'Wikidata'
     other: Other
   title: 1
   link_type: 16
