@@ -14,6 +14,7 @@ use Drupal\Core\TypedData\DataDefinition;
  *   id = "typed_relation",
  *   label = @Translation("Typed Relation"),
  *   module = "controlled_access_terms",
+ *   category = @Translation("Typed Relation"),
  *   description = @Translation("Implements a typed relation field"),
  *   default_formatter = "typed_relation_default",
  *   default_widget = "typed_relation_default",
