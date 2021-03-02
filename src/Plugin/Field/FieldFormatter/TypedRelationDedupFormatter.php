@@ -9,7 +9,7 @@ use Drupal\Core\Field\FieldItemListInterface;
  * Plugin implementation of the 'TypedRelationFormatter'.
  *
  * @FieldFormatter(
- *   id = "typed_relation_dedup_default",
+ *   id = "typed_relation_dedup",
  *   label = @Translation("Typed Relation Dedup Formatter"),
  *   field_types = {
  *     "typed_relation"
