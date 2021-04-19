@@ -269,14 +269,14 @@ class EDTFUtils {
         $cleaned_datetime = $datetime_str;
       }
       else {
-        $cleaned_datetime = implode('-', [
+        $cleaned_datetime = implode('-', array_filter([
           $parsed_date[self::YEAR_BASE],
           $parsed_date[self::MONTH],
           $parsed_date[self::DAY],
-        ]);
+        ]));
       }
-      $datetime_obj = DateTime::createFromFormat('!' . $strict_pattern, $cleaned_datetime);
-      $errors = DateTime::getLastErrors();
+      $datetime_obj = \DateTime::createFromFormat('!' . $strict_pattern, $cleaned_datetime);
+      $errors = \DateTime::getLastErrors();
       if (!$datetime_obj ||
           !empty($errors['warning_count']) ||
           // DateTime will create valid dates from Y-m without warning,

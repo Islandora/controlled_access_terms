@@ -20,6 +20,7 @@ settings:
   authority_sources:
     naf: 'NACO Authority File'
     viaf: 'Virtual International Authority File'
+    wiki: 'Wikidata'
     other: Other
   title: 1
   link_type: 16

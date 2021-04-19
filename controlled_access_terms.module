@@ -156,7 +156,7 @@ function controlled_access_terms_update_8002() {
         $entity_form_display->set("content.$field_name.type", 'edtf_default');
 
         // Update the field setting.
-        if (!$fields = \Drupal::entityManager()->getStorage('field_config')->loadByProperties(['field_name' => $field_name])) {
+        if (!$fields = \Drupal::service('entity_type.manager')->getStorage('field_config')->loadByProperties(['field_name' => $field_name])) {
           continue;
         }
         else {
@@ -171,7 +171,7 @@ function controlled_access_terms_update_8002() {
         }
 
         // Update the field storage setting.
-        if (!$field_storage_configs = \Drupal::entityManager()->getStorage('field_storage_config')->loadByProperties(['field_name' => $field_name])) {
+        if (!$field_storage_configs = \Drupal::service('entity_type.manager')->getStorage('field_storage_config')->loadByProperties(['field_name' => $field_name])) {
           continue;
         }
         else {

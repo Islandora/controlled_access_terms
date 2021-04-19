@@ -282,7 +282,7 @@ class EDTFFormatter extends FormatterBase {
     }
 
     // Time.
-    // TODO: Add time formatting options.
+    // @todo Add time formatting options.
     if (array_key_exists(1, $date_time) && !empty($date_time[1])) {
       $formatted_date .= ' ' . $date_time[1];
     }

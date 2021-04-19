@@ -25,6 +25,8 @@ settings:
     nal: 'National Agricultural Library subject headings'
     rvm: 'Répertoire de vedettes-matière'
     ulan: 'Union List of Artist Names'
+    viaf: 'Virtual International Authority File'
+    wiki: 'Wikidata'
     other: Other
   title: 1
   link_type: 16

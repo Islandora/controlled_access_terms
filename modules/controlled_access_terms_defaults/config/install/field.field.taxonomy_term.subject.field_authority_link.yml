@@ -31,6 +31,7 @@ settings:
     tgn: 'Getty Thesaurus of Geographic Names'
     tgm: 'Thesaurus for Graphic Materials'
     lcgft: 'Library of Congress Genre/Form Terms'
+    wiki: 'Wikidata'
     other: Other
   title: 1
   link_type: 16
