@@ -40,7 +40,10 @@ class TypedRelationDedupFormatter extends EntityReferenceLabelFormatter {
           $delta_to_update = array_search($this_tid, $unique_tids);
           $prefix_before = $elements[$delta_to_update]['#prefix'];
           $prefix_parts = explode(": ", $prefix_before);
-          $elements[$delta_to_update]['#prefix'] = $prefix_parts[0] . ", " . $rel_type . ': ';
+          if (!empty($prefix_parts[0])) {
+            $prefix_parts[0] = $prefix_parts[0] . ", ";
+          }
+          $elements[$delta_to_update]['#prefix'] = $prefix_parts[0] . $rel_type . ': ';
         }
         unset($elements[$delta]);
       }
