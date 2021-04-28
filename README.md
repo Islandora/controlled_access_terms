@@ -1,6 +1,6 @@
 # ![Mascot](https://user-images.githubusercontent.com/2371345/65699309-4752e380-e054-11e9-8bb1-d1aee8e2724e.png) Controlled Access Terms
 
-[![Build Status][1]](https://travis-ci.com/Islandora/controlled_access_terms)
+[![Build Status][1]](https://github.com/Islandora/controlled_access_terms/actions)
 [![Contribution Guidelines][2]](./CONTRIBUTING.md)
 [![LICENSE][3]](./LICENSE)
 
@@ -117,7 +117,7 @@ displayed. The default setting is YYYY-MM-DD (e.g. 1900-01-31) but settings
 can change, for example, the separator and the date order to display dates in
 'mm/dd/yyyy' format (e.g. 01/31/1900).
 
-[1]: https://travis-ci.org/Islandora/controlled_access_terms.png?branch=8.x-1.x
+[1]: https://github.com/islandora/controlled_access_terms/actions/workflows/build-8.x-1.x.yml/badge.svg
 [2]: http://img.shields.io/badge/CONTRIBUTING-Guidelines-blue.svg
 [3]: https://img.shields.io/badge/license-GPLv2-blue.svg?style=flat-square
 
