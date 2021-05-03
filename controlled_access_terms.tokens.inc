@@ -239,6 +239,7 @@ function _normalize_date_format($node, $field_name, $original) {
  */
 function _url_to_service_file_media_by_mimetype($node, $mime_type) {
   $islandora_utils = \Drupal::service('islandora.utils');
+  // This term value could potentially be a config value.
   $origfile_term = $islandora_utils->getTermForUri('http://pcdm.org/use#OriginalFile');
   $origfile_media = $islandora_utils->getMediaWithTerm($node, $origfile_term);
   // Get the media file's mime_type value.
