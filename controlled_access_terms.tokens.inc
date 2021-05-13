@@ -140,6 +140,7 @@ function controlled_access_terms_tokens($type, $tokens, array $data, array $opti
 
         case 'media-thumbnail-image:url':
         case 'media_thumbnail_image:url':
+          $islandoraUtils = \Drupal::service('islandora.utils');
           $term = $islandoraUtils->getTermForUri('http://pcdm.org/use#ThumbnailImage');
           $media = $islandoraUtils->getMediaWithTerm($data['node'], $term);
           // Is there media?
@@ -147,7 +148,7 @@ function controlled_access_terms_tokens($type, $tokens, array $data, array $opti
           if ($media) {
             $file = controlled_access_terms_image_from_media($media);
             if (!empty($file)) {
-              $url = $file->url();
+              $url =  file_create_url($file->url());
               $replacements[$original] = $url;
             }
           }
