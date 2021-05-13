@@ -147,8 +147,8 @@ function controlled_access_terms_tokens($type, $tokens, array $data, array $opti
           // @todo: is this single or multiple?
           if ($media) {
             $file = controlled_access_terms_image_from_media($media);
-            if (!empty($file)) {
-              $url =  file_create_url($file->url());
+            if (!is_null($file) && !empty($file)) {
+              $url =  file_create_url($file->getFileUri()); // url());
               $replacements[$original] = $url;
             }
           }
