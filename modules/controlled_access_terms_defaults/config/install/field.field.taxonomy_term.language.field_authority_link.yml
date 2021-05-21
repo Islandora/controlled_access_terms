@@ -10,15 +10,15 @@ id: taxonomy_term.language.field_authority_link
 field_name: field_authority_link
 entity_type: taxonomy_term
 bundle: language
-label: 'Authority Sources'
+label: 'Authority Link'
 description: ''
 required: false
-translatable: false
+translatable: true
 default_value: {  }
 default_value_callback: ''
 settings:
   authority_sources:
-    iso639-2b: 'Library of Congress MARC List for Languages'
+    iso639-2: 'ISO 639-2 Codes for the Representation of Names of Languages'
     other: Other
   title: 1
   link_type: 16
