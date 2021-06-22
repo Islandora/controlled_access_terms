@@ -53,6 +53,8 @@ class EDTFYear extends ProcessorPluginBase implements PluginFormInterface {
   public function defaultConfiguration() {
     return [
       'fields' => [],
+      'ignore_undated' => TRUE,
+      'ignore_open_dates' => FALSE,
       'open_start_year' => 0,
       'open_end_year' => '',
     ];
@@ -80,6 +82,18 @@ class EDTFYear extends ProcessorPluginBase implements PluginFormInterface {
       '#default_value' => $this->configuration['fields'],
     ];
 
+    $form['ignore_undated'] = [
+      '#type' => 'checkbox',
+      '#title' => $this->t('Ignore Undated'),
+      '#description' => $this->t('Ignore undated values (i.e. "EDTF").'),
+      '#default_value' => $this->configuration['ignore_undated'],
+    ];
+    $form['ignore_open_dates'] = [
+      '#type' => 'checkbox',
+      '#title' => $this->t('Ignore Open Dates'),
+      '#description' => $this->t('Ignores the open dates (".."). E.g. both "../2021" and "2021/.." would be indexed as "2021" instead of date ranges.'),
+      '#default_value' => $this->configuration['ignore_open_dates'],
+    ];
     $form['open_start_year'] = [
       '#type' => 'number',
       '#title' => $this->t('Open Interval Begin Year'),
@@ -122,12 +136,18 @@ class EDTFYear extends ProcessorPluginBase implements PluginFormInterface {
         && !$entity->get($field_name)->isEmpty()) {
         $edtf = $entity->get($field_name)->value;
         if ($edtf != "nan" && empty(EDTFUtils::validate($edtf))) {
+          if ($this->configuration['ignore_undated'] && $edtf == "XXXX") {
+            continue;
+          }
           $years = [];
           // Sets.
           if (strpos($edtf, '[') !== FALSE || strpos($edtf, '{') !== FALSE) {
             $years = preg_split('/(,|\.\.)/', trim($edtf, '{}[]'));
           }
           // Intervals.
+          elseif ($this->configuration['ignore_open_dates'] && strpos($edtf, '..') !== FALSE) {
+            $years[] = $this->edtfToYearInt(trim($edtf,'./'));
+          }
           elseif (strpos($edtf, '/') !== FALSE) {
             $date_range = explode('/', $edtf);
             if ($date_range[0] == '..') {
