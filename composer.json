@@ -15,7 +15,8 @@
   ],
   "require": {
     "drupal/geolocation": "^3.2",
-    "drupal/token": "^1.7"
+    "drupal/token": "^1.7",
+    "professional-wiki/edtf": "^2.0"
   },
   "require-dev": {
     "phpunit/phpunit": "^6",

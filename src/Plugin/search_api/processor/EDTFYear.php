@@ -2,6 +2,7 @@
 
 namespace Drupal\controlled_access_terms\Plugin\search_api\processor;
 
+use EDTF\EdtfFactory;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\PluginFormInterface;
 use Drupal\search_api\Datasource\DatasourceInterface;
@@ -54,7 +55,8 @@ class EDTFYear extends ProcessorPluginBase implements PluginFormInterface {
     return [
       'fields' => [],
       'ignore_undated' => TRUE,
-      'ignore_open_dates' => FALSE,
+      'ignore_open_start' => FALSE,
+      'ignore_open_end' => FALSE,
       'open_start_year' => 0,
       'open_end_year' => '',
     ];
@@ -85,14 +87,14 @@ class EDTFYear extends ProcessorPluginBase implements PluginFormInterface {
     $form['ignore_undated'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Ignore Undated'),
-      '#description' => $this->t('Ignore undated values (i.e. "EDTF").'),
+      '#description' => $this->t('Ignore undated values (i.e. "XXXX").'),
       '#default_value' => $this->configuration['ignore_undated'],
     ];
-    $form['ignore_open_dates'] = [
+    $form['ignore_open_start'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Ignore Open Dates'),
-      '#description' => $this->t('Ignores the open dates (".."). E.g. both "../2021" and "2021/.." would be indexed as "2021" instead of date ranges.'),
-      '#default_value' => $this->configuration['ignore_open_dates'],
+      '#description' => $this->t('Ignores the open start dates. E.g. "../2021" would be indexed as "2021" instead of every year from 0 (or the configured open start year).'),
+      '#default_value' => $this->configuration['ignore_open_start'],
     ];
     $form['open_start_year'] = [
       '#type' => 'number',
@@ -100,10 +102,16 @@ class EDTFYear extends ProcessorPluginBase implements PluginFormInterface {
       '#description' => $this->t('Sets the beginning year to be used when processing an date interval. For example, by default, "../%year" would become every year from 0 until %year', ['%year' => date("Y")]),
       '#default_value' => $this->configuration['open_start_year'],
     ];
+    $form['ignore_open_end'] = [
+      '#type' => 'checkbox',
+      '#title' => $this->t('Ignore Open Ended Dates'),
+      '#description' => $this->t('Ignores the open ended dates. E.g. "2020/.." would be indexed as "2020" instead of every year from 2020 until %year.', ['%year' => date("Y")]),
+      '#default_value' => $this->configuration['ignore_open_end'],
+    ];
     $form['open_end_year'] = [
       '#type' => 'number',
       '#title' => $this->t('Open Interval End Year'),
-      '#description' => $this->t('Sets the last year to be used when processing an date interval. Leave blank to use the current year when last indexed. For example, by default, "2020/.." would become every year from 2020 until this year (%year).', ['%year' => date("Y")]),
+      '#description' => $this->t('Sets the last year to be used when processing an date interval. Leave blank to use the current year when indexed. For example, by default, "2020/.." would become every year from 2020 until this year (%year).', ['%year' => date("Y")]),
       '#default_value' => $this->configuration['open_end_year'],
     ];
     return $form;
@@ -127,71 +135,73 @@ class EDTFYear extends ProcessorPluginBase implements PluginFormInterface {
   public function addFieldValues(ItemInterface $item) {
 
     $entity = $item->getOriginalObject()->getValue();
-
     foreach ($this->configuration['fields'] as $field) {
       list($bundle, $field_name) = explode('|', $field, 2);
       if ($entity
           && $entity->bundle() == $bundle
         && $entity->hasField($field_name)
         && !$entity->get($field_name)->isEmpty()) {
-        $edtf = $entity->get($field_name)->value;
+        $edtf = trim($entity->get($field_name)->value);
         if ($edtf != "nan" && empty(EDTFUtils::validate($edtf))) {
           if ($this->configuration['ignore_undated'] && $edtf == "XXXX") {
             continue;
           }
-          $years = [];
-          // Sets.
-          if (strpos($edtf, '[') !== FALSE || strpos($edtf, '{') !== FALSE) {
-            $years = preg_split('/(,|\.\.)/', trim($edtf, '{}[]'));
-          }
-          // Intervals.
-          elseif ($this->configuration['ignore_open_dates'] && strpos($edtf, '..') !== FALSE) {
-            $years[] = $this->edtfToYearInt(trim($edtf,'./'));
-          }
-          elseif (strpos($edtf, '/') !== FALSE) {
-            $date_range = explode('/', $edtf);
-            if ($date_range[0] == '..') {
-              // The list of years needs to begin *somewhere*.
-              $begin = $this->configuration['open_start_year'];
+          try {
+            $parser = EdtfFactory::newParser();
+            $years = [];
+            // Sets.
+            if (strpos($edtf, '[') !== FALSE || strpos($edtf, '{') !== FALSE) {
+              $dates = $parser->parse($edtf)->getEdtfValue();
+              $years = array_map(function ($date) {
+                return $date->getYear();
+              }, $dates->getDates());
             }
             else {
-              $begin = $this->edtfToYearInt($date_range[0]);
+              // Open start dates.
+              if (substr($edtf, 0, 3) === '../') {
+                if ($this->configuration['ignore_open_start']) {
+                  $edtf = substr($edtf, 3);
+                }
+                else {
+                  $edtf = str_replace('../', $this->configuration['open_start_year'] . '/', $edtf);
+                }
+              }
+              // Open end dates.
+              if (substr($edtf, -3) === '/..') {
+                if ($this->configuration['ignore_open_end']) {
+                  $edtf = substr($edtf, 0, -3);
+                }
+                else {
+                  $end_year = (empty($this->configuration['open_end_year'])) ? date('Y') : $this->configuration['open_end_year'];
+                  $edtf = str_replace('/..', '/' . $this->configuration['open_end_year'], $edtf);
+                }
+              }
+
+              $parsed = $parser->parse($edtf)->getEdtfValue();
+              $years = range(intval(date('Y', $parsed->getMin())), intval(date('Y', $parsed->getMax())));
             }
-            if ($date_range[1] == '..') {
-              // Similarly, we need to end somewhere.
-              // Use this year if none was configured.
-              $end = (empty($this->configuration['open_end_year'])) ? intval(date("Y")) : $this->configuration['open_end_year'];
-            }
-            else {
-              $end = $this->edtfToYearInt($date_range[1]);
-            }
-            $years = range($begin, $end);
-          }
-          else {
-            $years[] = $this->edtfToYearInt($edtf);
-          }
-          foreach ($years as $year) {
-            if (is_numeric($year)) {
-              $fields = $item->getFields(FALSE);
-              $fields = $this->getFieldsHelper()
-                ->filterForPropertyPath($fields, NULL, 'edtf_year');
-              foreach ($fields as $field) {
-                $field->addValue($year);
+            foreach ($years as $year) {
+              if (is_numeric($year)) {
+                $fields = $item->getFields(FALSE);
+                $fields = $this->getFieldsHelper()
+                  ->filterForPropertyPath($fields, NULL, 'edtf_year');
+                foreach ($fields as $field) {
+                  $field->addValue($year);
+                }
               }
             }
+          }
+          catch (\Throwable $e) {
+            \Drupal::logger('controlled_access_terms')->warning(t("Could not parse EDTF value '@edtf' for indexing @type/@id",
+            [
+              '@edtf' => $edtf,
+              '@type' => $entity->getEntityTypeId(),
+              '@id' => $entity->id(),
+            ]));
           }
         }
       }
     }
-  }
-
-  /**
-   * Convert a given EDTF date string into a year integer.
-   */
-  private function edtfToYearInt(string $edtf) {
-    $iso = EDTFUtils::iso8601Value($edtf);
-    $components = explode('-', $iso);
-    return intval(array_shift($components));
   }
 
 }
