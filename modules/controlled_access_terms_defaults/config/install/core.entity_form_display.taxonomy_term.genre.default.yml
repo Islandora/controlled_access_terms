@@ -2,7 +2,7 @@ langcode: en
 status: true
 dependencies:
   config:
-    - field.field.taxonomy_term.genre.field_authority_sources
+    - field.field.taxonomy_term.genre.field_authority_link
     - taxonomy.vocabulary.genre
   module:
     - controlled_access_terms
@@ -14,15 +14,15 @@ bundle: genre
 mode: default
 content:
   description:
-    type: text_textfield
+    type: text_textarea
     weight: 0
     region: content
     settings:
       size: 60
       placeholder: ''
     third_party_settings: {  }
-  field_authority_sources:
-    weight: 101
+  field_authority_link:
+    weight: 2
     settings:
       placeholder_url: ''
       placeholder_title: ''

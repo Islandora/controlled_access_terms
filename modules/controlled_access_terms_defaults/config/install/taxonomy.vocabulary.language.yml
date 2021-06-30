@@ -3,5 +3,5 @@ status: true
 dependencies: {  }
 name: Language
 vid: language
-description: 'Codes to describe language of resourse content. Intended for use with ISO639-2'
+description: 'Codes to describe language of resource content. Intended for use with ISO639-2'
 weight: 0

@@ -10,7 +10,7 @@ id: taxonomy_term.language.field_authority_link
 field_name: field_authority_link
 entity_type: taxonomy_term
 bundle: language
-label: 'Authority Link'
+label: 'Authority Sources'
 description: ''
 required: false
 translatable: true
