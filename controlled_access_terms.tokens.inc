@@ -12,7 +12,6 @@ use Drupal\media\Entity\Media;
 use Drupal\file\Entity\File;
 use Drupal\controlled_access_terms\EDTFUtils;
 use Drupal\Core\Render\BubbleableMetadata;
-use Drupal\islandora\IslandoraUtils;
 
 /**
  * Implements hook_token_info().
@@ -46,11 +45,6 @@ function controlled_access_terms_token_info() {
     'name' => t("Publication date"),
     'description' => t('Show the "Date Created" into YYYY/MM/DD format (handles EDTF format)'),
   ];
-// Move this field to our own baby asu_islandora_tokens module.
-//  $node['copyright_date'] = [
-//    'name' => t("Copyright date"),
-//    'description' => t('Show the "Copyright Date" into YYYY/MM/DD format (handles EDTF format)'),
-//  ];
   $node['pdf_url'] = [
     'name' => t("PDF Url"),
     'description' => t('URL to related media file if "Original file" is a PDF file'),
@@ -76,7 +70,6 @@ function controlled_access_terms_token_info() {
     'name' => t('Alternative text for Media: Thumbnail Image.'),
     'description' => t('Deprecated: Alternative text for Thumbnail Image associated with Islandora Object via Media.'),
   ];
-
 
   return [
     'types' => ['islandoratokens' => $type],
@@ -129,11 +122,6 @@ function controlled_access_terms_tokens($type, $tokens, array $data, array $opti
           $replacements[$original] = _normalize_date_format($data['node'], 'field_edtf_date_created', $original);
           break;
 
-//// Move this one to our own baby islandora_tokens module.
-//        case 'copyright_date':
-//          $replacements[$original] = _normalize_date_format($data['node'], 'field_edtf_copyright_date', $original);
-//          break;
-
         case 'pdf_url':
           $replacements[$original] = ' ' . _url_to_service_file_media_by_mimetype($data['node'], 'application/pdf');
           break;
@@ -144,11 +132,12 @@ function controlled_access_terms_tokens($type, $tokens, array $data, array $opti
           $term = $islandoraUtils->getTermForUri('http://pcdm.org/use#ThumbnailImage');
           $media = $islandoraUtils->getMediaWithTerm($data['node'], $term);
           // Is there media?
-          // @todo: is this single or multiple?
+          // @todo is this single or multiple?
           if ($media) {
             $file = controlled_access_terms_image_from_media($media);
             if (!is_null($file) && !empty($file)) {
-              $url =  file_create_url($file->getFileUri()); // url());
+              // url());
+              $url = file_create_url($file->getFileUri());
               $replacements[$original] = $url;
             }
           }
@@ -161,14 +150,14 @@ function controlled_access_terms_tokens($type, $tokens, array $data, array $opti
           $term = $islandoraUtils->getTermForUri('http://pcdm.org/use#ThumbnailImage');
           $media = $islandoraUtils->getMediaWithTerm($data['node'], $term);
           // Is there media?
-          // @todo: is this single or multiple?
+          // @todo is this single or multiple?
           if ($media) {
             // Is the media an image?
             if (isset($media->field_media_image)) {
               $alt = $media->field_media_image[0]->alt;
             }
           }
-          // @todo: get alt from original or service file, if thumbnail alt is empty.
+          // @todo get alt from original or service file, if thumbnail alt is empty.
           $replacements[$original] = $alt;
           break;
       }
@@ -357,8 +346,8 @@ function controlled_access_terms_remove_comma($input, $remove_comma = FALSE) {
 /**
  * Get File referenced by given Media.
  *
- * @todo: Add to IslandoraUtils?
- * @todo: Had to remove typehint MediaInterface from function.
+ * @todo Add to IslandoraUtils?
+ * @todo Had to remove typehint MediaInterface from function.
  *
  * @param \Drupal\media\MediaInterface $media
  *   The Media to operate on.
@@ -366,7 +355,7 @@ function controlled_access_terms_remove_comma($input, $remove_comma = FALSE) {
  * @return mixed
  *   \Drupal\file\FileInterface on success, NULL otherwise.
  */
-function controlled_access_terms_image_from_media($media) {
+function controlled_access_terms_image_from_media(MediaInterface $media) {
   $files = [];
   if ($media->hasField('field_media_image')) {
     $files = $media->get('field_media_image')->referencedEntities();
