@@ -3,5 +3,5 @@ status: true
 dependencies: {  }
 name: Genre
 vid: genre
-description: 'Terms that designate particular styles or forms of content'
+description: 'A term or terms that designate a category characterizing a particular style, form, or content, such as artistic, musical, literary composition, etc.'
 weight: 0

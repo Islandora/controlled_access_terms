@@ -2,7 +2,7 @@ langcode: en
 status: true
 dependencies:
   config:
-    - field.field.taxonomy_term.genre.field_authority_sources
+    - field.field.taxonomy_term.genre.field_authority_link
     - taxonomy.vocabulary.genre
   module:
     - controlled_access_terms
@@ -19,7 +19,7 @@ content:
     region: content
     settings: {  }
     third_party_settings: {  }
-  field_authority_sources:
+  field_authority_link:
     weight: 1
     label: above
     settings:
