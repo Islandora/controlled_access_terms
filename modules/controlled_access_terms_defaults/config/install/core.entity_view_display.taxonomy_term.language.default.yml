@@ -19,7 +19,7 @@ content:
     region: content
     settings: {  }
     third_party_settings: {  }
-  field_authority_sources:
+  field_authority_link:
     weight: 1
     label: above
     settings:
@@ -33,3 +33,4 @@ content:
     region: content
 hidden:
   langcode: true
+
