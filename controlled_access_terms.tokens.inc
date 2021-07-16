@@ -49,27 +49,6 @@ function controlled_access_terms_token_info() {
     'name' => t("PDF Url"),
     'description' => t('URL to related media file if "Original file" is a PDF file'),
   ];
-  $node['media-thumbnail-image:url'] = [
-    'name' => t('Media: Thumbnail Image URL.'),
-    'description' => t('URL of Thumbnail Image associated with Islandora Object via Media.'),
-  ];
-
-  $node['media-thumbnail-image:alt'] = [
-    'name' => t('Alternative text for Media: Thumbnail Image.'),
-    'description' => t('Alternative text for Thumbnail Image associated with Islandora Object via Media.'),
-  ];
-
-  // Deprecated in favour if hyphenated version.
-  $node['media_thumbnail_image:url'] = [
-    'name' => t('Media: Thumbnail Image URL.'),
-    'description' => t('Deprecated: URL of Thumbnail Image associated with Islandora Object via Media.'),
-  ];
-
-  // Deprecated in favour if hyphenated version.
-  $node['media_thumbnail_image:alt'] = [
-    'name' => t('Alternative text for Media: Thumbnail Image.'),
-    'description' => t('Deprecated: Alternative text for Thumbnail Image associated with Islandora Object via Media.'),
-  ];
 
   return [
     'types' => ['islandoratokens' => $type],
@@ -124,41 +103,6 @@ function controlled_access_terms_tokens($type, $tokens, array $data, array $opti
 
         case 'pdf_url':
           $replacements[$original] = ' ' . _url_to_service_file_media_by_mimetype($data['node'], 'application/pdf');
-          break;
-
-        case 'media-thumbnail-image:url':
-        case 'media_thumbnail_image:url':
-          $islandoraUtils = \Drupal::service('islandora.utils');
-          $term = $islandoraUtils->getTermForUri('http://pcdm.org/use#ThumbnailImage');
-          $media = $islandoraUtils->getMediaWithTerm($data['node'], $term);
-          // Is there media?
-          // @todo is this single or multiple?
-          if ($media) {
-            $file = controlled_access_terms_image_from_media($media);
-            if (!is_null($file) && !empty($file)) {
-              // url());
-              $url = file_create_url($file->getFileUri());
-              $replacements[$original] = $url;
-            }
-          }
-          break;
-
-        case 'media-thumbnail-image:alt':
-        case 'media_thumbnail_image:alt':
-          $alt = '';
-          $islandoraUtils = \Drupal::service('islandora.utils');
-          $term = $islandoraUtils->getTermForUri('http://pcdm.org/use#ThumbnailImage');
-          $media = $islandoraUtils->getMediaWithTerm($data['node'], $term);
-          // Is there media?
-          // @todo is this single or multiple?
-          if ($media) {
-            // Is the media an image?
-            if (isset($media->field_media_image)) {
-              $alt = $media->field_media_image[0]->alt;
-            }
-          }
-          // @todo get alt from original or service file, if thumbnail alt is empty.
-          $replacements[$original] = $alt;
           break;
       }
     }
@@ -341,24 +285,4 @@ function controlled_access_terms_remove_comma($input, $remove_comma = FALSE) {
   else {
     return $input;
   }
-}
-
-/**
- * Get File referenced by given Media.
- *
- * @todo Add to IslandoraUtils?
- * @todo Had to remove typehint MediaInterface from function.
- *
- * @param \Drupal\media\MediaInterface $media
- *   The Media to operate on.
- *
- * @return mixed
- *   \Drupal\file\FileInterface on success, NULL otherwise.
- */
-function controlled_access_terms_image_from_media(MediaInterface $media) {
-  $files = [];
-  if ($media->hasField('field_media_image')) {
-    $files = $media->get('field_media_image')->referencedEntities();
-  }
-  return !empty($files) ? reset($files) : NULL;
 }
