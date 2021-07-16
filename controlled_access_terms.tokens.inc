@@ -78,31 +78,31 @@ function controlled_access_terms_tokens($type, $tokens, array $data, array $opti
         case 'agent_author':
           // For the Linked agent field, the Author/s are specified
           // by the relationship "aut" for Author.
-          $replacements[$original] = _get_term_with_rel_type($data['node'], 'field_linked_agent', 'relators:aut', TRUE);
+          $replacements[$original] = controlled_access_terms_get_term_with_rel_type($data['node'], 'field_linked_agent', 'relators:aut', TRUE);
           break;
 
         case 'agent_contributor':
           // For the Linked agent field, the Contributor/s are specified
           // by the relationship "ctb".
-          $replacements[$original] = _get_term_with_rel_type($data['node'], 'field_linked_agent', 'relators:ctb', TRUE);
+          $replacements[$original] = controlled_access_terms_get_term_with_rel_type($data['node'], 'field_linked_agent', 'relators:ctb', TRUE);
           break;
 
         case 'agent_creators':
           // For the Linked agent field, Creators are any relationship value.
-          $replacements[$original] = _get_term_with_rel_type($data['node'], 'field_linked_agent', '');
+          $replacements[$original] = controlled_access_terms_get_term_with_rel_type($data['node'], 'field_linked_agent', '');
           break;
 
         case 'agent_publisher':
           // For the Linked agent field, Publishers are any relationship value.
-          $replacements[$original] = _get_term_with_rel_type($data['node'], 'field_linked_agent', 'relators:pbl');
+          $replacements[$original] = controlled_access_terms_get_term_with_rel_type($data['node'], 'field_linked_agent', 'relators:pbl');
           break;
 
         case 'publication_date':
-          $replacements[$original] = _normalize_date_format($data['node'], 'field_edtf_date_created', $original);
+          $replacements[$original] = controlled_access_terms_normalize_date_format($data['node'], 'field_edtf_date_created', $original);
           break;
 
         case 'pdf_url':
-          $replacements[$original] = ' ' . _url_to_service_file_media_by_mimetype($data['node'], 'application/pdf');
+          $replacements[$original] = ' ' . controlled_access_terms_url_to_service_file_media_by_mimetype($data['node'], 'application/pdf');
           break;
       }
     }
@@ -126,7 +126,7 @@ function controlled_access_terms_tokens($type, $tokens, array $data, array $opti
  * @return string
  *   The tokenized value for the given data.
  */
-function _get_term_with_rel_type($node, $field_name, $relation_type = '', $remove_comma = FALSE) {
+function controlled_access_terms_get_term_with_rel_type($node, $field_name, $relation_type = '', $remove_comma = FALSE) {
   $matches = [];
   $field = ($node->hasField($field_name) ? $node->get($field_name) : NULL);
   if (is_object($field)) {
@@ -172,7 +172,7 @@ function _get_term_with_rel_type($node, $field_name, $relation_type = '', $remov
  *
  * @throws Exception
  */
-function _normalize_date_format($node, $field_name, $original) {
+function controlled_access_terms_normalize_date_format($node, $field_name, $original) {
   $retval = '';
   try {
     $created_date = ($node->hasField($field_name) ? $node->get($field_name) : NULL);
@@ -230,7 +230,7 @@ function _normalize_date_format($node, $field_name, $original) {
  * @return string
  *   The tokenized value for the given data.
  */
-function _url_to_service_file_media_by_mimetype($node, $mime_type) {
+function controlled_access_terms_url_to_service_file_media_by_mimetype($node, $mime_type) {
   $islandora_utils = \Drupal::service('islandora.utils');
   $origfile_term = $islandora_utils->getTermForUri('http://pcdm.org/use#OriginalFile');
   $origfile_media = $islandora_utils->getMediaWithTerm($node, $origfile_term);
