@@ -107,6 +107,11 @@ function controlled_access_terms_tokens($type, $tokens, array $data, array $opti
       }
     }
   }
+  // For the two contributors in my test case, their names are "Mouse, Mickey" and "Who, Doctor" yet
+  // while the $replacements looks correctly glued together using the pipe character "|":
+  //   "Mouse, Mickey| Who, Doctor"
+  // the metatag is switching that back to a comma.
+  //   <meta name="citation_author" content="Mickey Mouse,  Doctor Who">
   return $replacements;
 }
 
@@ -128,7 +133,6 @@ function controlled_access_terms_tokens($type, $tokens, array $data, array $opti
  */
 function controlled_access_terms_get_term_with_rel_type($node, $field_name, $relation_type = '', $remove_comma = FALSE) {
   $settings = \Drupal::config('metatag.settings');
-  $entity_type_groups = $settings->get('entity_type_groups');
   $separator = $settings->get('separator');
   $separator = ($separator) ? $separator : ',';
   $matches = [];
@@ -158,7 +162,7 @@ function controlled_access_terms_get_term_with_rel_type($node, $field_name, $rel
       }
     }
   }
-  return implode($separator . " ", $matches);
+  return implode($separator, $matches);
 }
 
 /**
