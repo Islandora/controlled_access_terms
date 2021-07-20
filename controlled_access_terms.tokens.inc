@@ -127,6 +127,10 @@ function controlled_access_terms_tokens($type, $tokens, array $data, array $opti
  *   The tokenized value for the given data.
  */
 function controlled_access_terms_get_term_with_rel_type($node, $field_name, $relation_type = '', $remove_comma = FALSE) {
+  $settings = \Drupal::config('metatag.settings');
+  $entity_type_groups = $settings->get('entity_type_groups');
+  $separator = $settings->get('separator');
+  $separator = ($separator) ? $separator : ',';
   $matches = [];
   $field = ($node->hasField($field_name) ? $node->get($field_name) : NULL);
   if (is_object($field)) {
@@ -141,20 +145,20 @@ function controlled_access_terms_get_term_with_rel_type($node, $field_name, $rel
           if ($tid['rel_type'] == $relation_type) {
             $term = Term::load($tid['target_id']);
             if ($term) {
-              $matches[] = controlled_access_terms_remove_comma($term->getName(), $remove_comma);
+              $matches[] = ($separator == ',') ? controlled_access_terms_remove_comma($term->getName(), $remove_comma) : $term->getName();
             }
           }
         }
         else {
           $term = Term::load($tid['target_id']);
           if ($term) {
-            $matches[] = controlled_access_terms_remove_comma($term->getName(), $remove_comma);
+            $matches[] = ($separator == ',') ? controlled_access_terms_remove_comma($term->getName(), $remove_comma) : $term->getName();
           }
         }
       }
     }
   }
-  return implode(", ", $matches);
+  return implode($separator . " ", $matches);
 }
 
 /**
