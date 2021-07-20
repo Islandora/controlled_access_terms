@@ -107,11 +107,6 @@ function controlled_access_terms_tokens($type, $tokens, array $data, array $opti
       }
     }
   }
-  // For the two contributors in my test case, their names are "Mouse, Mickey" and "Who, Doctor" yet
-  // while the $replacements looks correctly glued together using the pipe character "|":
-  //   "Mouse, Mickey| Who, Doctor"
-  // the metatag is switching that back to a comma.
-  //   <meta name="citation_author" content="Mickey Mouse,  Doctor Who">
   return $replacements;
 }
 

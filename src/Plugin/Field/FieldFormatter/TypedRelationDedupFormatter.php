@@ -31,13 +31,20 @@ class TypedRelationDedupFormatter extends EntityReferenceLabelFormatter {
       $rel_type = isset($rel_types[$item->rel_type]) ? $rel_types[$item->rel_type] : $item->rel_type;
       if (!$delta_to_update) {
         $unique_tids[$delta] = $this_tid;
-        $elements[$delta]['#prefix'] = $rel_type . ': ';
+        if (!empty($rel_type)) {
+          $elements[$delta]['#prefix'] = $rel_type . ': ';
+        }
       }
       else {
-        $delta_to_update = array_search($this_tid, $unique_tids);
-        $prefix_before = $elements[$delta_to_update]['#prefix'];
-        $prefix_parts = explode(": ", $prefix_before);
-        $elements[$delta_to_update]['#prefix'] = $prefix_parts[0] . ", " . $rel_type . ': ';
+        if (!empty($rel_type)) {
+          $delta_to_update = array_search($this_tid, $unique_tids);
+          $prefix_before = $elements[$delta_to_update]['#prefix'];
+          $prefix_parts = explode(": ", $prefix_before);
+          if (!empty($prefix_parts[0])) {
+            $prefix_parts[0] = $prefix_parts[0] . ", ";
+          }
+          $elements[$delta_to_update]['#prefix'] = $prefix_parts[0] . $rel_type . ': ';
+        }
         unset($elements[$delta]);
       }
 
