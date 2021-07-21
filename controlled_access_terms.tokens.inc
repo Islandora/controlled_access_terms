@@ -8,8 +8,6 @@
  */
 
 use Drupal\taxonomy\Entity\Term;
-use Drupal\media\Entity\Media;
-use Drupal\file\Entity\File;
 use Drupal\controlled_access_terms\EDTFUtils;
 use Drupal\Core\Render\BubbleableMetadata;
 
