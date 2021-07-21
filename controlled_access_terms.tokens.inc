@@ -45,10 +45,6 @@ function controlled_access_terms_token_info() {
     'name' => t("Publication date"),
     'description' => t('Show the "Date Created" into YYYY/MM/DD format (handles EDTF format)'),
   ];
-  $node['pdf_url'] = [
-    'name' => t("PDF Url"),
-    'description' => t('URL to related media file if "Original file" is a PDF file'),
-  ];
 
   return [
     'types' => ['islandoratokens' => $type],
@@ -99,10 +95,6 @@ function controlled_access_terms_tokens($type, $tokens, array $data, array $opti
 
         case 'publication_date':
           $replacements[$original] = controlled_access_terms_normalize_date_format($data['node'], 'field_edtf_date_created', $original);
-          break;
-
-        case 'pdf_url':
-          $replacements[$original] = ' ' . controlled_access_terms_url_to_service_file_media_by_mimetype($data['node'], 'application/pdf');
           break;
       }
     }
@@ -220,52 +212,6 @@ function controlled_access_terms_normalize_date_format($node, $field_name, $orig
     );
   }
   return $retval;
-}
-
-/**
- * Gets Original File PDF file URL.
- *
- * @param object $node
- *   A core drupal node object.
- * @param string $mime_type
- *   The name of the node's field to check for the specific relationship.
- *
- * @return string
- *   The tokenized value for the given data.
- */
-function controlled_access_terms_url_to_service_file_media_by_mimetype($node, $mime_type) {
-  $islandora_utils = \Drupal::service('islandora.utils');
-  $origfile_term = $islandora_utils->getTermForUri('http://pcdm.org/use#OriginalFile');
-  $origfile_media = $islandora_utils->getMediaWithTerm($node, $origfile_term);
-  // Get the media file's mime_type value.
-  if (is_object($origfile_media)) {
-    $origfile_mime_type = ($origfile_media->hasField('field_mime_type')) ?
-      $origfile_media->get('field_mime_type')->getValue() : NULL;
-    $origfile_mime_type = (is_array($origfile_mime_type) &&
-      array_key_exists(0, $origfile_mime_type) &&
-      is_array($origfile_mime_type[0]) &&
-      array_key_exists('value', $origfile_mime_type[0])) ?
-      $origfile_mime_type[0]['value'] : '';
-    // Compare the media file's mime_type to the given value.
-    if ($origfile_mime_type == $mime_type) {
-      $vid = $origfile_media->id();
-      if (!is_null($vid)) {
-        $media = Media::load($vid);
-        $bundle = $media->bundle();
-        // Since this is Islandora and we assume the Original File is a
-        // Document type... but doing it dynamically.
-        $fid = $media->get('field_media_' . $bundle)->getValue();
-        $fid_value = (is_array($fid) && array_key_exists(0, $fid) &&
-          array_key_exists('target_id', $fid[0])) ?
-          $fid[0]['target_id'] : NULL;
-        if (!is_null($fid_value)) {
-          $file = File::load($fid_value);
-          $url = $file->getFileUri();
-          return $url;
-        }
-      }
-    }
-  }
 }
 
 /**
