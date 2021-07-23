@@ -1,8 +1,15 @@
 langcode: en
 status: true
-dependencies: {  }
-name: Temporal
-vid: temporal
-description: 'Used for chronological subject terms or temporal coverage.'
-weight: 0
-
+dependencies:
+  config:
+    - taxonomy.vocabulary.temporal_subjects
+  module:
+    - content_translation
+third_party_settings:
+  content_translation:
+    enabled: true
+id: taxonomy_term.temporal_subjects
+target_entity_type_id: taxonomy_term
+target_bundle: temporal_subjects
+default_langcode: site_default
+language_alterable: false
