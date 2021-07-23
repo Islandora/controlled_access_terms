@@ -1,0 +1,7 @@
+langcode: en
+status: true
+dependencies: {  }
+name: 'Temporal Subjects'
+vid: temporal_subjects
+description: 'Subject terms expressing periods of time'
+weight: 0
