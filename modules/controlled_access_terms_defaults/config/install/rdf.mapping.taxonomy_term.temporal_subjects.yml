@@ -2,12 +2,12 @@ langcode: en
 status: true
 dependencies:
   config:
-    - taxonomy.vocabulary.temporal
+    - taxonomy.vocabulary.temporal_subjects
   module:
     - taxonomy
-id: taxonomy_term.temporal
+id: taxonomy_term.temporal_subjects
 targetEntityType: taxonomy_term
-bundle: temporal
+bundle: temporal_subjects
 types:
   - 'schema:Thing'
 fieldMappings:
