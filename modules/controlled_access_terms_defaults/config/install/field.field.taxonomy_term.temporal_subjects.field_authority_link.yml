@@ -3,13 +3,13 @@ status: true
 dependencies:
   config:
     - field.storage.taxonomy_term.field_authority_link
-    - taxonomy.vocabulary.temporal
+    - taxonomy.vocabulary.temporal_subjects
   module:
     - controlled_access_terms
-id: taxonomy_term.temporal.field_authority_link
+id: taxonomy_term.temporal_subjects.field_authority_link
 field_name: field_authority_link
 entity_type: taxonomy_term
-bundle: temporal
+bundle: temporal_subjects
 label: 'Authority Sources'
 description: ''
 required: false
@@ -18,8 +18,7 @@ default_value: {  }
 default_value_callback: ''
 settings:
   authority_sources:
-    lgcft: 'Library of Congress Temporal Terms'
-    wiki: 'Wikidata'
+    lcsh: 'Library of Congress Subject Headings'
     other: Other
   title: 1
   link_type: 16
