@@ -56,7 +56,7 @@ function controlled_access_terms_jsonld_alter_normalized_array(EntityInterface $
             // We are assuming the first graph is the one corresponding
             // to the node/taxonomy_term we are modifying.
             $normalized['@graph'][0][$predicate][] = [
-              '@id' => $referenced_entity->toUrl('canonical', ['absolute' => TRUE])->setRouteParameter('_format', 'jsonld')->toString(),
+              '@id' => $context['utils']->getEntityUri($referenced_entity),
             ];
           }
         }

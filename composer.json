@@ -27,6 +27,9 @@
   "suggest": {
     "drupal/name": "Provides western-centric structured names."
   },
+  "conflict": {
+    "islandora/jsonld": "<2.1.0"
+  },
   "license": "GPL-2.0-or-later",
   "authors": [
     {
