@@ -12,7 +12,7 @@ subject terms.
 
 It is intended to be used in conjunction with both the [ArchivesSpace/Drupal 8
 Integration project](https://github.com/UNLV-Libraries/archivesspace-drupal) and
-[Islandora 8](https://github.com/Islandora/islandora/tree/8.x-1.x).
+[Islandora 8](https://github.com/Islandora/islandora/tree/2.x).
 
 
 ## Requirements
@@ -117,7 +117,7 @@ displayed. The default setting is YYYY-MM-DD (e.g. 1900-01-31) but settings
 can change, for example, the separator and the date order to display dates in
 'mm/dd/yyyy' format (e.g. 01/31/1900).
 
-[1]: https://github.com/islandora/controlled_access_terms/actions/workflows/build-8.x-1.x.yml/badge.svg
+[1]: https://github.com/islandora/controlled_access_terms/actions/workflows/build-2.x.yml/badge.svg
 [2]: http://img.shields.io/badge/CONTRIBUTING-Guidelines-blue.svg
 [3]: https://img.shields.io/badge/license-GPLv2-blue.svg?style=flat-square
 

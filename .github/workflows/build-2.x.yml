@@ -6,9 +6,9 @@ name: CI
 on:
   # Triggers the workflow on push or pull request events but only for the 7.x branch
   push:
-    branches: [ 8.x-1.x, main ]
+    branches: [ 2.x ]
   pull_request:
-    branches: [ 8.x-1.x, main ]
+    branches: [ 2.x ]
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -87,11 +87,11 @@ jobs:
 
       - name: Setup composer paths
         run: |
-          git -C "$GITHUB_WORKSPACE/build_dir" checkout -b travis-testing
+          git -C "$GITHUB_WORKSPACE/build_dir" checkout -b github-testing
           cd $DRUPAL_DIR
           composer config repositories.local path "$GITHUB_WORKSPACE/build_dir"
           composer config minimum-stability dev
-          composer require "islandora/controlled_access_terms:dev-travis-testing as dev-8.x-1.x"
+          composer require "islandora/controlled_access_terms:dev-github-testing as dev-2.x"
 
       - name: Install modules
         run: |
@@ -105,4 +105,3 @@ jobs:
         run: |
           cd $DRUPAL_DIR/web/core
           php scripts/run-tests.sh --suppress-deprecations --url http://127.0.0.1:8282 --verbose --php `which php` --module "controlled_access_terms"
-
