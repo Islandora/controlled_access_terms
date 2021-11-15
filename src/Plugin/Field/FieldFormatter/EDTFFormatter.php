@@ -283,10 +283,12 @@ class EDTFFormatter extends FormatterBase {
     if (array_key_exists(EDTFUtils::YEAR_BASE, $parsed_date)) {
       if ($settings['year_format'] == 'ny') {
         $year = '';
-      } elseif ($settings['year_format'] = 'yy') {
+      }
+      elseif ($settings['year_format'] = 'yy') {
         $year = ltrim($parsed_date[EDTFUtils::YEAR_BASE], '0');
-      } else {
-        $year =  substr(ltrim($parsed_date[EDTFUtils::YEAR_BASE], '0'), 0, 2);
+      }
+      else {
+        $year = substr(ltrim($parsed_date[EDTFUtils::YEAR_BASE], '0'), 0, 2);
       }
     }
 
@@ -312,7 +314,7 @@ class EDTFFormatter extends FormatterBase {
     }
 
     // Time.
-    // TODO: Add time formatting options.
+    // @todo: Add time formatting options.
     if (array_key_exists(1, $date_time) && !empty($date_time[1])) {
       $formatted_date .= ' ' . $date_time[1];
     }
