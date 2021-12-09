@@ -63,6 +63,7 @@ class EDTFFormatter extends FormatterBase {
         'space' => t("Space ' '"),
       ],
     ];
+
     $form['date_order'] = [
       '#title' => t('Date Order'),
       '#type' => 'select',
@@ -74,11 +75,13 @@ class EDTFFormatter extends FormatterBase {
         'middle_endian' => t('Middle-endian (month, day, year)'),
       ],
     ];
+
     $form['month_format'] = [
       '#title' => t('Month Format'),
       '#type' => 'select',
       '#default_value' => $this->getSetting('month_format'),
       '#options' => [
+        'nm' => t('Do not show Month'),
         'mm' => t('two-digit month, e.g. 04'),
         'm' => t('one-digit month for months below 10, e.g. 4'),
         'mmm' => t('three-letter abbreviation for month, Apr'),
@@ -90,8 +93,19 @@ class EDTFFormatter extends FormatterBase {
       '#type' => 'select',
       '#default_value' => $this->getSetting('day_format'),
       '#options' => [
+        'nd'  => t('Do not show day'),
         'dd' => t('two-digit day of the month, e.g. 02'),
         'd' => t('one-digit day of the month for days below 10, e.g. 2'),
+      ],
+    ];
+    $form['year_format'] = [
+      '#title' => t('Year Format'),
+      '#type' => 'select',
+      '#default_value' => $this->getSetting('year_format'),
+      '#options' => [
+        'ny'  => t('Do not show year'),
+        'yy' => t('two-digit day of the month, e.g. 02'),
+        'y' => t('four-digit representation of the year, e.g. 2020'),
       ],
     ];
     return $form;
@@ -242,6 +256,9 @@ class EDTFFormatter extends FormatterBase {
       elseif ($settings['month_format'] === 'm') {
         $month = ltrim($parsed_date[EDTFUtils::MONTH], ' 0');
       }
+      elseif ($settings['month_format'] == 'nm') {
+        $month = "";
+      }
       // IF 'mm', do nothing, it is already in this format.
       else {
         $month = $parsed_date[EDTFUtils::MONTH];
@@ -255,8 +272,23 @@ class EDTFFormatter extends FormatterBase {
       elseif ($settings['day_format'] === 'd') {
         $day = ltrim($parsed_date[EDTFUtils::DAY], ' 0');
       }
+      elseif ($settings['day_format'] == "nd") {
+        $day = "";
+      }
       else {
         $day = $parsed_date[EDTFUtils::DAY];
+      }
+    }
+
+    if (array_key_exists(EDTFUtils::YEAR_BASE, $parsed_date)) {
+      if ($settings['year_format'] == 'ny') {
+        $year = '';
+      }
+      elseif ($settings['year_format'] = 'yy') {
+        $year = ltrim($parsed_date[EDTFUtils::YEAR_BASE], '0');
+      }
+      else {
+        $year = substr(ltrim($parsed_date[EDTFUtils::YEAR_BASE], '0'), 0, 2);
       }
     }
 
