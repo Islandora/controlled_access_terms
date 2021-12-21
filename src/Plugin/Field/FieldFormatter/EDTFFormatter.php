@@ -42,6 +42,7 @@ class EDTFFormatter extends FormatterBase {
     // ISO 8601 bias.
       'date_separator' => 'dash',
       'date_order' => 'big_endian',
+      'year_format' => 'y',
       'month_format' => 'mm',
       'day_format' => 'dd',
     ] + parent::defaultSettings();
@@ -104,7 +105,7 @@ class EDTFFormatter extends FormatterBase {
       '#default_value' => $this->getSetting('year_format'),
       '#options' => [
         'ny'  => t('Do not show year'),
-        'yy' => t('two-digit day of the month, e.g. 02'),
+        'yy' => t('two-digit representation of the year, e.g. 20'),
         'y' => t('four-digit representation of the year, e.g. 2020'),
       ],
     ];
