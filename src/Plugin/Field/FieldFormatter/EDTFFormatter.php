@@ -305,9 +305,11 @@ class EDTFFormatter extends FormatterBase {
       $parts_in_order = [$year, $month, $day];
     }
 
+    # Special case for dates such as "Dec 29, 2021".
     if ($settings['date_order'] === 'middle_endian' &&
         !preg_match('/\d/', $month) &&
-        !empty(array_filter([$month, $day]))) {
+        self::DELIMITERS[$settings['date_separator']] == ' ' &&
+        count(array_filter([$year, $day])) == 2) {
       $formatted_date = "$month $day, $year";
     }
     else {
