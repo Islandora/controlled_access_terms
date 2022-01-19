@@ -130,6 +130,9 @@ class EDTFUtils {
    *   Array of error messages. Valid if empty.
    */
   public static function validate($edtf_text, $intervals = TRUE, $sets = TRUE, $strict = FALSE) {
+    if (empty($edtf_text)) {
+      return ["Cannot parse empty value."];
+    }
     $msgs = [];
     // Sets.
     if ($sets) {
