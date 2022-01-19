@@ -150,7 +150,7 @@ class EDTFUtils {
       }
     }
     // Intervals.
-    if ($intervals) {
+    if ($intervals && str_contains($edtf_text, '/')) {
       if (strpos($edtf_text, 'T') !== FALSE) {
         $msgs[] = "Date intervals cannot include times.";
       }
