@@ -130,6 +130,9 @@ class EDTFUtils {
    *   Array of error messages. Valid if empty.
    */
   public static function validate($edtf_text, $intervals = TRUE, $sets = TRUE, $strict = FALSE) {
+    if (empty($edtf_text)) {
+      return ["Cannot parse empty value."];
+    }
     $msgs = [];
     // Sets.
     if ($sets) {
@@ -150,7 +153,7 @@ class EDTFUtils {
       }
     }
     // Intervals.
-    if ($intervals) {
+    if ($intervals && str_contains($edtf_text, '/')) {
       if (strpos($edtf_text, 'T') !== FALSE) {
         $msgs[] = "Date intervals cannot include times.";
       }

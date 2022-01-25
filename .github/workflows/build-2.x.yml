@@ -4,7 +4,7 @@ name: CI
 
 # Controls when the action will run.
 on:
-  # Triggers the workflow on push or pull request events but only for the 7.x branch
+  # Triggers the workflow on push or pull request events but only for the 2.x branch
   push:
     branches: [ 2.x ]
   pull_request:
@@ -63,6 +63,7 @@ jobs:
       - name: Setup Mysql client
         run: |
           sudo apt-get update
+          sudo apt-get remove -y mysql-client mysql-common
           sudo apt-get install -y mysql-client
 
       - name: Set environment variables

@@ -42,6 +42,7 @@ class EDTFFormatter extends FormatterBase {
     // ISO 8601 bias.
       'date_separator' => 'dash',
       'date_order' => 'big_endian',
+      'year_format' => 'y',
       'month_format' => 'mm',
       'day_format' => 'dd',
     ] + parent::defaultSettings();
