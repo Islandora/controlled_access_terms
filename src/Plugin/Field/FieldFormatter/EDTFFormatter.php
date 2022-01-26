@@ -105,7 +105,7 @@ class EDTFFormatter extends FormatterBase {
       '#default_value' => $this->getSetting('year_format'),
       '#options' => [
         'ny'  => t('Do not show year'),
-        'yy' => t('two-digit day of the month, e.g. 02'),
+        'yy' => t('two-digit representation of the year, e.g. 20'),
         'y' => t('four-digit representation of the year, e.g. 2020'),
       ],
     ];
@@ -305,9 +305,11 @@ class EDTFFormatter extends FormatterBase {
       $parts_in_order = [$year, $month, $day];
     }
 
+    // Special case for dates such as "Dec 29, 2021".
     if ($settings['date_order'] === 'middle_endian' &&
         !preg_match('/\d/', $month) &&
-        !empty(array_filter([$month, $day]))) {
+        self::DELIMITERS[$settings['date_separator']] == ' ' &&
+        count(array_filter([$year, $day])) == 2) {
       $formatted_date = "$month $day, $year";
     }
     else {
