@@ -13,6 +13,6 @@ use Symfony\Component\Validator\Constraint;
  */
 class EDTF extends Constraint {
 
-  public $invalidStuff = '%value is not valid EDTF.';
+  public $invalid = '%value is not valid EDTF: %verbose';
 
 }
