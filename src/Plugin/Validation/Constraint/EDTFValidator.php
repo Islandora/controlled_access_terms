@@ -18,7 +18,7 @@ class EDTFValidator extends ConstraintValidator {
    */
   public function validate($value, Constraint $constraint) {
     if (!$constraint instanceof EDTF) {
-      throw new UnexpectedTypeException($constraint, __NAMESPACE__ . '\\EDTF');
+      throw new UnexpectedTypeException($constraint, EDTF::class);
     }
     if (NULL === $value) {
       return;
