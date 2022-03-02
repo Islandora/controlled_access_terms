@@ -110,7 +110,10 @@ values to use intervals; however, the widget settings (accessible through the
 bundle's form display page) can restrict the field to only accept single-dates.
 
 Note: widget settings will not apply to data imported through other means (e.g.
-the Migrate API or REST-based updates).
+the Migrate API or REST-based updates). To apply some basic EDTF validation 
+when using Migrate API, set `validate: true` in the migration's `destination`.
+This is a coarser validation than the widgets provided but will rule out some 
+malformed date strings.
 
 The formatter settings allow administrators to control how the date is
 displayed. The default setting is YYYY-MM-DD (e.g. 1900-01-31) but settings
