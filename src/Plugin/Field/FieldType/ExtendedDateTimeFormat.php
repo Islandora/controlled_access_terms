@@ -14,6 +14,9 @@ use Drupal\Core\Field\Plugin\Field\FieldType\StringItem;
  *   description = @Translation("Extended Date Time Format field"),
  *   default_formatter = "edtf_default",
  *   default_widget = "edtf_default",
+ *   constraints = {
+ *     "EDTF" = {},
+ *   },
  * )
  */
 class ExtendedDateTimeFormat extends StringItem {
