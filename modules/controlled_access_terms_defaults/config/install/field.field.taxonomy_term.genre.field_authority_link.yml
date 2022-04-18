@@ -19,6 +19,7 @@ default_value_callback: ''
 settings:
   authority_sources:
     lcgft: 'Library of Congress Genre/Form Terms'
+    lcmpt: 'Library of Congress Medium of Performance Thesaurus'
     tgm: 'Thesaurus for Graphic Materials (TGM)'
     mgt: 'MARC Genre/Terms Scheme'
     other: Other
