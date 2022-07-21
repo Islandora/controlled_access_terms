@@ -30,6 +30,7 @@ jobs:
       DRUPAL_VERSION: ${{ matrix.drupal-version }}
       SCRIPT_DIR: ${{ github.workspace }}/islandora_ci
       DRUPAL_DIR: /opt/drupal
+      DRUPAL_WEB_ROOT: /opt/drupal/web
       DRUPAL_EXTENSION_NAME: controlled_access_terms
 
     services:
