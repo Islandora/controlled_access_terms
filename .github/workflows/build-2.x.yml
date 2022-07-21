@@ -25,6 +25,12 @@ jobs:
         test-suite: ["kernel"]
         php-versions: ["7.4", "8.0", "8.1"]
         drupal-version: ["9.3.x", "9.4.x", "9.5.x-dev"]
+    name: PHP ${{ matrix.php-versions }} | drupal ${{ matrix.drupal-version }}
+    env:
+      DRUPAL_VERSION: ${{ matrix.drupal-version }}
+      SCRIPT_DIR: $GITHUB_WORKSPACE/islandora_ci
+      DRUPAL_DIR: /opt/drupal
+      DRUPAL_EXTENSION_NAME: controlled_access_terms
 
     services:
       mysql:
@@ -68,12 +74,6 @@ jobs:
           sudo apt-get remove -y mysql-client mysql-common
           sudo apt-get install -y mysql-client
 
-      - name: Set environment variables
-        run: |
-          echo "DRUPAL_VERSION=${{ matrix.drupal-version }}" >> $GITHUB_ENV
-          echo "SCRIPT_DIR=$GITHUB_WORKSPACE/islandora_ci" >> $GITHUB_ENV
-          echo "DRUPAL_DIR=/opt/drupal" >> $GITHUB_ENV
-
       - name: Cache Composer dependencies
         uses: actions/cache@v2
         with:
@@ -100,11 +100,15 @@ jobs:
         run: |
           cd $DRUPAL_DIR/web
           drush --uri=127.0.0.1:8282 en -y controlled_access_terms
-
+        
       - name: Test scripts
         run: $SCRIPT_DIR/travis_scripts.sh
 
-      - name: PHP tests
+      - name: PHPUnit
+        working-directory: ${{ env.DRUPAL_DIR }}
+        env:
+          SIMPLETEST_BASE_URL: http://127.0.0.1:8282
+          SIMPLETEST_DB: mysql://drupal:drupal@127.0.0.1/drupal
+          BROWSERTEST_OUTPUT_DIRECTORY: /opt/drupal/web/sites/simpletest/browser_output
         run: |
-          cd $DRUPAL_DIR/web/core
-          $DRUPAL_DIR/vendor/bin/phpunit --verbose --testsuite "${{ matrix.test-suite }}"
+          $DRUPAL_DIR/vendor/bin/phpunit "--bootstrap=$DRUPAL_WEB_ROOT/core/tests/bootstrap.php" --group $DRUPAL_EXTENSION_NAME --verbose "$GITHUB_WORKSPACE"
