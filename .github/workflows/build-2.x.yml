@@ -23,6 +23,7 @@ jobs:
       matrix:
         php-versions: ["7.4"]
         drupal-version: ["8.9.11", "9.1.5"]
+        test-suite: ["kernel"]
 
     services:
       mysql:
@@ -105,4 +106,4 @@ jobs:
       - name: PHP tests
         run: |
           cd $DRUPAL_DIR/web/core
-          php scripts/run-tests.sh --suppress-deprecations --url http://127.0.0.1:8282 --verbose --php `which php` --module "controlled_access_terms"
+          $DRUPAL_DIR/vendor/bin/phpunit --verbose --testsuite "${{ matrix.test-suite }}"
