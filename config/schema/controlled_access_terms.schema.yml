@@ -36,6 +36,13 @@ field.widget.settings.text_edtf:
       type: boolean
       label: 'Intervals Permitted'
 
+field.widget.settings.edtf_default:
+  type: field.widget.settings.text_edtf
+  mapping:
+    sets:
+      type: boolean
+      label: Sets permitted
+
 field.widget.settings.text_date:
   type: mapping
   link: ''
@@ -83,9 +90,15 @@ field.formatter.settings.text_edtf_human:
     day_format:
       type: string
       label: 'Day Format'
+    year_format:
+      type: string
+      label: 'Year Format'
     season_hemisphere:
       type: string
       label: 'Hemisphere Seasons'
+
+field.formatter.settings.edtf_default:
+  type: field.formatter.settings.text_edtf_human
 
 field.formatter.settings.text_edtf_iso8601:
   type: mapping
@@ -94,3 +107,35 @@ field.formatter.settings.text_edtf_iso8601:
     season_hemisphere:
       type: string
       label: 'Hemisphere Seasons'
+
+field.field_settings.typed_relation:
+  type: field.field_settings.entity_reference
+  mapping:
+    rel_types:
+      type: sequence
+      sequence:
+        type: string
+
+field.storage_settings.edtf:
+  type: field.storage_settings.string
+
+field.widget.settings.typed_relation_default:
+  type: mapping
+  mapping:
+    match_operator:
+      type: string
+    size:
+      type: integer
+    placeholder:
+      type: string
+    match_limit:
+      type: integer
+
+field.formatter.settings.typed_relation_default:
+  type: mapping
+  mapping:
+    link:
+      type: boolean
+
+field.storage_settings.typed_relation:
+  type: field.storage_settings.entity_reference
