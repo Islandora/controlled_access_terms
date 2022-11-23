@@ -27,7 +27,7 @@ class TypedRelationFiltered extends ProcessorPluginBase {
    * {@inheritdoc}
    */
   public function getPropertyDefinitions(DatasourceInterface $datasource = NULL): array {
-    # Get all configured typed relation fields.
+    // Get all configured typed relation fields.
     $fields = \Drupal::entityTypeManager()->getStorage('field_config')->loadByProperties(['field_type' => 'typed_relation']);
     $properties = [];
     foreach ($fields as $field) {
@@ -42,9 +42,9 @@ class TypedRelationFiltered extends ProcessorPluginBase {
         'processor_id' => $this->getPluginId(),
         'settings' => ['options' => $field->getSetting('rel_types')],
       ];
-      $fieldname = 'typed_relation_filter__' . str_replace('.','__', $field->id());
+      $fieldname = 'typed_relation_filter__' . str_replace('.', '__', $field->id());
       $properties[$fieldname] = new TypedRelationFilteredProperty($definition);
-      $properties[$fieldname]->setSetting('options',$field->getSetting('rel_types') );
+      $properties[$fieldname]->setSetting('options', $field->getSetting('rel_types'));
     }
     return $properties;
   }
@@ -73,7 +73,7 @@ class TypedRelationFiltered extends ProcessorPluginBase {
         if (!$node->get($field_name)->isEmpty()) {
 
           // See if this field is being indexed.
-          $property_path = 'typed_relation_filter__' . str_replace('.','__', $field->id());
+          $property_path = 'typed_relation_filter__' . str_replace('.', '__', $field->id());
           $search_api_fields = $this->getFieldsHelper()
             ->filterForPropertyPath($search_api_fields, NULL, $property_path);
 
