@@ -37,6 +37,7 @@ class TypedRelationFilteredProperty extends ConfigurablePropertyBase {
       '#multiple' => TRUE,
       '#default_value' => $configuration['rel_types'],
       '#required' => TRUE,
+      '#size' => 16,
     ];
     return $form;
   }
