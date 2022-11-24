@@ -27,11 +27,20 @@ class TypedRelationFiltered extends ProcessorPluginBase {
    * {@inheritdoc}
    */
   public function getPropertyDefinitions(DatasourceInterface $datasource = NULL): array {
-    // Get all configured typed relation fields.
-    $fields = \Drupal::entityTypeManager()->getStorage('field_config')->loadByProperties(['field_type' => 'typed_relation']);
     $properties = [];
+
+    if (!$datasource || !$datasource->getEntityTypeId()) {
+      return $properties;
+    }
+
+    $entity_type = $datasource->getEntityTypeId();
+    // Get all configured typed relation fields.
+    $fields = \Drupal::entityTypeManager()->getStorage('field_config')->loadByProperties([
+      'entity_type' => $entity_type,
+      'field_type' => 'typed_relation',
+    ]);
     foreach ($fields as $field) {
-      // Set a filtered field.
+      // Create a "filtered" option.
       $definition = [
         'label' => $this->t('@label (filtered by type) [@bundle]', [
           '@label' => $field->label(),
@@ -40,11 +49,13 @@ class TypedRelationFiltered extends ProcessorPluginBase {
         'description' => $this->t('Typed relation field, filtered by type'),
         'type' => 'string',
         'processor_id' => $this->getPluginId(),
+        'is_list' => TRUE,
         'settings' => ['options' => $field->getSetting('rel_types')],
       ];
       $fieldname = 'typed_relation_filter__' . str_replace('.', '__', $field->id());
-      $properties[$fieldname] = new TypedRelationFilteredProperty($definition);
-      $properties[$fieldname]->setSetting('options', $field->getSetting('rel_types'));
+      $property = new TypedRelationFilteredProperty($definition);
+      $property->setSetting('options', $field->getSetting('rel_types'));
+      $properties[$fieldname] = $property;
     }
     return $properties;
   }
@@ -65,22 +76,19 @@ class TypedRelationFiltered extends ProcessorPluginBase {
       return;
     }
     // Cycle over any typed relation fields on the original item.
-    $node = $item->getOriginalObject()->getValue();
-    $field_defs = $node->getFieldDefinitions();
+    $content_entity = $item->getOriginalObject()->getValue();
+    $field_defs = $content_entity->getFieldDefinitions();
     foreach ($field_defs as $field) {
       if ($field->getType() == 'typed_relation') {
         $field_name = $field->getName();
-        if (!$node->get($field_name)->isEmpty()) {
-
+        if (!$content_entity->get($field_name)->isEmpty()) {
           // See if this field is being indexed.
           $property_path = 'typed_relation_filter__' . str_replace('.', '__', $field->id());
           $search_api_fields = $this->getFieldsHelper()
-            ->filterForPropertyPath($search_api_fields, NULL, $property_path);
-
+            ->filterForPropertyPath($search_api_fields, $item->getDatasourceId(), $property_path);
           foreach ($search_api_fields as $search_api_field) {
-
-            // Load field values.
-            $vals = $node->$field_name->getValue();
+            // Load entity's field values.
+            $vals = $content_entity->$field_name->getValue();
             foreach ($vals as $element) {
               $rel_type = $element['rel_type'];
               if (in_array($rel_type, $search_api_field->getConfiguration()['rel_types'])) {
@@ -98,6 +106,16 @@ class TypedRelationFiltered extends ProcessorPluginBase {
         }
       }
     }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function requiresReindexing(array $old_settings = NULL, array $new_settings = NULL) {
+    if ($new_settings != $old_settings) {
+      return TRUE;
+    }
+    return FALSE;
   }
 
 }
