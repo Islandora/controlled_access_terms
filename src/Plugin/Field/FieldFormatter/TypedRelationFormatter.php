@@ -29,7 +29,7 @@ class TypedRelationFormatter extends EntityReferenceLabelFormatter {
       $rel_types = $item->getRelTypes();
       $rel_type = isset($rel_types[$item->rel_type]) ? $rel_types[$item->rel_type] : $item->rel_type;
       if (!empty($rel_type)) {
-        $elements[$delta]['#prefix'] = $rel_type . ': ';
+        $elements[$delta]['#prefix'] = $this->t($rel_type) . ': ';
       }
     }
 
