@@ -39,6 +39,14 @@ class TypedRelationFilteredProperty extends ConfigurablePropertyBase {
       '#required' => TRUE,
       '#size' => 16,
     ];
+    $form['bundle'] = [
+      '#type' => 'hidden',
+      '#value' => $field->getDataDefinition()->getSetting('bundle'),
+    ];
+    $form['base_field'] = [
+      '#type' => 'hidden',
+      '#value' => $field->getDataDefinition()->getSetting('base_field'),
+    ];
     return $form;
   }
 
