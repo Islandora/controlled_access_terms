@@ -22,6 +22,8 @@ class TypedRelationFilteredProperty extends ConfigurablePropertyBase {
   public function defaultConfiguration() {
     return [
       'rel_types' => [],
+      'bundle' => '',
+      'base_field' => '',
     ];
   }
 

@@ -139,7 +139,7 @@ class TypedRelationFiltered extends ProcessorPluginBase {
         return;
       }
 
-      $vals = $content_entity->$field_config['base_field']->getValue();
+      $vals = $content_entity->$field_config['base_field'];
       foreach ($vals as $element) {
         $rel_type = $element['rel_type'];
         if (in_array($rel_type, $field_config['rel_types'])) {
