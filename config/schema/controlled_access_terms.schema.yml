@@ -114,7 +114,7 @@ field.field_settings.typed_relation:
     rel_types:
       type: sequence
       sequence:
-        type: string
+        type: label
 
 field.storage_settings.edtf:
   type: field.storage_settings.string
