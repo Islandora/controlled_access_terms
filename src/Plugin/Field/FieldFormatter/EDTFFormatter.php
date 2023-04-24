@@ -59,7 +59,7 @@ class EDTFFormatter extends FormatterBase {
       '#default_value' => $this->getSetting('date_separator'),
       '#options' => [
         'dash' => t("Dash '-'"),
-        'stroke' => t("Stroke '\'"),
+        'stroke' => t("Stroke '/'"),
         'period' => t("Period '.'"),
         'space' => t("Space ' '"),
       ],
