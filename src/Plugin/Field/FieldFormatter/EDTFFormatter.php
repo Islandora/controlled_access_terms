@@ -158,6 +158,7 @@ class EDTFFormatter extends FormatterBase {
       // Sets.
       if (strpos($item->value, '[') !== FALSE || strpos($item->value, '{') !== FALSE) {
         $set_qualifier = (strpos($item->value, '[') !== FALSE) ? t('one of the dates:') : t('all of the dates:');
+        $formatted_dates = [];
         foreach (explode(',', trim($item->value, '{}[] ')) as $date) {
           $date_range = explode('..', $date);
           switch (count($date_range)) {
