@@ -1,20 +1,19 @@
 name: 'Controlled Access Terms Defaults'
 description: 'Install content types for geographic location, corporate body, family, person and subject along with default form configuration and RDF mapping.'
 type: module
-core: 8.x
-core_version_requirement: ^8 || ^9
+core_version_requirement: ^9 || ^10
 dependencies:
-  - content_translation
-  - controlled_access_terms
-  - field
-  - geolocation
-  - language
-  - menu_ui
-  - node
-  - options
-  - path
-  - rdf
-  - taxonomy
-  - text
-  - user
+  - drupal:content_translation
+  - controlled_access_terms:controlled_access_terms
+  - drupal:field
+  - geolocation:geolocation
+  - drupal:language
+  - drupal:menu_ui
+  - drupal:node
+  - drupal:options
+  - drupal:path
+  - rdf:rdf
+  - drupal:taxonomy
+  - drupal:text
+  - drupal:user
 package: 'Controlled Access Terms'
