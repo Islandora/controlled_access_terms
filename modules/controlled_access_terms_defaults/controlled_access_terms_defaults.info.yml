@@ -3,17 +3,17 @@ description: 'Install content types for geographic location, corporate body, fam
 type: module
 core_version_requirement: ^9 || ^10
 dependencies:
-  - drupal:content_translation
   - controlled_access_terms:controlled_access_terms
+  - drupal:content_translation
   - drupal:field
-  - geolocation:geolocation
   - drupal:language
   - drupal:menu_ui
   - drupal:node
   - drupal:options
   - drupal:path
-  - rdf:rdf
   - drupal:taxonomy
   - drupal:text
   - drupal:user
+  - geolocation:geolocation
+  - rdf:rdf
 package: 'Controlled Access Terms'
