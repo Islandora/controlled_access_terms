@@ -345,7 +345,7 @@ class EDTFFormatter extends FormatterBase {
         $formatted_date = t('unspecified @time_unit1, @time_unit2, and @time_unit3 in @date', [
           '@time_unit1' => $unspecified[0],
           '@time_unit2' => $unspecified[1],
-          '@time_unit2' => $unspecified[2],
+          '@time_unit3' => $unspecified[2],
           '@date' => $formatted_date,
         ]);
         break;
