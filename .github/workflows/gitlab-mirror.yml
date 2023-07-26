@@ -1,0 +1,24 @@
+name: Mirror to Drupal.org GitLab
+
+on:
+  push:
+    branches:
+      - 2.x
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+    - name: Mirror + trigger CI
+      uses: SvanBoxel/gitlab-mirror-and-ci-action@master
+      with:
+        args: "https://git.drupalcode.org/project/controlled_access_terms"
+      env:
+        FOLLOW_TAGS: "true"
+        FORCE_PUSH: "false"
+        GITLAB_HOSTNAME: "git.drupal.org"
+        GITLAB_USERNAME: "project_60628_bot"
+        GITLAB_PASSWORD: ${{ secrets.GITLAB_PASSWORD }}
+        GITLAB_PROJECT_ID: "60628"
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
