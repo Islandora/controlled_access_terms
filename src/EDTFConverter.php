@@ -30,7 +30,7 @@ class EDTFConverter extends CommonDataConverter {
   }
 
   /**
-   * Converts an EDTF text field into an ISO 8601 timestamp string.
+   * Converts an EDTF text field into an ISO 8601 date.
    *
    * It assumes the earliest valid date for approximations and intervals.
    *

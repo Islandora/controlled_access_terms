@@ -183,7 +183,7 @@ class EDTFUtils {
     $msgs = [];
 
     if (strpos($datetime_str, 'T') > -1) {
-      list($date, $time) = explode('T', $datetime_str);
+      [$date, $time] = explode('T', $datetime_str);
     }
     else {
       $date = (string) $datetime_str;
@@ -216,22 +216,29 @@ class EDTFUtils {
     elseif (strlen(ltrim($parsed_date[self::YEAR_BASE], '-')) > 4) {
       $msgs[] = "Years longer than 4 digits must be prefixed with a 'Y'.";
     }
-    elseif (strlen($parsed_date[self::YEAR_BASE]) < 4) {
-      $msgs[] = "Years must be at least 4 characters long.";
-    }
     $strict_pattern = 'Y';
 
     // Month.
     if (array_key_exists(self::MONTH, $parsed_date) && !empty($parsed_date[self::MONTH])) {
       // Valid month values?
       if (
-        // Month doesn't exist in mapping or does exist in mapping, but is > 12
-        // and there is a day part.
-        (!array_key_exists($parsed_date[self::MONTH], self::MONTHS_MAP) ||
-          (array_key_exists($parsed_date[self::MONTH], self::MONTHS_MAP) &&
-          array_key_exists(self::DAY, $parsed_date) &&
-          $parsed_date[self::MONTH] > 12)) &&
-          strpos($parsed_date[self::MONTH], 'X') === FALSE) {
+            // Month doesn't exist in mapping
+            // and isn't a valid unspecified month value.
+            (
+              !array_key_exists($parsed_date[self::MONTH], self::MONTHS_MAP) &&
+              (intval(str_replace('X', '1', $parsed_date[self::MONTH])) > 12)
+            ) ||
+            // Sub-year groupings with day values.
+            (
+              array_key_exists($parsed_date[self::MONTH], self::MONTHS_MAP) &&
+              array_key_exists(self::DAY, $parsed_date) &&
+              $parsed_date[self::MONTH] > 12
+            ) ||
+            // Unspecifed character comes before number.
+            (
+              preg_match('/X+\d/', $parsed_date[self::MONTH])
+            )
+        ) {
         $msgs[] = "Provided month value '" . $parsed_date[self::MONTH] . "' is not valid.";
       }
       $strict_pattern = 'Y-m';
@@ -327,7 +334,27 @@ class EDTFUtils {
    */
   public static function iso8601Value(string $edtf) {
 
+    if (count(self::validate($edtf)) > 0) {
+      return '';
+    }
+    // Sets.
+    if (strpos($edtf, '[') !== FALSE || strpos($edtf, '{') !== FALSE) {
+      // Use first in set.
+      $dates = preg_split('/(,|\.\.)/', trim($edtf, '{}[]'));
+      return self::iso8601Value(array_shift($dates));
+    }
+    // Intervals.
+    if (str_contains($edtf, '/')) {
+      $dates = explode('/', $edtf);
+      return self::iso8601Value(array_shift($dates));
+    }
+
     $date_time = explode('T', $edtf);
+
+    // Valid EDTF values with time portions are already ISO 8601 timestamps.
+    if (array_key_exists(1, $date_time) && !empty($date_time[1])) {
+      return $edtf;
+    }
 
     preg_match(EDTFUtils::DATE_PARSE_REGEX, $date_time[0], $parsed_date);
 
@@ -358,17 +385,7 @@ class EDTFUtils {
       $day = str_replace('X', '0', $day);
     }
 
-    $formatted_date = implode('-', array_filter([$year, $month, $day]));
-
-    // Time.
-    if (array_key_exists(1, $date_time) && !empty($date_time[1])) {
-      $formatted_date .= 'T' . $date_time[1];
-    }
-    else {
-      $formatted_date .= 'T00:00:00';
-    }
-
-    return $formatted_date;
+    return implode('-', array_filter([$year, $month, $day]));
 
   }
 
