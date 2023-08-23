@@ -216,6 +216,9 @@ class EDTFUtils {
     elseif (strlen(ltrim($parsed_date[self::YEAR_BASE], '-')) > 4) {
       $msgs[] = "Years longer than 4 digits must be prefixed with a 'Y'.";
     }
+    elseif (strlen($parsed_date[self::YEAR_BASE]) < 4) {
+      $msgs[] = "Years must be at least 4 characters long.";
+    }
     $strict_pattern = 'Y';
 
     // Month.
