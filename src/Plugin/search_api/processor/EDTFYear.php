@@ -182,7 +182,7 @@ class EDTFYear extends ProcessorPluginBase implements PluginFormInterface {
                 }
                 else {
                   $end_year = (empty($this->configuration['open_end_year'])) ? date('Y') : $this->configuration['open_end_year'];
-                  $edtf = str_replace('/..', '/' . $this->configuration['open_end_year'], $edtf);
+                  $edtf = str_replace('/..', '/' . $end_year, $edtf);
                 }
               }
               // Open end dates with `/`.
@@ -192,7 +192,7 @@ class EDTFYear extends ProcessorPluginBase implements PluginFormInterface {
                 }
                 else {
                   $end_year = (empty($this->configuration['open_end_year'])) ? date('Y') : $this->configuration['open_end_year'];
-                  $edtf = str_replace('/', '/' . $this->configuration['open_end_year'], $edtf);
+                  $edtf = str_replace('/', '/' . $end_year, $edtf);
                 }
               }
               $parsed = $parser->parse($edtf)->getEdtfValue();
