@@ -157,7 +157,7 @@ class EDTFYear extends ProcessorPluginBase implements PluginFormInterface {
               }, $dates->getDates());
             }
             else {
-              // Open start dates.
+              // Open start dates with `../`.
               if (substr($edtf, 0, 3) === '../') {
                 if ($this->configuration['ignore_open_start']) {
                   $edtf = substr($edtf, 3);
@@ -166,7 +166,16 @@ class EDTFYear extends ProcessorPluginBase implements PluginFormInterface {
                   $edtf = str_replace('../', $this->configuration['open_start_year'] . '/', $edtf);
                 }
               }
-              // Open end dates.
+              // Open start dates with `/`.
+              if (substr($edtf, 0, 1) === '/') {
+                if ($this->configuration['ignore_open_start']) {
+                  $edtf = substr($edtf, 1);
+                }
+                else {
+                  $edtf = str_replace('/', $this->configuration['open_start_year'] . '/', $edtf);
+                }
+              }
+              // Open end dates with `/..`.
               if (substr($edtf, -3) === '/..') {
                 if ($this->configuration['ignore_open_end']) {
                   $edtf = substr($edtf, 0, -3);
@@ -176,7 +185,16 @@ class EDTFYear extends ProcessorPluginBase implements PluginFormInterface {
                   $edtf = str_replace('/..', '/' . $this->configuration['open_end_year'], $edtf);
                 }
               }
-
+              // Open end dates with `/`.
+              if (substr($edtf, -1) === '/') {
+                if ($this->configuration['ignore_open_end']) {
+                  $edtf = substr($edtf, 0, -1);
+                }
+                else {
+                  $end_year = (empty($this->configuration['open_end_year'])) ? date('Y') : $this->configuration['open_end_year'];
+                  $edtf = str_replace('/', '/' . $this->configuration['open_end_year'], $edtf);
+                }
+              }
               $parsed = $parser->parse($edtf)->getEdtfValue();
               $years = range(intval(date('Y', $parsed->getMin())), intval(date('Y', $parsed->getMax())));
             }
