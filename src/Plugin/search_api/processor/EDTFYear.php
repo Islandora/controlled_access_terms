@@ -2,8 +2,8 @@
 
 namespace Drupal\controlled_access_terms\Plugin\search_api\processor;
 
+use Drupal\controlled_access_terms\EDTFUtils;
 use Drupal\Core\Entity\EntityInterface;
-use EDTF\EdtfFactory;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\PluginFormInterface;
 use Drupal\search_api\Datasource\DatasourceInterface;
@@ -11,7 +11,7 @@ use Drupal\search_api\Item\ItemInterface;
 use Drupal\search_api\Plugin\PluginFormTrait;
 use Drupal\search_api\Processor\ProcessorPluginBase;
 use Drupal\search_api\Processor\ProcessorProperty;
-use Drupal\controlled_access_terms\EDTFUtils;
+use EDTF\EdtfFactory;
 
 /**
  * Adds the item's creation year to the indexed data.
@@ -142,7 +142,7 @@ class EDTFYear extends ProcessorPluginBase implements PluginFormInterface {
       [$entityType, $bundle, $field_name] = explode('|', $field, 3);
 
       if ($entityType === 'paragraph') {
-       $edtf = $this->getDateFromParagraphField($entity, $bundle, $field_name);
+        $edtf = $this->getDateFromParagraphField($entity, $bundle, $field_name);
       }
       elseif ($entity->getEntityTypeId() == $entityType
         && $entity->bundle() == $bundle
@@ -200,7 +200,8 @@ class EDTFYear extends ProcessorPluginBase implements PluginFormInterface {
                 }
               }
             }
-          } catch (\Throwable $e) {
+          }
+          catch (\Throwable $e) {
             \Drupal::logger('controlled_access_terms')
               ->warning(t("Could not parse EDTF value '@edtf' for indexing @type/@id",
                 [
