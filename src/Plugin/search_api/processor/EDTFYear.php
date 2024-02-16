@@ -139,8 +139,14 @@ class EDTFYear extends ProcessorPluginBase implements PluginFormInterface {
   public function addFieldValues(ItemInterface $item) {
     $entity = $item->getOriginalObject()->getValue();
     foreach ($this->configuration['fields'] as $field) {
-      [$entityType, $bundle, $field_name] = explode('|', $field, 3);
+      $components = explode('|', $field, 3);
+      if (count($components) != 3) {
+        continue;
+      }
 
+      [$entityType, $bundle, $field_name] = $components;
+
+      $edtf = FALSE;
       if ($entityType === 'paragraph') {
         $edtf = $this->getDateFromParagraphField($entity, $bundle, $field_name);
       }
