@@ -148,7 +148,7 @@ class TypedRelationFiltered extends ProcessorPluginBase {
             ->getStorage('taxonomy_term')
             ->load($tid);
           if ($taxo_term) {
-            $taxo_name = $taxo_term->name->value;
+            $taxo_name = $taxo_term->getName();
             $search_api_field->addValue($taxo_name);
           }
         }
