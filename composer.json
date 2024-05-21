@@ -25,7 +25,8 @@
     "sebastian/phpcpd": "*"
   },
   "suggest": {
-    "drupal/name": "Provides western-centric structured names."
+    "drupal/name": "Provides western-centric structured names.",
+    "drupal/rdf": "Provides ability to map fields to RDF."
   },
   "conflict": {
     "islandora/jsonld": "<2.1.0",
