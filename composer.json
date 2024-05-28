@@ -13,6 +13,9 @@
       "url": "https://packages.drupal.org/8"
     }
   ],
+  "replace": {
+    "islandora/controlled_access_terms": "self.version"
+  },
   "require": {
     "drupal/geolocation": "^3.2",
     "drupal/token": "^1.7",
