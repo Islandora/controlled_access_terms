@@ -1,0 +1,6 @@
+typed_relation:
+  label: 'Typed Relation'
+  description: 'A Reference field, with an associated type selected from a configurable list.'
+  weight: 10
+  libraries:
+    - controlled_access_terms/controlled_access_terms.icons

@@ -105,6 +105,13 @@ function controlled_access_terms_jsonld_field_mappings() {
 }
 
 /**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function controlled_access_terms_form_field_ui_field_storage_add_form_alter(&$form, &$form_state, $form_id) {
+  $form['#attached']['library'][] = 'controlled_access_terms/controlled_access_terms.icons';
+}
+
+/**
  * Update EDTF fields from the 2012 draft to match the 2018 spec.
  */
 function controlled_access_terms_update_8003() {

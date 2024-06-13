@@ -14,7 +14,7 @@ use Drupal\link\Plugin\Field\FieldType\LinkItem;
  * @FieldType(
  *   id = "authority_link",
  *   label = @Translation("Authority Link"),
- *   description = @Translation("Stores a URL string, an authority source dropdown, an optional varchar link text, and optional blob of attributes to assemble a link."),
+ *   description = @Translation("A Link field, with an authority source selected from a configurable list."),
  *   default_widget = "authority_link_default",
  *   default_formatter = "authority_formatter_default",
  *   constraints = {
