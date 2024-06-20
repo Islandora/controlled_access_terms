@@ -1,4 +1,4 @@
 controlled_access_terms.icons:
   css:
     theme:
-      css/controlled_access_terms.icons-min.css: {}
+      css/controlled_access_terms.icons.css: {}

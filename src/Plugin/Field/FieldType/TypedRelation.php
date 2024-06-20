@@ -15,7 +15,7 @@ use Drupal\Core\TypedData\DataDefinition;
  *   label = @Translation("Typed Relation"),
  *   module = "controlled_access_terms",
  *   category = "typed_relation",
- *   description = @Translation("Implements a typed relation field"),
+ *   description = @Translation("A reference field with a configurable type selector."),
  *   default_formatter = "typed_relation_default",
  *   default_widget = "typed_relation_default",
  *   list_class = "\Drupal\Core\Field\EntityReferenceFieldItemList",

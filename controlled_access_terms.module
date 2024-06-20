@@ -7,6 +7,7 @@
 
 use Drupal\jsonld\Normalizer\NormalizerBase;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Field\FieldTypeCategoryManagerInterface;
 use Drupal\controlled_access_terms\EDTFConverter;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\field\Entity\FieldConfig;
@@ -109,6 +110,27 @@ function controlled_access_terms_jsonld_field_mappings() {
  */
 function controlled_access_terms_form_field_ui_field_storage_add_form_alter(&$form, &$form_state, $form_id) {
   $form['#attached']['library'][] = 'controlled_access_terms/controlled_access_terms.icons';
+}
+
+/**
+ * Implements hook_field_info_entity_type_ui_definitions_alter().
+ */
+function controlled_access_terms_field_info_entity_type_ui_definitions_alter(array &$ui_definitions, string $entity_type_id) {
+  // Put the generic typed relation field last and name it 'Other'.
+  if (isset($ui_definitions['typed_relation'])) {
+    $ui_definitions['typed_relation']['label'] = t('Other');
+    $ui_definitions['typed_relation']['weight'] = 10;
+  }
+  // Undo some shenanigans done by the Media module to the media option.
+  if (isset($ui_definitions['field_ui:typed_relation:media'])) {
+    $ui_definitions['field_ui:typed_relation:media']['category'] = 'typed_relation';
+    $ui_definitions['field_ui:typed_relation:media']['description'] = 'A reference field with a configurable type selector.';
+    $ui_definitions['field_ui:typed_relation:media']['weight'] = 0;
+  }
+  // Put taxonomy term first in the option list.
+  if (isset($ui_definitions['field_ui:typed_relation:taxonomy_term'])) {
+    $ui_definitions['field_ui:typed_relation:taxonomy_term']['weight'] = -10;
+  }
 }
 
 /**
