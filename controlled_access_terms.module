@@ -5,12 +5,11 @@
  * Controlled Access Terms stuff.
  */
 
-use Drupal\jsonld\Normalizer\NormalizerBase;
-use Drupal\Core\Entity\EntityInterface;
-use Drupal\Core\Field\FieldTypeCategoryManagerInterface;
 use Drupal\controlled_access_terms\EDTFConverter;
-use Drupal\field\Entity\FieldStorageConfig;
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\field\Entity\FieldConfig;
+use Drupal\field\Entity\FieldStorageConfig;
+use Drupal\jsonld\Normalizer\NormalizerBase;
 
 /**
  * Implements hook_rdf_namespaces().
