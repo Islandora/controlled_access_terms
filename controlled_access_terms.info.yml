@@ -1,7 +1,7 @@
 name: 'Controlled Access Terms'
 type: module
 description: 'Provides topic, geographic, person, family, and corporate body entites as well as an authorities link field.'
-core_version_requirement: ^9 || ^10
+core_version_requirement: ^10.2
 package: 'Controlled Access Terms'
 
 dependencies:

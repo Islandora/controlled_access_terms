@@ -24,10 +24,7 @@ jobs:
       matrix:
         test-suite: ["kernel"]
         php-versions: ["8.1", "8.2", "8.3"]
-        drupal-version: ["10.1.x", "10.2.x", "10.3.x-dev"]
-        exclude:
-          - php-versions: "8.3"
-            drupal-version: "10.1.x"
+        drupal-version: ["10.2.x", "10.3.x", "10.4.x-dev"]
     name: PHP ${{ matrix.php-versions }} | drupal ${{ matrix.drupal-version }}
     env:
       DRUPAL_VERSION: ${{ matrix.drupal-version }}

@@ -30,7 +30,7 @@
   },
   "conflict": {
     "islandora/jsonld": "<2.1.0",
-    "drupal/core": "<=8"
+    "drupal/core": "<=10.1"
   },
   "license": "GPL-2.0-or-later",
   "authors": [
