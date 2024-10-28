@@ -24,7 +24,12 @@ jobs:
       matrix:
         test-suite: ["kernel"]
         php-versions: ["8.1", "8.2", "8.3"]
-        drupal-version: ["10.2.x", "10.3.x", "10.4.x-dev"]
+        drupal-version: ["10.2.x", "10.3.x", "10.4.x-dev", "11.0.x"]
+        exclude:
+          - drupal-version: "11.0.x"
+            php-versions: "8.1"
+          - drupal-version: "11.0.x"
+            php-versions: "8.2"
     name: PHP ${{ matrix.php-versions }} | drupal ${{ matrix.drupal-version }}
     env:
       DRUPAL_VERSION: ${{ matrix.drupal-version }}
@@ -112,4 +117,4 @@ jobs:
           SIMPLETEST_DB: mysql://drupal:drupal@127.0.0.1/drupal
           BROWSERTEST_OUTPUT_DIRECTORY: /opt/drupal/web/sites/simpletest/browser_output
         run: |
-          $DRUPAL_DIR/vendor/bin/phpunit "--bootstrap=$DRUPAL_WEB_ROOT/core/tests/bootstrap.php" --group $DRUPAL_EXTENSION_NAME --verbose "$GITHUB_WORKSPACE"
+          $DRUPAL_DIR/vendor/bin/phpunit "--bootstrap=$DRUPAL_WEB_ROOT/core/tests/bootstrap.php" --group $DRUPAL_EXTENSION_NAME "$GITHUB_WORKSPACE"
