@@ -32,6 +32,15 @@ class AuthorityLinkFormatter extends LinkFormatter {
   /**
    * {@inheritdoc}
    */
+  public function settingsForm(array $form, FormStateInterface $form_state) {
+    $form = parent::settingsForm($form, $form_state);
+    $form['url_only']['#access'] = $form['url_plain']['#access'] = ($this->getPluginId() == 'authority_formatter_default');
+    return $form;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function viewElements(FieldItemListInterface $items, $langcode) {
     $element = [];
     $entity = $items
