@@ -4,6 +4,7 @@ namespace Drupal\controlled_access_terms\Plugin\Field\FieldFormatter;
 
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Field\FieldItemListInterface;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\link\Plugin\Field\FieldFormatter\LinkFormatter;
 
 /**
