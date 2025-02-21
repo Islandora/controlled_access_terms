@@ -241,24 +241,26 @@ class EDTFFormatter extends FormatterBase {
     ];
     $unspecified_count = 0;
 
-    if (strpos($parsed_date[EDTFUtils::YEAR_BASE], 'XXXX') !== FALSE) {
-      $unspecified['fullyear'] = TRUE;
-      $unspecified_count++;
-    }
-    elseif (strpos($parsed_date[EDTFUtils::YEAR_BASE], 'XXX') !== FALSE) {
-      $unspecified['century'] = TRUE;
-      $unspecified_count++;
-    }
-    elseif (strpos($parsed_date[EDTFUtils::YEAR_BASE], 'XX') !== FALSE) {
-      $unspecified['decade'] = TRUE;
-      $unspecified_count++;
-    }
-    elseif (strpos($parsed_date[EDTFUtils::YEAR_BASE], 'X') !== FALSE) {
-      $unspecified['year'] = TRUE;
-      $unspecified_count++;
-    }
+    if (array_key_exists(EDTFUtils::YEAR_BASE, $parsed_date)) {
+      if (strpos($parsed_date[EDTFUtils::YEAR_BASE], 'XXXX') !== FALSE) {
+        $unspecified['fullyear'] = TRUE;
+        $unspecified_count++;
+      }
+      elseif (strpos($parsed_date[EDTFUtils::YEAR_BASE], 'XXX') !== FALSE) {
+        $unspecified['century'] = TRUE;
+        $unspecified_count++;
+      }
+      elseif (strpos($parsed_date[EDTFUtils::YEAR_BASE], 'XX') !== FALSE) {
+        $unspecified['decade'] = TRUE;
+        $unspecified_count++;
+      }
+      elseif (strpos($parsed_date[EDTFUtils::YEAR_BASE], 'X') !== FALSE) {
+        $unspecified['year'] = TRUE;
+        $unspecified_count++;
+      }
 
-    $year = $parsed_date[EDTFUtils::YEAR_BASE];
+      $year = $parsed_date[EDTFUtils::YEAR_BASE];
+    }
 
     if (array_key_exists(EDTFUtils::MONTH, $parsed_date)) {
       if (strpos($parsed_date[EDTFUtils::MONTH], 'X') !== FALSE) {
