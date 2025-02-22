@@ -76,9 +76,13 @@ class AuthorityLinkFormatter extends LinkFormatter {
       if (!empty($settings['trim_length'])) {
         $link_title = Unicode::truncate($link_title, $settings['trim_length'], FALSE, TRUE);
       }
+      if (!empty($settings['url_only']) && empty($settings['url_plain'])) {
+        $link_title = $url->toString();
+      }
+
       if (!empty($settings['url_only']) && !empty($settings['url_plain'])) {
         $element[$delta] = [
-          '#plain_text' => $link_title,
+          '#plain_text' => $url->toString(),
         ];
         if (!empty($item->_attributes)) {
 
