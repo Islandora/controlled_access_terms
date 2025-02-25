@@ -164,17 +164,29 @@ class EDTFFormatterTest extends KernelTestBase {
         'input' => '1985-04-12',
         'expected' => '1985-04-12',
       ],
-      'Year' => [
-        'input' => '1975',
-        'expected' => '1975',
+      'Date - reduced precision - year and month' => [
+        'input' => '1985-04',
+        'expected' => '1985-04',
       ],
-      'Year-month' => [
-        'input' => '2025-02',
-        'expected' => '2025-02',
+      'Date - reduced precision - year' => [
+        'input' => '1985',
+        'expected' => '1985',
       ],
-      'Date and time (no TZ)' => [
+      'Date and time - local' => [
         'original' => '2024-10-15T12:00:00',
         'formatted' => '2024-10-15 12:00:00',
+      ],
+      'Date and time - Z' => [
+        'original' => '1985-04-12T23:20:30Z',
+        'formatted' => '1985-04-12 23:20:30Z',
+      ],
+      'Date and time - shift in hours' => [
+        'original' => '1985-04-12T23:20:30+04',
+        'formatted' => '1985-04-12 23:20:30+04',
+      ],
+      'Date and time - shift in hours and minutes' => [
+        'original' => '1985-04-12T23:20:30+04:30',
+        'formatted' => '1985-04-12 23:20:30+04:30',
       ],
 
       // EDTF level 1.
@@ -197,6 +209,10 @@ class EDTFFormatterTest extends KernelTestBase {
       'Year and month' => [
         'original' => '2024-10',
         'formatted' => '2024-10',
+      ],
+      'Unspecified digits from right' => [
+        'input' => '198X',
+        'expected' => 'Unknown year in the decade of the 1980s',
       ],
 
       // Invalid/edge cases.
