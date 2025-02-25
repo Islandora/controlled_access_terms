@@ -200,18 +200,18 @@ class EDTFFormatterTest extends KernelTestBase {
       ],
 
       // Invalid/edge cases.
-      //      'Empty input' => [
-      //        'input' => '',
-      //        'expected' => '',
-      //      ],
-      //      'Invalid date format' => [
-      //        'input' => 'invalid-date',
-      //        'expected' => '',
-      //      ],
-      //      'Invalid (date-like)' => [
-      //        'original' => '1900s',
-      //        'formatted' => '',
-      //      ],.
+      'Empty input' => [
+        'input' => '',
+        'expected' => '',
+      ],
+      'Invalid date format' => [
+        'input' => 'invalid-date',
+        'expected' => '',
+      ],
+      'Invalid (date-like)' => [
+        'original' => '1900s',
+        'formatted' => '',
+      ],
     ];
   }
 
