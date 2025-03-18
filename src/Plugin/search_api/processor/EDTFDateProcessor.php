@@ -63,10 +63,12 @@ class EDTFDateProcessor extends ProcessorPluginBase implements PluginFormInterfa
         $fields_options = [];
         foreach ($fields as $field) {
             $key = $field->getTargetEntityTypeId() . '|' . $field->getName();
-            $fields_options[$key] = $this->t('@label (Entity: @entity_type)', [
+            $fields_options[$key] = $this->t(
+                '@label (Entity: @entity_type)', [
                 '@label' => $field->label(),
                 '@entity_type' => $field->getTargetEntityTypeId(),
-            ]);
+                ]
+            );
         }
   
         $form['fields'] = [
@@ -132,14 +134,16 @@ class EDTFDateProcessor extends ProcessorPluginBase implements PluginFormInterfa
                 ->setLabel($this->t('EDTF Dates'))
                 ->setDescription($this->t('Indexes single EDTF dates or multiple separate dates.'));
         
-            $properties['edtf_dates'] = new ProcessorProperty([
+            $properties['edtf_dates'] = new ProcessorProperty(
+                [
                 'label' => $this->t('EDTF Dates'),
                 'description' => $this->t('Indexes single EDTF dates or multiple separate dates.'),
                 'type' => 'datetime_iso8601',
                 'is_list' => true,
                 'processor_id' => $this->getPluginId(),
                 'data_definition' => $data_definition,
-            ]);
+                ]
+            );
         }
   
         return $properties;
@@ -198,9 +202,11 @@ class EDTFDateProcessor extends ProcessorPluginBase implements PluginFormInterfa
         $edtfDates = $filteredDates;
   
         // Sort dates in ascending order.
-        usort($edtfDates, function ($a, $b) {
-            return strtotime($a) - strtotime($b);
-        });
+        usort(
+            $edtfDates, function ($a, $b) {
+                return strtotime($a) - strtotime($b);
+            }
+        );
   
         if (!empty($edtfDates)) {
             $fields = $this->getFieldsHelper()->filterForPropertyPath($item->getFields(), null, 'edtf_dates');
@@ -257,14 +263,14 @@ class EDTFDateProcessor extends ProcessorPluginBase implements PluginFormInterfa
   
         // Ensure complete date format.
         switch (true) {
-            case preg_match('/^\d{4}-\d{2}-\d{2}$/', $value):
-                break;
-            case preg_match('/^\d{4}-\d{2}$/', $value):
-                $value .= '-01';
-                break;
-            case preg_match('/^\d{4}$/', $value):
-                $value .= '-01-01';
-                break;
+        case preg_match('/^\d{4}-\d{2}-\d{2}$/', $value):
+            break;
+        case preg_match('/^\d{4}-\d{2}$/', $value):
+            $value .= '-01';
+            break;
+        case preg_match('/^\d{4}$/', $value):
+            $value .= '-01-01';
+            break;
         }
         return $value . 'T00:00:00Z';
     }
