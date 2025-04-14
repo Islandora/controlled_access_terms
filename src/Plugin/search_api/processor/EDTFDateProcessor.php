@@ -30,7 +30,7 @@ class EDTFDateProcessor extends ProcessorPluginBase implements PluginFormInterfa
   /**
    * Stores plugin configuration.
    *
-   * @var array Stores plugin configuration
+   * @var array
    */
   protected $configuration;
 
