@@ -142,7 +142,7 @@ class EDTFDateProcessor extends ProcessorPluginBase implements PluginFormInterfa
       $form_state->setErrorByName('open_end_year', $this->t('Open end year must be greater than or equal to open start year.'));
     }
 
-    // Make sure given months for seasons are valid
+    // Make sure given months for seasons are valid.
     if ($form_state->getValue('spring_date') < 1 || $form_state->getValue('spring_date') > 12) {
       $form_state->setErrorByName('spring_date', $this->t('Spring month must be between 1 and 12.'));
     }
@@ -365,7 +365,7 @@ class EDTFDateProcessor extends ProcessorPluginBase implements PluginFormInterfa
         break;
 
       case preg_match('/^\d{4}-\d{2}$/', $value):
-        // Convert sub-year groupings to months
+        // Convert sub-year groupings to months.
         $parts = explode('-', $value);
         $month = $this->mapMonth($parts[1]);
         $value = $parts[0] . '-' . $month . '-01';
@@ -450,7 +450,7 @@ class EDTFDateProcessor extends ProcessorPluginBase implements PluginFormInterfa
    * Returns a 2 digit string between 01 and 12.
    */
   protected function mapMonth($month) {
-    $map = array(
+    $map = [
       '01' => 1,
       '02' => 2,
       '03' => 3,
@@ -484,7 +484,7 @@ class EDTFDateProcessor extends ProcessorPluginBase implements PluginFormInterfa
       '39' => 8,
       '40' => 1,
       '41' => 7,
-    );
+    ];
 
     return str_pad($map[$month], 2, '0', STR_PAD_LEFT);
   }
