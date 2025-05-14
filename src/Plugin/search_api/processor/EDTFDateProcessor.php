@@ -150,10 +150,10 @@ class EDTFDateProcessor extends ProcessorPluginBase implements PluginFormInterfa
       $form_state->setErrorByName('summer_date', $this->t('Summer month must be between 1 and 12.'));
     }
     if ($form_state->getValue('autumn_date') < 1 || $form_state->getValue('autumn_date') > 12) {
-      $form_state->setErrorByName('autumn_date', $this->t('Spring month must be between 1 and 12.'));
+      $form_state->setErrorByName('autumn_date', $this->t('Autumn month must be between 1 and 12.'));
     }
     if ($form_state->getValue('winter_date') < 1 || $form_state->getValue('winter_date') > 12) {
-      $form_state->setErrorByName('winter_date', $this->t('Spring month must be between 1 and 12.'));
+      $form_state->setErrorByName('winter_date', $this->t('Winter month must be between 1 and 12.'));
     }
   }
 
