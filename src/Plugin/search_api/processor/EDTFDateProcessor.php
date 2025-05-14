@@ -117,7 +117,7 @@ class EDTFDateProcessor extends ProcessorPluginBase implements PluginFormInterfa
     $form['autumn_date'] = [
       '#type' => 'number',
       '#title' => $this->t('Month to Map Autumn to'),
-      '#description' => $this->t('What month Sutumn should map to. This is used for seasons 23, 27, and 31.'),
+      '#description' => $this->t('What month Autumn should map to. This is used for seasons 23, 27, and 31.'),
       '#default_value' => $this->configuration['autumn_date'],
     ];
     $form['winter_date'] = [
