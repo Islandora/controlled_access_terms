@@ -42,6 +42,11 @@ class EDTFDateProcessor extends ProcessorPluginBase implements PluginFormInterfa
       'fields' => [],
       'open_start_year' => 0,
       'open_end_year' => '',
+      'spring_date' => 3,
+      'summer_date' => 6,
+      'autumn_date' => 9,
+      'winter_date' => 12,
+
     ];
   }
 
@@ -58,6 +63,7 @@ class EDTFDateProcessor extends ProcessorPluginBase implements PluginFormInterfa
                 <li>Multiple dates:{YYYY, YYYY-MM, YYYY-MM-DD, ...}</li>
                 <li>Date ranges: YYYY/YYYY</li>
                 <li> Dates with unknown parts: YYYY-X, YYYY-MM-X, YYYY-MM-DD-X</li>
+                <li> Dates with sub-year groupings: YYYY-21 to YYYY-41</li>
                 <ul>');
 
     $fields = \Drupal::entityTypeManager()
@@ -96,6 +102,30 @@ class EDTFDateProcessor extends ProcessorPluginBase implements PluginFormInterfa
       '#description' => $this->t('Sets the end year to end indexing at. Leave blank if you would like to index up to date 9999.'),
       '#default_value' => $this->configuration['open_end_year'],
     ];
+    $form['spring_date'] = [
+      '#type' => 'number',
+      '#title' => $this->t('Month to Map Spring to'),
+      '#description' => $this->t('What month Spring should map to. This is used for seasons 21, 25, and 29.'),
+      '#default_value' => $this->configuration['spring_date'],
+    ];
+    $form['summer_date'] = [
+      '#type' => 'number',
+      '#title' => $this->t('Month to Map Summer to'),
+      '#description' => $this->t('What month Summer should map to. This is used for seasons 22, 26, and 30.'),
+      '#default_value' => $this->configuration['summer_date'],
+    ];
+    $form['autumn_date'] = [
+      '#type' => 'number',
+      '#title' => $this->t('Month to Map Autumn to'),
+      '#description' => $this->t('What month Sutumn should map to. This is used for seasons 23, 27, and 31.'),
+      '#default_value' => $this->configuration['autumn_date'],
+    ];
+    $form['winter_date'] = [
+      '#type' => 'number',
+      '#title' => $this->t('Month to Map Winter to'),
+      '#description' => $this->t('What month Winter should map to. This is used for seasons 24, 28, and 32.'),
+      '#default_value' => $this->configuration['winter_date'],
+    ];
 
     return $form;
   }
@@ -111,6 +141,20 @@ class EDTFDateProcessor extends ProcessorPluginBase implements PluginFormInterfa
     if (!empty($form_state->getValue('open_end_year')) && $form_state->getValue('open_end_year') < $form_state->getValue('open_start_year')) {
       $form_state->setErrorByName('open_end_year', $this->t('Open end year must be greater than or equal to open start year.'));
     }
+
+    // Make sure given months for seasons are valid
+    if ($form_state->getValue('spring_date') < 1 || $form_state->getValue('spring_date') > 12) {
+      $form_state->setErrorByName('spring_date', $this->t('Spring month must be between 1 and 12.'));
+    }
+    if ($form_state->getValue('summer_date') < 1 || $form_state->getValue('summer_date') > 12) {
+      $form_state->setErrorByName('summer_date', $this->t('Summer month must be between 1 and 12.'));
+    }
+    if ($form_state->getValue('autumn_date') < 1 || $form_state->getValue('autumn_date') > 12) {
+      $form_state->setErrorByName('autumn_date', $this->t('Spring month must be between 1 and 12.'));
+    }
+    if ($form_state->getValue('winter_date') < 1 || $form_state->getValue('winter_date') > 12) {
+      $form_state->setErrorByName('winter_date', $this->t('Spring month must be between 1 and 12.'));
+    }
   }
 
   /**
@@ -122,6 +166,10 @@ class EDTFDateProcessor extends ProcessorPluginBase implements PluginFormInterfa
     $this->configuration['ignore_open_end'] = $form_state->getValue('ignore_open_end');
     $this->configuration['open_start_year'] = $form_state->getValue('open_start_year');
     $this->configuration['open_end_year'] = $form_state->getValue('open_end_year');
+    $this->configuration['spring_date'] = $form_state->getValue('spring_date');
+    $this->configuration['summer_date'] = $form_state->getValue('summer_date');
+    $this->configuration['autumn_date'] = $form_state->getValue('autumn_date');
+    $this->configuration['winter_date'] = $form_state->getValue('winter_date');
   }
 
   /**
@@ -300,8 +348,8 @@ class EDTFDateProcessor extends ProcessorPluginBase implements PluginFormInterfa
     $parts = explode('-', $value);
     if (count($parts) >= 2) {
       $month = (int) $parts[1];
-      if ($month < 1 || $month > 12) {
-        \Drupal::logger('edtf_date_processor')->warning('Month out of acceptable range in date: "@value". Month should be between 01 and 12.', ['@value' => $value]);
+      if (!(($month >= 1 && $month <= 12) || ($month >= 21 && $month <= 41))) {
+        \Drupal::logger('edtf_date_processor')->warning('Month out of acceptable range in date: "@value". Month should be between 01 and 12, or 21 and 41.', ['@value' => $value]);
       }
     }
     if (count($parts) == 3) {
@@ -317,7 +365,10 @@ class EDTFDateProcessor extends ProcessorPluginBase implements PluginFormInterfa
         break;
 
       case preg_match('/^\d{4}-\d{2}$/', $value):
-        $value .= '-01';
+        // Convert sub-year groupings to months
+        $parts = explode('-', $value);
+        $month = $this->mapMonth($parts[1]);
+        $value = $parts[0] . '-' . $month . '-01';
         break;
 
       case preg_match('/^\d{4}$/', $value):
@@ -391,6 +442,51 @@ class EDTFDateProcessor extends ProcessorPluginBase implements PluginFormInterfa
       }
     }
     return implode('-', $parts);
+  }
+
+  /**
+   * Maps the given sub-year grouping to a month.
+   *
+   * Returns a 2 digit string between 01 and 12.
+   */
+  protected function mapMonth($month) {
+    $map = array(
+      '01' => 1,
+      '02' => 2,
+      '03' => 3,
+      '04' => 4,
+      '05' => 5,
+      '06' => 6,
+      '07' => 7,
+      '08' => 8,
+      '09' => 9,
+      '10' => 10,
+      '11' => 11,
+      '12' => 12,
+      '21' => $this->configuration['spring_date'],
+      '22' => $this->configuration['summer_date'],
+      '23' => $this->configuration['autumn_date'],
+      '24' => $this->configuration['winter_date'],
+      '25' => $this->configuration['spring_date'],
+      '26' => $this->configuration['summer_date'],
+      '27' => $this->configuration['autumn_date'],
+      '28' => $this->configuration['winter_date'],
+      '29' => $this->configuration['spring_date'],
+      '30' => $this->configuration['summer_date'],
+      '31' => $this->configuration['autumn_date'],
+      '32' => $this->configuration['winter_date'],
+      '33' => 1,
+      '34' => 4,
+      '35' => 7,
+      '36' => 10,
+      '37' => 1,
+      '38' => 5,
+      '39' => 8,
+      '40' => 1,
+      '41' => 7,
+    );
+
+    return str_pad($map[$month], 2, '0', STR_PAD_LEFT);
   }
 
 }
