@@ -26,7 +26,7 @@ class ExtendedDateTimeFormat extends StringItem {
    */
   public static function generateSampleValue(FieldDefinitionInterface $field_definition) {
     // Setting a valid basic EDTF year value.
-    $values = (string)mt_rand(0, 9999);
+    $values = (string)mt_rand(1600, 9999);
     return $values;
   }
 }
