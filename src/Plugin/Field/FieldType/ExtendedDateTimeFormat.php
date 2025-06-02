@@ -2,6 +2,7 @@
 
 namespace Drupal\controlled_access_terms\Plugin\Field\FieldType;
 
+use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\Plugin\Field\FieldType\StringItem;
 
 /**
