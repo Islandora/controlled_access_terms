@@ -21,4 +21,12 @@ use Drupal\Core\Field\Plugin\Field\FieldType\StringItem;
  */
 class ExtendedDateTimeFormat extends StringItem {
 
+  /**
+   * {@inheritdoc}
+   */
+  public static function generateSampleValue(FieldDefinitionInterface $field_definition) {
+    // Setting a valid basic EDTF year value.
+    $values = (string)mt_rand(0, 9999);
+    return $values;
+  }
 }
