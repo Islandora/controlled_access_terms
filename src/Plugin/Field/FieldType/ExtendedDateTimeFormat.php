@@ -2,6 +2,7 @@
 
 namespace Drupal\controlled_access_terms\Plugin\Field\FieldType;
 
+use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\Plugin\Field\FieldType\StringItem;
 
 /**
@@ -20,5 +21,14 @@ use Drupal\Core\Field\Plugin\Field\FieldType\StringItem;
  * )
  */
 class ExtendedDateTimeFormat extends StringItem {
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function generateSampleValue(FieldDefinitionInterface $field_definition) {
+    // Setting a valid basic EDTF year value.
+    $values = (string) mt_rand(1600, 9999);
+    return $values;
+  }
 
 }
