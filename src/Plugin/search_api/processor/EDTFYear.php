@@ -138,124 +138,131 @@ class EDTFYear extends ProcessorPluginBase implements PluginFormInterface {
    */
   public function addFieldValues(ItemInterface $item) {
     $entity = $item->getOriginalObject()->getValue();
+
     foreach ($this->configuration['fields'] as $field) {
       [$entityType, $bundle, $field_name] = explode('|', $field, 3);
 
+      $edtf_values = [];
+
       if ($entityType === 'paragraph') {
-        $edtf = $this->getDateFromParagraphField($entity, $bundle, $field_name);
+        $edtf_values = $this->getDatesFromParagraphField($entity, $bundle, $field_name);
       }
-      elseif ($entity->getEntityTypeId() == $entityType
-        && $entity->bundle() == $bundle
-        && $entity->hasField($field_name)
-        && !$entity->get($field_name)->isEmpty()) {
-        $edtf = trim($entity->get($field_name)->value);
-      }
-      else {
-        continue;
+      elseif (
+        $entity->getEntityTypeId() == $entityType &&
+        $entity->bundle() == $bundle &&
+        $entity->hasField($field_name) &&
+        !$entity->get($field_name)->isEmpty()
+      ) {
+        foreach ($entity->get($field_name) as $item_value) {
+          if (!empty($item_value->value)) {
+            $edtf_values[] = trim($item_value->value);
+          }
+        }
       }
 
-      if ($edtf != "nan" && empty(EDTFUtils::validate($edtf))) {
-        if ($this->configuration['ignore_undated'] && $edtf == "XXXX") {
-          continue;
-        }
-        try {
-          $parser = EdtfFactory::newParser();
-          $years = [];
-          // Sets.
-          if (strpos($edtf, '[') !== FALSE || strpos($edtf, '{') !== FALSE) {
-            $dates = $parser->parse($edtf)->getEdtfValue();
-            $years = array_map(function ($date) {
-              return $date->getYear();
-            }, $dates->getDates());
-          }
-          else {
-            // Open start dates with `../`.
-            if (substr($edtf, 0, 3) === '../') {
-              if ($this->configuration['ignore_open_start']) {
-                $edtf = substr($edtf, 3);
-              }
-              else {
-                $edtf = str_replace('../', $this->configuration['open_start_year'] . '/', $edtf);
-              }
-            }
-            // Open start dates with `/`.
-            if (substr($edtf, 0, 1) === '/') {
-              if ($this->configuration['ignore_open_start']) {
-                $edtf = substr($edtf, 1);
-              }
-              else {
-                $edtf = str_replace('/', $this->configuration['open_start_year'] . '/', $edtf);
-              }
-            }
-            // Open end dates with `/..`.
-            if (substr($edtf, -3) === '/..') {
-              if ($this->configuration['ignore_open_end']) {
-                $edtf = substr($edtf, 0, -3);
-              }
-              else {
-                $end_year = (empty($this->configuration['open_end_year'])) ? date('Y') : $this->configuration['open_end_year'];
-                $edtf = str_replace('/..', '/' . $end_year, $edtf);
-              }
-            }
-            // Open end dates with `/`.
-            if (substr($edtf, -1) === '/') {
-              if ($this->configuration['ignore_open_end']) {
-                $edtf = substr($edtf, 0, -1);
-              }
-              else {
-                $end_year = (empty($this->configuration['open_end_year'])) ? date('Y') : $this->configuration['open_end_year'];
-                $edtf = str_replace('/', '/' . $end_year, $edtf);
-              }
-            }
-            $parsed = $parser->parse($edtf)->getEdtfValue();
-            $years = range(intval(date('Y', $parsed->getMin())), intval(date('Y', $parsed->getMax())));
-          }
-          foreach ($years as $year) {
-            if (is_numeric($year)) {
-              $fields = $item->getFields(FALSE);
-              $fields = $this->getFieldsHelper()
-                ->filterForPropertyPath($fields, NULL, 'edtf_year');
-              foreach ($fields as $field) {
-                $field->addValue($year);
-              }
-            }
-          }
-        }
-        catch (\Throwable $e) {
-          \Drupal::logger('controlled_access_terms')
-            ->warning(t("Could not parse EDTF value '@edtf' for indexing @type/@id",
-              [
-                '@edtf' => $edtf,
-                '@type' => $entity->getEntityTypeId(),
-                '@id' => $entity->id(),
-              ]));
-        }
+      foreach ($edtf_values as $edtf) {
+        $this->processEdtfValue($edtf, $entity, $item);
       }
     }
   }
 
   /**
-   * Gets edtf date value from a referenced paragraph.
+   * Process a single EDTF value into years and add to index.
    */
-  private function getDateFromParagraphField(EntityInterface $entity, string $bundle, string $field_name) {
+  private function processEdtfValue(string $edtf, EntityInterface $entity, ItemInterface $item) {
+    if ($edtf != "nan" && empty(EDTFUtils::validate($edtf))) {
+      if ($this->configuration['ignore_undated'] && $edtf == "XXXX") {
+        return;
+      }
+      try {
+        $parser = EdtfFactory::newParser();
+        $years = [];
+
+        if (strpos($edtf, '[') !== FALSE || strpos($edtf, '{') !== FALSE) {
+          $dates = $parser->parse($edtf)->getEdtfValue();
+          $years = array_map(function ($date) {
+            return $date->getYear();
+          }, $dates->getDates());
+        }
+        else {
+          if (substr($edtf, 0, 3) === '../') {
+            $edtf = $this->configuration['ignore_open_start']
+              ? substr($edtf, 3)
+              : str_replace('../', $this->configuration['open_start_year'] . '/', $edtf);
+          }
+          if (substr($edtf, 0, 1) === '/') {
+            $edtf = $this->configuration['ignore_open_start']
+              ? substr($edtf, 1)
+              : str_replace('/', $this->configuration['open_start_year'] . '/', $edtf);
+          }
+          if (substr($edtf, -3) === '/..') {
+            $end_year = (empty($this->configuration['open_end_year'])) ? date('Y') : $this->configuration['open_end_year'];
+            $edtf = $this->configuration['ignore_open_end']
+              ? substr($edtf, 0, -3)
+              : str_replace('/..', '/' . $end_year, $edtf);
+          }
+          if (substr($edtf, -1) === '/') {
+            $end_year = (empty($this->configuration['open_end_year'])) ? date('Y') : $this->configuration['open_end_year'];
+            $edtf = $this->configuration['ignore_open_end']
+              ? substr($edtf, 0, -1)
+              : str_replace('/', '/' . $end_year, $edtf);
+          }
+
+          $parsed = $parser->parse($edtf)->getEdtfValue();
+          $years = range(intval(date('Y', $parsed->getMin())), intval(date('Y', $parsed->getMax())));
+        }
+
+        foreach ($years as $year) {
+          if (is_numeric($year)) {
+            $fields = $item->getFields(FALSE);
+            $fields = $this->getFieldsHelper()->filterForPropertyPath($fields, NULL, 'edtf_year');
+            foreach ($fields as $field) {
+              $field->addValue($year);
+            }
+          }
+        }
+      }
+      catch (\Throwable $e) {
+        \Drupal::logger('controlled_access_terms')
+          ->warning(t("Could not parse EDTF value '@edtf' for indexing @type/@id", [
+            '@edtf' => $edtf,
+            '@type' => $entity->getEntityTypeId(),
+            '@id' => $entity->id(),
+          ]));
+      }
+    }
+  }
+
+  /**
+   * Gets all EDTF date values from referenced paragraphs.
+   */
+  private function getDatesFromParagraphField(EntityInterface $entity, string $bundle, string $field_name) {
+    $values = [];
+
     $query = \Drupal::entityTypeManager()
       ->getStorage('field_config')
       ->getQuery();
     $query->condition('bundle', $entity->bundle());
     $query->condition("settings.handler_settings.target_bundles.{$bundle}", $bundle);
     $paragraph_ids = $query->execute();
+
     if (!empty($paragraph_ids)) {
       $paragraph_field_config = reset($paragraph_ids);
       $paragraph_field_config_array = explode('.', $paragraph_field_config);
       $paragraph_field_name = end($paragraph_field_config_array);
-      $paragraph_entity = $entity->get($paragraph_field_name)
-        ->referencedEntities()[0] ?? NULL;
 
-      if ($paragraph_entity && $paragraph_entity->hasField($field_name)
-        && !$paragraph_entity->get($field_name)->isEmpty()) {
-        return trim($paragraph_entity->get($field_name)->value);
+      foreach ($entity->get($paragraph_field_name)->referencedEntities() as $paragraph_entity) {
+        if ($paragraph_entity->hasField($field_name) && !$paragraph_entity->get($field_name)->isEmpty()) {
+          foreach ($paragraph_entity->get($field_name) as $item_value) {
+            if (!empty($item_value->value)) {
+              $values[] = trim($item_value->value);
+            }
+          }
+        }
       }
     }
+
+    return $values;
   }
 
 }
