@@ -165,7 +165,7 @@ class EDTFUtils {
         if (!empty($dates[1]) && !($dates[1] == '..')) {
           $msgs = array_merge($msgs, self::validateDate($dates[1], $strict));
         }
-        // Check if start date is sooner than end date
+        // Check if start date is sooner than end date.
         if (self::compareDates($dates[0], $dates[1]) > 0) {
           $msgs[] = "The start date must be sooner than the end date.";
         }
@@ -188,7 +188,7 @@ class EDTFUtils {
    *   The second date.
    *
    * @return int
-   *   Returns -1 if $date1 is earlier, 1 if $date1 is later, 0 if they are equal.
+   *   Returns -1, 1 or 0 based on the order of the two dates.
    */
   private static function compareDates($date1, $date2) {
     $isoDate1 = self::iso8601Value($date1);
