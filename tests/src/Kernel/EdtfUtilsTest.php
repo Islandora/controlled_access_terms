@@ -49,7 +49,20 @@ class EdtfUtilsTest extends KernelTestBase {
     '1900-01-02T01:22:33Z' => [],
     '1900-01-02T01:22:33+' => ['The date/time \'1900-01-02T01:22:33+\' is invalid.'],
     '1900-01-02T01:22:33+05:00' => [],
+  ];
+
+  /**
+   * Array of interval test inputs and expected outputs.
+   *
+   * @var array
+   */
+  private $intervalValidations = [
+    '2000-01-01/2025-01-01' => [],
     '2025-01-01/2000-01-01' => ['The start date must be sooner than the end date.'],
+    '1900/2023' => [],
+    '2023/1900' => ['The start date must be sooner than the end date.'],
+    '../2000' => [],
+    '2000/..' => [],
   ];
 
   /**
@@ -58,6 +71,15 @@ class EdtfUtilsTest extends KernelTestBase {
   public function testEdtfValidate() {
     foreach ($this->singleDateValidations as $input => $expected) {
       $this->assertEquals($expected, EDTFUtils::validate($input, FALSE, FALSE, FALSE));
+    }
+  }
+
+  /**
+   * @covers ::validate
+   */
+  public function testEdtfIntervalValidate() {
+    foreach ($this->intervalValidations as $input => $expected) {
+      $this->assertEquals($expected, EDTFUtils::validate($input, TRUE, FALSE, FALSE));
     }
   }
 
