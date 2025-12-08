@@ -9,7 +9,7 @@ use Drupal\controlled_access_terms\EDTFConverter;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
-use Drupal\field\FieldStorageConfigInterface
+use Drupal\field\FieldStorageConfigInterface;
 use Drupal\jsonld\Normalizer\NormalizerBase;
 
 /**
