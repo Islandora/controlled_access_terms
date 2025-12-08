@@ -9,6 +9,7 @@ use Drupal\controlled_access_terms\EDTFConverter;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
+use Drupal\field\FieldStorageConfigInterface
 use Drupal\jsonld\Normalizer\NormalizerBase;
 
 /**
@@ -132,7 +133,10 @@ function controlled_access_terms_field_info_entity_type_ui_definitions_alter(arr
   }
 }
 
-function controlled_access_terms_field_views_data_views_data_alter(array &$data, \Drupal\field\FieldStorageConfigInterface $field) {
+/**
+ * Implements hook_field_views_data_views_data_alter().
+ */
+function controlled_access_terms_field_views_data_views_data_alter(array &$data, FieldStorageConfigInterface $field) {
 
   if ($field->getType() == 'typed_relation') {
     // Add a direct entity reference. See views.api.php and views.views.inc.
@@ -151,9 +155,9 @@ function controlled_access_terms_field_views_data_views_data_alter(array &$data,
 
     $data[$data_key][$field_name]['relationship'] = [
       'title' => t('@label referenced from @field_name', $args),
-      'help'  => t('Appears in @bundles.', ['@bundles' => implode(',', $field->getBundles())] ),
+      'help'  => t('Appears in @bundles.', ['@bundles' => implode(',', $field->getBundles())]),
       'group' => $entity_type->getLabel(),
-      'label' => t('@field_name: @label', $args ),
+      'label' => t('@field_name: @label', $args),
       'id' => 'standard',
       'base' => $target_base_table,
       'entity_type' => $target_entity_type_id,
@@ -163,12 +167,12 @@ function controlled_access_terms_field_views_data_views_data_alter(array &$data,
 
     // Add a reverse entity reference.
     $data_key = $target_entity_type_id . '_field_data';
-    $pseudo_field_name = 'reverse__' .$entity_type_id . '__' .  $field_name;
+    $pseudo_field_name = 'reverse__' . $entity_type_id . '__' . $field_name;
     $table_mapping = \Drupal::entityTypeManager()->getStorage($entity_type_id)->getTableMapping();
 
     $data[$data_key][$pseudo_field_name]['relationship'] = [
-      'title' => t('@entity using @field', ['@entity' => $entity_type->getLabel(), '@field' => $label]),
-      'help' => t('Relate each @entity with a @field set to the term.', ['@entity' => $entity_type->getLabel(), '@field' => $label]),
+      'title' => t('@entity using @field_name', $args),
+      'help' => t('Relate each @entity with a @field_name set to the term.', $args),
       'id' => 'entity_reverse',
       'field_name' => $field_name,
       'entity_type' => $entity_type_id,
