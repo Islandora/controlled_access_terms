@@ -149,15 +149,16 @@ function controlled_access_terms_field_views_data_views_data_alter(array &$data,
     $target_base_table = $target_entity_type->getDataTable() ?: $target_entity_type->getBaseTable();
     $args = [
       '@label' => $entity_type->getLabel(),
+      '@target_label' => $target_entity_type->getLabel(),
       '@field_name' => $field_name,
     ];
     $data_key = $entity_type_id . '__' . $field_name;
 
     $data[$data_key][$field_name]['relationship'] = [
-      'title' => t('@label referenced from @field_name', $args),
+      'title' => t('@target_label referenced from @field_name', $args),
       'help'  => t('Appears in @bundles.', ['@bundles' => implode(',', $field->getBundles())]),
       'group' => $entity_type->getLabel(),
-      'label' => t('@field_name: @label', $args),
+      'label' => t('@field_name: @target_label', $args),
       'id' => 'standard',
       'base' => $target_base_table,
       'entity_type' => $target_entity_type_id,
@@ -171,14 +172,14 @@ function controlled_access_terms_field_views_data_views_data_alter(array &$data,
     $table_mapping = \Drupal::entityTypeManager()->getStorage($entity_type_id)->getTableMapping();
 
     $data[$data_key][$pseudo_field_name]['relationship'] = [
-      'title' => t('@entity using @field_name', $args),
-      'help' => t('Relate each @entity with a @field_name set to the term.', $args),
+      'title' => t('@label using @field_name', $args),
+      'help' => t('Relate each @label with a @field_name set to the term.', $args),
       'id' => 'entity_reverse',
       'field_name' => $field_name,
       'entity_type' => $entity_type_id,
       'field table' => $table_mapping->getDedicatedDataTableName($field),
       'field field' => $field_name . '_target_id',
-      'base' => $entity_type->getBaseTable() . '_field_data',
+      'base' => $entity_type->getDataTable(),
       'base field' => $entity_type->getKey('id'),
       'label' => $field_name,
       'join_extra' => [
