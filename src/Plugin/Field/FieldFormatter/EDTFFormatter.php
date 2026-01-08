@@ -263,9 +263,17 @@ class EDTFFormatter extends FormatterBase {
     }
 
     if (array_key_exists(EDTFUtils::MONTH, $parsed_date)) {
+      // determining whether the month is seasonal
+      $int_month_value = intval($parsed_date[EDTFUtils::MONTH]);
+      $is_seasonal = ($int_month_value >= 21) && ($int_month_value <= 41);
+
       if (strpos($parsed_date[EDTFUtils::MONTH], 'X') !== FALSE) {
         $unspecified['month'] = TRUE;
         $unspecified_count++;
+      }
+      // convert seasonal months to 'mmmm'
+      else if ($is_seasonal){
+        $month = EDTFUtils::MONTHS_MAP[$parsed_date[EDTFUtils::MONTH]]['mmmm'];
       }
       elseif ($settings['month_format'] === 'mmm' || $settings['month_format'] === 'mmmm') {
         $month = EDTFUtils::MONTHS_MAP[$parsed_date[EDTFUtils::MONTH]][$settings['month_format']];
@@ -443,6 +451,12 @@ class EDTFFormatter extends FormatterBase {
           "@year" => $year,
         ]);
       }
+    }
+    // change the display format if the month is seasonal to be always (month [space] year)
+    else if ($is_seasonal){
+        $formatted_date = t("@date", [
+            "@date" => implode(self::DELIMITERS['space'], array_filter([$month, $year])),
+        ]);
     }
     else {
       $formatted_date = t("@date", [
