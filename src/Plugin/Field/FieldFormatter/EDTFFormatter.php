@@ -87,6 +87,7 @@ class EDTFFormatter extends FormatterBase {
         'm' => t('one-digit month for months below 10, e.g. 4'),
         'mmm' => t('three-letter abbreviation for month, Apr'),
         'mmmm' => t('month spelled out in full, e.g. April'),
+        'num_seasonal' => t('numbered months (e.g. 01) and seasons spelled out in full (e.g. Spring)'),
       ],
     ];
     $form['day_format'] = [
@@ -223,6 +224,9 @@ class EDTFFormatter extends FormatterBase {
     $month = '';
     $day = '';
 
+    // flag to keep track of the seasons
+    $is_seasonal = FALSE;
+
     preg_match(EDTFUtils::DATE_PARSE_REGEX, $date_time[0], $parsed_date);
 
     // Expand the year if the Year Exponent exists.
@@ -271,8 +275,8 @@ class EDTFFormatter extends FormatterBase {
         $unspecified['month'] = TRUE;
         $unspecified_count++;
       }
-      // convert seasonal months to 'mmmm'
-      else if ($is_seasonal){
+      // spell out seasons in full, but keep the regular months (1-12) as numbers
+      elseif ($is_seasonal && $settings['month_format'] === 'num_seasonal'){
         $month = EDTFUtils::MONTHS_MAP[$parsed_date[EDTFUtils::MONTH]]['mmmm'];
       }
       elseif ($settings['month_format'] === 'mmm' || $settings['month_format'] === 'mmmm') {
@@ -452,8 +456,9 @@ class EDTFFormatter extends FormatterBase {
         ]);
       }
     }
-    // change the display format if the month is seasonal to be always (month [space] year)
-    else if ($is_seasonal){
+    // change the display format to be always (month [space] year)
+    // if the month is seasonal and the user has selected the appropriate setting 'num_seasonal'
+    if ($is_seasonal && $settings['month_format'] === 'num_seasonal'){
         $formatted_date = t("@date", [
             "@date" => implode(self::DELIMITERS['space'], array_filter([$month, $year])),
         ]);
