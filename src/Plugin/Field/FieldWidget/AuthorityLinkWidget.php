@@ -22,11 +22,13 @@ class AuthorityLinkWidget extends LinkWidget {
   /**
    * {@inheritdoc}
    */
-  public function formElement(FieldItemListInterface $items,
-                              $delta,
-                              array $element,
-                              array &$form,
-                              FormStateInterface $form_state) {
+  public function formElement(
+    FieldItemListInterface $items,
+    $delta,
+    array $element,
+    array &$form,
+    FormStateInterface $form_state,
+  ) {
     // Item of interest.
     $item =& $items[$delta];
     $settings = $item->getFieldDefinition()->getSettings();
@@ -36,10 +38,10 @@ class AuthorityLinkWidget extends LinkWidget {
       '#type' => 'fieldset',
     ];
     $element['source'] = [
-      '#title' => t('Source'),
+      '#title' => $this->t('Source'),
       '#type' => 'select',
       '#options' => $settings['authority_sources'],
-      '#default_value' => isset($item->source) ? $item->source : '',
+      '#default_value' => $item->source ?? '',
     ];
     $element['uri'] = [
       '#type' => 'url',
@@ -61,9 +63,9 @@ class AuthorityLinkWidget extends LinkWidget {
       '#type' => 'textfield',
       '#title' => $this->t('Alternate link text'),
       '#placeholder' => $this->getSetting('placeholder_title'),
-      '#default_value' => isset($items[$delta]->title) ? $items[$delta]->title : NULL,
+      '#default_value' => $items[$delta]->title ?? NULL,
       '#maxlength' => 255,
-      '#description' => t('Text to use in place of the authority source name.'),
+      '#description' => $this->t('Text to use in place of the authority source name.'),
     ];
 
     return $element;

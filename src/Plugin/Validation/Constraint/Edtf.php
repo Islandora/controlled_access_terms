@@ -13,7 +13,7 @@ use Symfony\Component\Validator\Constraint;
  *   type = "string",
  * )
  */
-class EDTF extends Constraint {
+class Edtf extends Constraint {
 
   /**
    * Invalid format message template.

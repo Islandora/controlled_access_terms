@@ -11,14 +11,14 @@ use Symfony\Component\Validator\Exception\UnexpectedTypeException;
 /**
  * EDTF validation handler.
  */
-class EDTFValidator extends ConstraintValidator {
+class EdtfValidator extends ConstraintValidator {
 
   /**
    * {@inheritdoc}
    */
   public function validate($value, Constraint $constraint) {
-    if (!$constraint instanceof EDTF) {
-      throw new UnexpectedTypeException($constraint, EDTF::class);
+    if (!$constraint instanceof Edtf) {
+      throw new UnexpectedTypeException($constraint, Edtf::class);
     }
     if (NULL === $value) {
       return;

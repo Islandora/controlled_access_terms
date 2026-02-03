@@ -49,9 +49,9 @@ class TypedRelationFiltered extends ProcessorPluginBase {
    */
   public function __construct(
     array $configuration,
-          $plugin_id,
-          $plugin_definition,
-    EntityTypeManager $entityTypeManager
+    $plugin_id,
+    $plugin_definition,
+    EntityTypeManager $entityTypeManager,
   ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->entityTypeManager = $entityTypeManager;
@@ -72,7 +72,7 @@ class TypedRelationFiltered extends ProcessorPluginBase {
   /**
    * {@inheritdoc}
    */
-  public function getPropertyDefinitions(DatasourceInterface $datasource = NULL): array {
+  public function getPropertyDefinitions(?DatasourceInterface $datasource = NULL): array {
     $properties = [];
 
     if (!$datasource || !$datasource->getEntityTypeId()) {
@@ -159,7 +159,7 @@ class TypedRelationFiltered extends ProcessorPluginBase {
   /**
    * {@inheritdoc}
    */
-  public function requiresReindexing(array $old_settings = NULL, array $new_settings = NULL) {
+  public function requiresReindexing(?array $old_settings = NULL, ?array $new_settings = NULL) {
     if ($new_settings != $old_settings) {
       return TRUE;
     }

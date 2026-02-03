@@ -1,120 +1,38 @@
-# This is a basic workflow to help you get started with Actions
-
 name: CI
 
-# Controls when the action will run.
 on:
-  # Triggers the workflow on push or pull request events but only for the 2.x branch
   push:
     branches: [ 2.x ]
   pull_request:
     branches: [ 2.x ]
 
-  # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
-  # This workflow contains a single job called "build"
   build:
-    # The type of runner that the job will run on
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     strategy:
       fail-fast: false
       matrix:
-        test-suite: ["kernel"]
-        php-versions: ["8.1", "8.2", "8.3"]
-        drupal-version: ["10.2.x", "10.3.x", "10.4.x-dev", "11.0.x"]
-        exclude:
-          - drupal-version: "11.0.x"
-            php-versions: "8.1"
-          - drupal-version: "11.0.x"
-            php-versions: "8.2"
+        php-versions: ["8.3", "8.4"]
+        drupal-version: ["10.5", "10.6", "11.2", "11.3"]
     name: PHP ${{ matrix.php-versions }} | drupal ${{ matrix.drupal-version }}
-    env:
-      DRUPAL_VERSION: ${{ matrix.drupal-version }}
-      SCRIPT_DIR: ${{ github.workspace }}/islandora_ci
-      DRUPAL_DIR: /opt/drupal
-      DRUPAL_WEB_ROOT: /opt/drupal/web
-      DRUPAL_EXTENSION_NAME: controlled_access_terms
-
-    services:
-      mysql:
-        image: mysql:8.0
-        env:
-          MYSQL_ALLOW_EMPTY_PASSWORD: yes
-          MYSQL_DATABASE: drupal
-        ports:
-          - 3306:3306
-      activemq:
-        image: webcenter/activemq:5.14.3
-        ports:
-          - 8161:8161
-          - 61616:61616
-          - 61613:61613
-
-    # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - name: Checkout code
-        uses: actions/checkout@v3
-        with:
-          path: build_dir
+      - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6
 
-      - name: Checkout islandora_ci
-        uses: actions/checkout@v3
-        with:
-          repository: islandora/islandora_ci
-          ref: github-actions
-          path: islandora_ci
-
-      - name: Setup PHP
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: ${{ matrix.php-versions }}
-          tools: composer:v2
-
-      - name: Setup Mysql client
+      - name: PHPUNIT tests
         run: |
-          sudo apt-get update
-          sudo apt-get remove -y mysql-client mysql-common
-          sudo apt-get install -y mysql-client
-
-      - name: Cache Composer dependencies
-        uses: actions/cache@v3
-        with:
-          path: /tmp/composer-cache
-          key: ${{ runner.os }}-${{ hashFiles('**/composer.lock') }}
-
-      - name: Setup Drupal
-        run: |
-          mkdir $DRUPAL_DIR
-          $SCRIPT_DIR/travis_setup_drupal.sh
-          cd $DRUPAL_DIR
-          chmod -R u+w web/sites/default
-          mkdir -p web/sites/simpletest/browser_output
-
-      - name: Setup composer paths
-        run: |
-          git -C "$GITHUB_WORKSPACE/build_dir" checkout -b github-testing
-          cd $DRUPAL_DIR
-          composer config repositories.local path "$GITHUB_WORKSPACE/build_dir"
-          composer config minimum-stability dev
-          composer require "drupal/controlled_access_terms:dev-github-testing as dev-2.x"
-
-      - name: Install modules
-        run: |
-          cd $DRUPAL_DIR/web
-          drush --uri=127.0.0.1:8282 en -y controlled_access_terms
-
-      - name: Test scripts
-        run: $SCRIPT_DIR/travis_scripts.sh
-
-      - name: PHPUnit
-        working-directory: ${{ env.DRUPAL_DIR }}
+          docker run \
+            --name drupal \
+            --hostname drupal \
+            --rm \
+            --volume $(pwd):/var/www/drupal/web/modules/contrib/$ENABLE_MODULES:ro \
+            --env ENABLE_MODULES \
+           ghcr.io/islandora/ci:${{ matrix.drupal-version }}-php${{ matrix.php-versions }}
         env:
-          SIMPLETEST_BASE_URL: http://127.0.0.1:8282
-          SIMPLETEST_DB: mysql://drupal:drupal@127.0.0.1/drupal
-          BROWSERTEST_OUTPUT_DIRECTORY: /opt/drupal/web/sites/simpletest/browser_output
-        run: |
-          $DRUPAL_DIR/vendor/bin/phpunit "--bootstrap=$DRUPAL_WEB_ROOT/core/tests/bootstrap.php" --group $DRUPAL_EXTENSION_NAME "$GITHUB_WORKSPACE"
+          ENABLE_MODULES: controlled_access_terms
+

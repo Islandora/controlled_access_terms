@@ -157,7 +157,7 @@ class EDTFFormatterTest extends KernelTestBase {
    * @return array
    *   Array of test inputs.
    */
-  public function edtfDateFormatProvider(): array {
+  public static function edtfDateFormatProvider(): array {
     return [
       // EDTF Level 0.
       'Date - complete' => [
@@ -173,20 +173,20 @@ class EDTFFormatterTest extends KernelTestBase {
         'expected' => '1985',
       ],
       'Date and time - local' => [
-        'original' => '2024-10-15T12:00:00',
-        'formatted' => '2024-10-15 12:00:00',
+        'input' => '2024-10-15T12:00:00',
+        'expected' => '2024-10-15 12:00:00',
       ],
       'Date and time - Z' => [
-        'original' => '1985-04-12T23:20:30Z',
-        'formatted' => '1985-04-12 23:20:30Z',
+        'input' => '1985-04-12T23:20:30Z',
+        'expected' => '1985-04-12 23:20:30Z',
       ],
       'Date and time - shift in hours' => [
-        'original' => '1985-04-12T23:20:30+04',
-        'formatted' => '1985-04-12 23:20:30+04',
+        'input' => '1985-04-12T23:20:30+04',
+        'expected' => '1985-04-12 23:20:30+04',
       ],
       'Date and time - shift in hours and minutes' => [
-        'original' => '1985-04-12T23:20:30+04:30',
-        'formatted' => '1985-04-12 23:20:30+04:30',
+        'input' => '1985-04-12T23:20:30+04:30',
+        'expected' => '1985-04-12 23:20:30+04:30',
       ],
 
       // EDTF level 1.
@@ -195,20 +195,20 @@ class EDTFFormatterTest extends KernelTestBase {
         'expected' => '1984 (year uncertain)',
       ],
       'Uncertain year and month' => [
-        'original' => '2024-10%',
-        'formatted' => '2024-10 (year and month uncertain; year and month approximate)',
+        'input' => '2024-10%',
+        'expected' => '2024-10 (year and month uncertain; year and month approximate)',
       ],
       'Approximate year' => [
         'input' => '1984~',
         'expected' => '1984 (year approximate)',
       ],
       'Approximate year and month' => [
-        'original' => '2024-10~',
-        'formatted' => '2024-10 (year and month approximate)',
+        'input' => '2024-10~',
+        'expected' => '2024-10 (year and month approximate)',
       ],
       'Year and month' => [
-        'original' => '2024-10',
-        'formatted' => '2024-10',
+        'input' => '2024-10',
+        'expected' => '2024-10',
       ],
       'Unspecified digits from right' => [
         'input' => '198X',
@@ -225,8 +225,8 @@ class EDTFFormatterTest extends KernelTestBase {
         'expected' => '',
       ],
       'Invalid (date-like)' => [
-        'original' => '1900s',
-        'formatted' => '',
+        'input' => '1900s',
+        'expected' => '',
       ],
     ];
   }

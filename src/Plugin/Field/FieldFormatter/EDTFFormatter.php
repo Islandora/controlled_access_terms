@@ -53,61 +53,61 @@ class EDTFFormatter extends FormatterBase {
    */
   public function settingsForm(array $form, FormStateInterface $form_state) {
     $form['date_separator'] = [
-      '#title' => t('Date Separator'),
+      '#title' => $this->t('Date Separator'),
       '#type' => 'select',
-      '#description' => "Select the separator between date elements.",
+      '#description' => $this->t("Select the separator between date elements."),
       '#default_value' => $this->getSetting('date_separator'),
       '#options' => [
-        'dash' => t("Dash '-'"),
-        'stroke' => t("Stroke '/'"),
-        'period' => t("Period '.'"),
-        'space' => t("Space ' '"),
+        'dash' => $this->t("Dash '-'"),
+        'stroke' => $this->t("Stroke '/'"),
+        'period' => $this->t("Period '.'"),
+        'space' => $this->t("Space ' '"),
       ],
     ];
 
     $form['date_order'] = [
-      '#title' => t('Date Order'),
+      '#title' => $this->t('Date Order'),
       '#type' => 'select',
-      '#description' => "Select the separator between date elements.",
+      '#description' => $this->t("Select the separator between date elements."),
       '#default_value' => $this->getSetting('date_order'),
       '#options' => [
-        'big_endian' => t('Big-endian (year, month, day)'),
-        'little_endian' => t('Little-endian (day, month, year)'),
-        'middle_endian' => t('Middle-endian (month, day, year)'),
+        'big_endian' => $this->t('Big-endian (year, month, day)'),
+        'little_endian' => $this->t('Little-endian (day, month, year)'),
+        'middle_endian' => $this->t('Middle-endian (month, day, year)'),
       ],
     ];
 
     $form['month_format'] = [
-      '#title' => t('Month Format'),
+      '#title' => $this->t('Month Format'),
       '#type' => 'select',
       '#default_value' => $this->getSetting('month_format'),
       '#options' => [
-        'nm' => t('Do not show Month'),
-        'mm' => t('two-digit month, e.g. 04'),
-        'm' => t('one-digit month for months below 10, e.g. 4'),
-        'mmm' => t('three-letter abbreviation for month, Apr'),
-        'mmmm' => t('month spelled out in full, e.g. April'),
-        'num_seasonal' => t('numbered months (e.g. 01) and seasons spelled out in full (e.g. Spring)'),
+        'nm' => $this->t('Do not show Month'),
+        'mm' => $this->t('two-digit month, e.g. 04'),
+        'm' => $this->t('one-digit month for months below 10, e.g. 4'),
+        'mmm' => $this->t('three-letter abbreviation for month, Apr'),
+        'mmmm' => $this->t('month spelled out in full, e.g. April'),
+        'num_seasonal' => $this->t('numbered months (e.g. 01) and seasons spelled out in full (e.g. Spring)'),
       ],
     ];
     $form['day_format'] = [
-      '#title' => t('Day Format'),
+      '#title' => $this->t('Day Format'),
       '#type' => 'select',
       '#default_value' => $this->getSetting('day_format'),
       '#options' => [
-        'nd'  => t('Do not show day'),
-        'dd' => t('two-digit day of the month, e.g. 02'),
-        'd' => t('one-digit day of the month for days below 10, e.g. 2'),
+        'nd'  => $this->t('Do not show day'),
+        'dd' => $this->t('two-digit day of the month, e.g. 02'),
+        'd' => $this->t('one-digit day of the month for days below 10, e.g. 2'),
       ],
     ];
     $form['year_format'] = [
-      '#title' => t('Year Format'),
+      '#title' => $this->t('Year Format'),
       '#type' => 'select',
       '#default_value' => $this->getSetting('year_format'),
       '#options' => [
-        'ny'  => t('Do not show year'),
-        'yy' => t('two-digit representation of the year, e.g. 20'),
-        'y' => t('four-digit representation of the year, e.g. 2020'),
+        'ny'  => $this->t('Do not show year'),
+        'yy' => $this->t('two-digit representation of the year, e.g. 20'),
+        'y' => $this->t('four-digit representation of the year, e.g. 2020'),
       ],
     ];
     return $form;
@@ -119,7 +119,7 @@ class EDTFFormatter extends FormatterBase {
   public function settingsSummary() {
     $summary = [];
     $example_date = $this->formatDate('1996-04-22');
-    $summary[] = t('Date Format Example: @date', ['@date' => $example_date]);
+    $summary[] = $this->t('Date Format Example: @date', ['@date' => $example_date]);
     return $summary;
   }
 
@@ -132,7 +132,7 @@ class EDTFFormatter extends FormatterBase {
     foreach ($items as $delta => $item) {
       // Interval.
       if (strpos($item->value, '/') !== FALSE) {
-        list($begin, $end) = explode('/', $item->value);
+        [$begin, $end] = explode('/', $item->value);
 
         if (empty($begin) || $begin === '..') {
           $formatted_begin = "open start";
@@ -149,7 +149,7 @@ class EDTFFormatter extends FormatterBase {
         }
 
         $element[$delta] = [
-          '#markup' => t('@begin to @end', [
+          '#markup' => $this->t('@begin to @end', [
             '@begin' => $formatted_begin,
             '@end' => $formatted_end,
           ]),
@@ -158,7 +158,7 @@ class EDTFFormatter extends FormatterBase {
       }
       // Sets.
       if (strpos($item->value, '[') !== FALSE || strpos($item->value, '{') !== FALSE) {
-        $set_qualifier = (strpos($item->value, '[') !== FALSE) ? t('one of the dates:') : t('all of the dates:');
+        $set_qualifier = (strpos($item->value, '[') !== FALSE) ? $this->t('one of the dates:') : $this->t('all of the dates:');
         $formatted_dates = [];
         foreach (explode(',', trim($item->value, '{}[] ')) as $date) {
           $date_range = explode('..', $date);
@@ -169,17 +169,17 @@ class EDTFFormatter extends FormatterBase {
 
             case 2:
               if (empty($date_range[0])) {
-                $formatted_dates[] = t('@date or some earlier date', [
+                $formatted_dates[] = $this->t('@date or some earlier date', [
                   '@date' => $this->formatDate($date_range[1]),
                 ]);
               }
               elseif (empty($date_range[1])) {
-                $formatted_dates[] = t('@date or some later date', [
+                $formatted_dates[] = $this->t('@date or some later date', [
                   '@date' => $this->formatDate($date_range[0]),
                 ]);
               }
               else {
-                $formatted_dates[] = t('@date_begin until @date_end', [
+                $formatted_dates[] = $this->t('@date_begin until @date_end', [
                   '@date_begin' => $this->formatDate($date_range[0]),
                   '@date_end' => $this->formatDate($date_range[1]),
                 ]);
@@ -188,7 +188,7 @@ class EDTFFormatter extends FormatterBase {
           }
         }
         $element[$delta] = [
-          '#markup' => t('@qualifier @list', [
+          '#markup' => $this->t('@qualifier @list', [
             '@qualifier' => $set_qualifier,
             '@list' => implode(', ', $formatted_dates),
           ]),
@@ -371,7 +371,7 @@ class EDTFFormatter extends FormatterBase {
         count(array_filter([$month, $day])) > 0) {
       // Unknown year only.
       if (!$unspecified['day'] && !$unspecified['month'] && $unspecified_count === 1) {
-        $formatted_date = t("@md, of an @year", [
+        $formatted_date = $this->t("@md, of an @year", [
           "@md" => trim("$month $day"),
           "@year" => $year,
         ]);
@@ -381,14 +381,14 @@ class EDTFFormatter extends FormatterBase {
         if ($day !== '') {
           $day .= "$day_suffix day of an";
         }
-        $formatted_date = t("@dm, in @year", [
+        $formatted_date = $this->t("@dm, in @year", [
           "@dm" => trim("$day $month"),
           "@year" => $year,
         ]);
       }
       // Unknown day only.
       elseif ($unspecified['day'] && $unspecified_count === 1) {
-        $formatted_date = t("@day in @month, @year", [
+        $formatted_date = $this->t("@day in @month, @year", [
           "@day" => $day,
           "@month" => $month,
           "@year" => $year,
@@ -400,14 +400,14 @@ class EDTFFormatter extends FormatterBase {
           $day .= "$day_suffix day of an";
         }
         if ($year == 'unknown year') {
-          $formatted_date = t("@day @month, in an @year", [
+          $formatted_date = $this->t("@day @month, in an @year", [
             "@day" => $day,
             "@month" => $month,
             "@year" => $year,
           ]);
         }
         else {
-          $formatted_date = t("@dm, in the @year", [
+          $formatted_date = $this->t("@dm, in the @year", [
             "@dm" => trim("$day $month"),
             "@year" => str_replace('unknown year in the ', '', $year),
           ]);
@@ -416,14 +416,14 @@ class EDTFFormatter extends FormatterBase {
       // Unknown year and day only.
       elseif (!$unspecified['month'] && $unspecified_count === 2) {
         if ($year == 'unknown year') {
-          $formatted_date = t("@day in @month, in an @year", [
+          $formatted_date = $this->t("@day in @month, in an @year", [
             "@day" => $day,
             "@month" => $month,
             "@year" => $year,
           ]);
         }
         else {
-          $formatted_date = t("@day in @month, in the @year", [
+          $formatted_date = $this->t("@day in @month, in the @year", [
             "@day" => $day,
             "@month" => $month,
             "@year" => str_replace('unknown year in the ', '', $year),
@@ -432,17 +432,17 @@ class EDTFFormatter extends FormatterBase {
       }
       // Unknown day and month only.
       elseif ($unspecified['day'] && $unspecified['month'] && $unspecified_count === 2) {
-        $formatted_date = t("Unknown date, in @year", [
+        $formatted_date = $this->t("Unknown date, in @year", [
           "@year" => $year,
         ]);
       }
       // Unknown year, month, and day.
       elseif ($unspecified_count === 3) {
         if ($year == 'unknown year') {
-          $formatted_date = t("Unknown day, month, and year");
+          $formatted_date = $this->t("Unknown day, month, and year");
         }
         else {
-          $formatted_date = t("Unknown date, in the @year", [
+          $formatted_date = $this->t("Unknown date, in the @year", [
             "@year" => str_replace('unknown year in the ', '', $year),
           ]);
         }
@@ -450,7 +450,7 @@ class EDTFFormatter extends FormatterBase {
       // No unknown segments.
       // Adds a comma after the month & day.
       else {
-        $formatted_date = t("@md, @year", [
+        $formatted_date = $this->t("@md, @year", [
           "@md" => trim("$month $day"),
           "@year" => $year,
         ]);
@@ -460,13 +460,13 @@ class EDTFFormatter extends FormatterBase {
     // If month is seasonal and the user has selected 'num_seasonal'.
     if ($is_seasonal && $settings['month_format'] === 'num_seasonal') {
       $space = self::DELIMITERS['space'];
-      $formatted_date = t("@date", [
+      $formatted_date = $this->t("@date", [
         "@date" => implode($space, array_filter([$month, $year])),
       ]);
     }
     else {
       $date_separator = self::DELIMITERS[$settings['date_separator']];
-      $formatted_date = t("@date", [
+      $formatted_date = $this->t("@date", [
         "@date" => implode($date_separator, array_filter($parts_in_order)),
       ]);
     }
@@ -602,7 +602,7 @@ class EDTFFormatter extends FormatterBase {
       switch (count($keys)) {
         case 1:
         case 2:
-          $qualifier_parts[] = implode(' ' . t('and') . ' ', $keys) . ' ' . $qualifier;
+          $qualifier_parts[] = implode(' ' . $this->t('and') . ' ', $keys) . ' ' . $qualifier;
           break;
 
         case 3:
