@@ -224,7 +224,7 @@ class EDTFYear extends ProcessorPluginBase implements PluginFormInterface {
       }
       catch (\Throwable $e) {
         \Drupal::logger('controlled_access_terms')
-          ->warning(t("Could not parse EDTF value '@edtf' for indexing @type/@id", [
+          ->warning($this->t("Could not parse EDTF value '@edtf' for indexing @type/@id", [
             '@edtf' => $edtf,
             '@type' => $entity->getEntityTypeId(),
             '@id' => $entity->id(),

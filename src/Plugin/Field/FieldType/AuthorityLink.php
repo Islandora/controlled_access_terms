@@ -67,14 +67,14 @@ class AuthorityLink extends LinkItem {
 
     $element['authority_sources'] = [
       '#type' => 'textarea',
-      '#title' => t('Authority Sources'),
+      '#title' => $this->t('Authority Sources'),
       '#default_value' => $this->encodeTextSettingsField($this->getSetting('authority_sources')),
       '#element_validate' => [[get_class($this), 'validateValues']],
       '#required' => TRUE,
       '#min' => 1,
-      '#description' => '<p>' . t('Enter one value per line, in the format key|label.') .
-      '<br/>' . t('The key is the stored value. The label will be used in displayed values and edit forms.') .
-      '<br/>' . t('The label is optional: if a line contains a single string, it will be used as key and label.') .
+      '#description' => '<p>' . $this->t('Enter one value per line, in the format key|label.') .
+      '<br/>' . $this->t('The key is the stored value. The label will be used in displayed values and edit forms.') .
+      '<br/>' . $this->t('The label is optional: if a line contains a single string, it will be used as key and label.') .
       '</p>',
     ];
 
@@ -126,7 +126,7 @@ class AuthorityLink extends LinkItem {
     $list = array_map('trim', $list);
     $list = array_filter($list, 'strlen');
 
-    foreach ($list as $position => $text) {
+    foreach ($list as $text) {
       // Check for an explicit key.
       $matches = [];
       if (preg_match('/(.*)\|(.*)/', $text, $matches)) {

@@ -79,19 +79,19 @@ class EDTFWidget extends WidgetBase {
     $summary = [];
 
     if ($this->getSetting('strict_dates')) {
-      $summary[] = t('Strict dates enabled');
+      $summary[] = $this->t('Strict dates enabled');
     }
     if ($this->getSetting('intervals')) {
-      $summary[] = t('Date intervals permitted');
+      $summary[] = $this->t('Date intervals permitted');
     }
     else {
-      $summary[] = t('Date intervals are not permitted');
+      $summary[] = $this->t('Date intervals are not permitted');
     }
     if ($this->getSetting('sets')) {
-      $summary[] = t('Date sets permitted');
+      $summary[] = $this->t('Date sets permitted');
     }
     else {
-      $summary[] = t('Date sets are not permitted');
+      $summary[] = $this->t('Date sets are not permitted');
     }
 
     return $summary;

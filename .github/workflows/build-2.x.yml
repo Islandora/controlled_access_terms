@@ -27,6 +27,8 @@ jobs:
       - name: PHPUNIT tests
         run: |
           docker run \
+            --name drupal \
+            --hostname drupal \
             --rm \
             --volume $(pwd):/var/www/drupal/web/modules/contrib/$ENABLE_MODULES:ro \
             --env ENABLE_MODULES \

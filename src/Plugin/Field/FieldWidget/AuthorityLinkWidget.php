@@ -38,7 +38,7 @@ class AuthorityLinkWidget extends LinkWidget {
       '#type' => 'fieldset',
     ];
     $element['source'] = [
-      '#title' => t('Source'),
+      '#title' => $this->t('Source'),
       '#type' => 'select',
       '#options' => $settings['authority_sources'],
       '#default_value' => $item->source ?? '',
@@ -65,7 +65,7 @@ class AuthorityLinkWidget extends LinkWidget {
       '#placeholder' => $this->getSetting('placeholder_title'),
       '#default_value' => $items[$delta]->title ?? NULL,
       '#maxlength' => 255,
-      '#description' => t('Text to use in place of the authority source name.'),
+      '#description' => $this->t('Text to use in place of the authority source name.'),
     ];
 
     return $element;
