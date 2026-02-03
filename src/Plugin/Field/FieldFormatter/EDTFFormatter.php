@@ -87,6 +87,7 @@ class EDTFFormatter extends FormatterBase {
         'm' => t('one-digit month for months below 10, e.g. 4'),
         'mmm' => t('three-letter abbreviation for month, Apr'),
         'mmmm' => t('month spelled out in full, e.g. April'),
+        'num_seasonal' => t('numbered months (e.g. 01) and seasons spelled out in full (e.g. Spring)'),
       ],
     ];
     $form['day_format'] = [
@@ -223,6 +224,9 @@ class EDTFFormatter extends FormatterBase {
     $month = '';
     $day = '';
 
+    // Flag to keep track of the seasons.
+    $is_seasonal = FALSE;
+
     preg_match(EDTFUtils::DATE_PARSE_REGEX, $date_time[0], $parsed_date);
 
     // Expand the year if the Year Exponent exists.
@@ -263,9 +267,17 @@ class EDTFFormatter extends FormatterBase {
     }
 
     if (array_key_exists(EDTFUtils::MONTH, $parsed_date)) {
+      // Determining whether the month is seasonal.
+      $int_month_value = intval($parsed_date[EDTFUtils::MONTH]);
+      $is_seasonal = ($int_month_value >= 21) && ($int_month_value <= 41);
+
       if (strpos($parsed_date[EDTFUtils::MONTH], 'X') !== FALSE) {
         $unspecified['month'] = TRUE;
         $unspecified_count++;
+      }
+      // Spell out seasons in full, keep the regular months (1-12) as numbers.
+      elseif ($is_seasonal && $settings['month_format'] === 'num_seasonal') {
+        $month = EDTFUtils::MONTHS_MAP[$parsed_date[EDTFUtils::MONTH]]['mmmm'];
       }
       elseif ($settings['month_format'] === 'mmm' || $settings['month_format'] === 'mmmm') {
         $month = EDTFUtils::MONTHS_MAP[$parsed_date[EDTFUtils::MONTH]][$settings['month_format']];
@@ -444,9 +456,18 @@ class EDTFFormatter extends FormatterBase {
         ]);
       }
     }
-    else {
+    // Change the display format to be always (month [space] year).
+    // If month is seasonal and the user has selected 'num_seasonal'.
+    if ($is_seasonal && $settings['month_format'] === 'num_seasonal') {
+      $space = self::DELIMITERS['space'];
       $formatted_date = t("@date", [
-        "@date" => implode(self::DELIMITERS[$settings['date_separator']], array_filter($parts_in_order)),
+        "@date" => implode($space, array_filter([$month, $year])),
+      ]);
+    }
+    else {
+      $date_separator = self::DELIMITERS[$settings['date_separator']];
+      $formatted_date = t("@date", [
+        "@date" => implode($date_separator, array_filter($parts_in_order)),
       ]);
     }
 
