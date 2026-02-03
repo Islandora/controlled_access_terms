@@ -28,7 +28,7 @@ class TypedRelationDedupFormatter extends EntityReferenceLabelFormatter {
       $this_tid = $item->target_id;
       $delta_to_update = in_array($this_tid, $unique_tids);
       $rel_types = $item->getRelTypes();
-      $rel_type = isset($rel_types[$item->rel_type]) ? $rel_types[$item->rel_type] : $item->rel_type;
+      $rel_type = $rel_types[$item->rel_type] ?? $item->rel_type;
       if (!$delta_to_update) {
         $unique_tids[$delta] = $this_tid;
         if (!empty($rel_type)) {

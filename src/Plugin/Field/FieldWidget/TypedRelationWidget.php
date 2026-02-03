@@ -32,7 +32,7 @@ class TypedRelationWidget extends EntityReferenceAutocompleteWidget {
       '#title' => t('Relationship Type'),
       '#type' => 'select',
       '#options' => $settings['rel_types'],
-      '#default_value' => isset($item->rel_type) ? $item->rel_type : '',
+      '#default_value' => $item->rel_type ?? '',
       '#weight' => -1,
     ];
 

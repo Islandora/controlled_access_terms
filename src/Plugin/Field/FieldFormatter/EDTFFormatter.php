@@ -131,7 +131,7 @@ class EDTFFormatter extends FormatterBase {
     foreach ($items as $delta => $item) {
       // Interval.
       if (strpos($item->value, '/') !== FALSE) {
-        list($begin, $end) = explode('/', $item->value);
+        [$begin, $end] = explode('/', $item->value);
 
         if (empty($begin) || $begin === '..') {
           $formatted_begin = "open start";
