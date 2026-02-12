@@ -597,21 +597,40 @@ class EDTFFormatter extends FormatterBase {
       }
     }
     $qualifier_parts = [];
+    $part_labels = [
+      'year' => $this->t('year'),
+      'month' => $this->t('month'),
+      'day' => $this->t('day'),
+    ];
+    $qualifier_labels = [
+      'uncertain' => $this->t('uncertain'),
+      'approximate' => $this->t('approximate'),
+    ];
+
     foreach ($qualifiers as $qualifier => $parts) {
       $keys = array_keys($parts);
       switch (count($keys)) {
         case 1:
         case 2:
-          $qualifier_parts[] = implode(' ' . $this->t('and') . ' ', $keys) . ' ' . $qualifier;
+          $translated_parts = array_map(function ($key) use ($part_labels) {
+            return $part_labels[$key];
+          }, $keys);
+          $qualifier_parts[] = $this->t('@parts @qualifier', [
+            '@parts' => implode(' ' . $this->t('and') . ' ', $translated_parts),
+            '@qualifier' => $qualifier_labels[$qualifier],
+          ]);
           break;
 
         case 3:
-          $qualifier_parts[] = $qualifier;
+          $qualifier_parts[] = $qualifier_labels[$qualifier];
           break;
       }
     }
     if (count($qualifier_parts) > 0) {
-      return $formatted_date . ' (' . implode('; ', $qualifier_parts) . ')';
+      return $this->t('@date (@qualifiers)', [
+        '@date' => $formatted_date,
+        '@qualifiers' => implode('; ', $qualifier_parts),
+      ]);
     }
     return $formatted_date;
   }
