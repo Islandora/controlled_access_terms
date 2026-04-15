@@ -157,15 +157,50 @@ class EDTFUtils {
       if (strpos($edtf_text, 'T') !== FALSE) {
         $msgs[] = "Date intervals cannot include times.";
       }
-      foreach (explode('/', $edtf_text) as $date) {
-        if (!empty($date) && !($date == '..')) {
-          $msgs = array_merge($msgs, self::validateDate($date, $strict));
+      $dates = explode('/', $edtf_text);
+      if (count($dates) == 2) {
+        if (!empty($dates[0]) && !($dates[0] == '..')) {
+          $msgs = array_merge($msgs, self::validateDate($dates[0], $strict));
         }
+        if (!empty($dates[1]) && !($dates[1] == '..')) {
+          $msgs = array_merge($msgs, self::validateDate($dates[1], $strict));
+        }
+        // Check if start date is sooner than end date.
+        if (self::compareDates($dates[0], $dates[1]) > 0) {
+          $msgs[] = "The start date must be sooner than the end date.";
+        }
+      }
+      else {
+        $msgs[] = "Invalid interval format.";
       }
       return $msgs;
     }
     // Single date (we assume at this point).
     return self::validateDate($edtf_text, $strict);
+  }
+
+  /**
+   * Compare two EDTF dates.
+   *
+   * @param string $date1
+   *   The first date.
+   * @param string $date2
+   *   The second date.
+   *
+   * @return int
+   *   Returns -1, 1 or 0 based on the order of the two dates.
+   */
+  private static function compareDates($date1, $date2) {
+    $isoDate1 = self::iso8601Value($date1);
+    $isoDate2 = self::iso8601Value($date2);
+
+    if ($isoDate1 < $isoDate2) {
+      return -1;
+    }
+    elseif ($isoDate1 > $isoDate2) {
+      return 1;
+    }
+    return 0;
   }
 
   /**
