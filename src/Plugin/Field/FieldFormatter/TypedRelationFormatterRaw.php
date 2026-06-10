@@ -25,7 +25,7 @@ class TypedRelationFormatterRaw extends EntityReferenceLabelFormatter {
     $elements = parent::viewElements($items, $langcode);
 
     foreach ($items as $delta => $item) {
-        $elements[$delta]['#plain_text'] = $item->rel_type . '=' . $item->target_id;
+      $elements[$delta]['#plain_text'] = $item->rel_type . '=' . $item->target_id;
     }
 
     return $elements;
