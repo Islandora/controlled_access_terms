@@ -1,0 +1,7 @@
+services:
+  Drupal\controlled_access_terms\EventSubscriber\DefaultContentSubscriber:
+    autowire: true
+    tags:
+      - { name: event_subscriber }
+    calls:
+      - [setLogger, ['@?logger.channel.default_content']]
